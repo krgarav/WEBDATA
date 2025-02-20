@@ -156,8 +156,8 @@ const ImageScanner = () => {
     const offsetY = e.clientY - boundingRect.top;
 
     const container = imageRef.current.parentElement;
-    if (offsetY > container.clientHeight - 100) {
-      container.scrollTop += 100;
+    if (offsetY > container.clientHeight - 10) {
+      container.scrollTop += 5;
     }
 
     setSelection({
@@ -410,12 +410,16 @@ const ImageScanner = () => {
 
     // Append the array of image files under the key "images"
     try {
-      await axios.post(`${process.env.REACT_APP_SERVER_IP}/add/templete`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          token: token,
-        },
-      });
+      await axios.post(
+        `${process.env.REACT_APP_SERVER_IP}/add/templete`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            token: token,
+          },
+        }
+      );
       toast.success("Template created & updated successfully!");
       dataCtx.modifyTemplateData(null);
       localStorage.removeItem("images");
