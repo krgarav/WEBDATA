@@ -36,3 +36,4 @@ router.post('/getUploadedFiles/:templateId', getUploadedFilesByTemplateId);
 router.get('/getUploadedFileHeader', getCsvHeaders);
 
 module.exports = router;
+

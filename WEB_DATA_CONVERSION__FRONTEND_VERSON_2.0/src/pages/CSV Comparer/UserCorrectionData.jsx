@@ -707,16 +707,17 @@ const UserCorrectionData = () => {
 
   const onCompleteHandler = async () => {
     try {
-      const response = await axios.get(`http://${REACT_APP_IP}:4000/download/correctedCsv/${taskId}`,
-      {
-        headers: {
-          token: token,
-        },
-      }
-    )
-    // if(!response.data.success) {
-    //   throw new Error("Network response was not ok");
-    // }
+      const response = await axios.get(
+        `http://${REACT_APP_IP}:4000/download/correctedCsv/${taskId}`,
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
+      // if(!response.data.success) {
+      //   throw new Error("Network response was not ok");
+      // }
 
       await axios.post(
         `http://${REACT_APP_IP}:4000/taskupdation/${parseInt(
@@ -860,35 +861,37 @@ const UserCorrectionData = () => {
                   currentImageIndex={currentImageIndex}
                   imageUrls={imageUrls}
                 />
+                <div>
+                  <ImageSectionCSV
+                    imageContainerRef={imageContainerRef}
+                    currentImageIndex={currentImageIndex}
+                    imageUrls={imageUrls}
+                    imageRef={imageRef}
+                    correctionData={correctionData}
+                    zoomLevel={zoomLevel}
+                    selectedCoordintes={selectedCoordintes}
+                    templateHeaders={templateHeaders}
+                  />
 
-                <ImageSectionCSV
-                  imageContainerRef={imageContainerRef}
-                  currentImageIndex={currentImageIndex}
-                  imageUrls={imageUrls}
-                  imageRef={imageRef}
-                  correctionData={correctionData}
-                  zoomLevel={zoomLevel}
-                  selectedCoordintes={selectedCoordintes}
-                  templateHeaders={templateHeaders}
-                />
-                <div className=" flex justify-end mt-5 mr-5">
-                {maximum === currentIndex && (
-                    <div className="flex justify-center">
+                  <section>
+                    <div className=" flex justify-end mt-5 mr-5">
+                      {maximum === currentIndex && (
+                        <div className="flex justify-center">
+                          <button
+                            onClick={() => onTaskCompleteHandler()}
+                            className="px-4 py-2 bg-teal-600 mx-2 text-white rounded-3xl shadow hover:bg-teal-700"
+                          >
+                            Task Completed
+                          </button>
+                        </div>
+                      )}
                       <button
-                        onClick={() => onTaskCompleteHandler()}
-                        className="px-4 py-2 bg-teal-600 mx-2 text-white rounded-3xl shadow hover:bg-teal-700"
+                        onClick={() => navigate("/datamatching")}
+                        className=" px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
                       >
-                        Task Completed
+                        Back
                       </button>
-                    </div>
-                  )}
-                  <button
-                    onClick={() => navigate("/datamatching")}
-                    className=" px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
-                  >
-                    Back
-                  </button>
-                  {/* <Button
+                      {/* <Button
                     onClick={onCsvUpdateHandler}
                     variant="contained"
                     color="info"
@@ -896,56 +899,57 @@ const UserCorrectionData = () => {
                     update
                   </Button> */}
 
-                  <button
-                    className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
-                    onClick={() =>
-                      //   onImageHandler(
-                      //     "prev",
-                      //     currentIndex,
-                      //     filteredArray,
-                      //     currentTaskData
-                      //   )
-                      onPrevHandler("prev", currentIndex)
-                    }
-                    endIcon={<ArrowBackIosIcon />}
-                  >
-                    Prev
-                  </button>
-                  <button
-                    className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
-                    onClick={() =>
-                      // onImageHandler(
-                      //   "next",
-                      //   currentIndex,
-                      //   filteredArray,
-                      //   currentTaskData
-                      // )
-                      onNextHandler("next", currentIndex)
-                    }
-                    endIcon={<ArrowForwardIosIcon />}
-                  >
-                    Next
-                  </button>
-                
+                      <button
+                        className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
+                        onClick={() =>
+                          //   onImageHandler(
+                          //     "prev",
+                          //     currentIndex,
+                          //     filteredArray,
+                          //     currentTaskData
+                          //   )
+                          onPrevHandler("prev", currentIndex)
+                        }
+                        endIcon={<ArrowBackIosIcon />}
+                      >
+                        Prev
+                      </button>
+                      <button
+                        className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
+                        onClick={() =>
+                          // onImageHandler(
+                          //   "next",
+                          //   currentIndex,
+                          //   filteredArray,
+                          //   currentTaskData
+                          // )
+                          onNextHandler("next", currentIndex)
+                        }
+                        endIcon={<ArrowForwardIosIcon />}
+                      >
+                        Next
+                      </button>
+                    </div>
+                    <CorrectionField
+                      csvCurrentData={csvCurrentData} //whole row data
+                      csvData={csvData}
+                      tableData={tableData}
+                      correctionData={correctionData}
+                      setCorrectionData={setCorrectionData}
+                      currentIndex={currentIndex} //error questions data
+                      setCurrentIndex={setCurrentIndex}
+                      maximum={maximum} //error questions data
+                      templateHeaders={templateHeaders} //template header already present
+                      imageColName={imageColName}
+                      currentFocusIndex={currentFocusIndex}
+                      inputRefs={inputRefs}
+                      handleKeyDownJump={handleKeyDownJump}
+                      onNextHandler={onNextHandler}
+                      changeCurrentCsvDataHandler={changeCurrentCsvDataHandler}
+                      imageFocusHandler={imageFocusHandler}
+                    />
+                  </section>
                 </div>
-                <CorrectionField
-                  csvCurrentData={csvCurrentData} //whole row data
-                  csvData={csvData}
-                  tableData={tableData}
-                  correctionData={correctionData}
-                  setCorrectionData={setCorrectionData}
-                  currentIndex={currentIndex} //error questions data
-                  setCurrentIndex={setCurrentIndex}
-                  maximum={maximum} //error questions data
-                  templateHeaders={templateHeaders} //template header already present
-                  imageColName={imageColName}
-                  currentFocusIndex={currentFocusIndex}
-                  inputRefs={inputRefs}
-                  handleKeyDownJump={handleKeyDownJump}
-                  onNextHandler={onNextHandler}
-                  changeCurrentCsvDataHandler={changeCurrentCsvDataHandler}
-                  imageFocusHandler={imageFocusHandler}
-                />
               </div>
             )}
           </div>

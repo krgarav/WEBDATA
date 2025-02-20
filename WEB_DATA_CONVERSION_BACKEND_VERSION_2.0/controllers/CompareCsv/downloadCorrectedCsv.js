@@ -28,7 +28,11 @@ const DownloadCorrectedCsv = async (req, res) => {
     }
 
     const originalFilename = fileData.csvFile;
-    const originalFilePath = path.join(__dirname, "../../csvFile", originalFilename);
+    const originalFilePath = path.join(
+      __dirname,
+      "../../csvFile",
+      originalFilename
+    );
 
     try {
       await fs.access(originalFilePath);
@@ -39,18 +43,44 @@ const DownloadCorrectedCsv = async (req, res) => {
     const jsonData = await csvToJson(originalFilePath);
     const errorData = await csvToJson(errorFilePath);
 
+    // errorData.forEach((errorRow) => {
+    //   const primaryKey = errorRow["PRIMARY KEY"];
+    //   const primary = errorRow["PRIMARY"];
+    //   const columnName = errorRow["COLUMN_NAME"];
+    //   const correctedValue = errorRow["CORRECTED"];
+    //   let findVar = jsonData.find((item) => item[primaryKey] == primary.trim());
+
+    //   if (findVar) {
+    //     findVar[columnName] = correctedValue;
+    //   } else {
+    //     console.log(`No matching row found for primary key '${primary},${primaryKey}'`);
+    //   }
+    // });
     errorData.forEach((errorRow) => {
       const primaryKey = errorRow["PRIMARY KEY"];
       const primary = errorRow["PRIMARY"];
       const columnName = errorRow["COLUMN_NAME"];
       const correctedValue = errorRow["CORRECTED"];
+      const correctedBy = errorRow["CORRECTED BY"] || "Unknown"; // Default to "Unknown" if not present
 
       let findVar = jsonData.find((item) => item[primaryKey] == primary.trim());
 
       if (findVar) {
+        // Apply the correction
         findVar[columnName] = correctedValue;
+
+        // Append the correction in "Corrected Data"
+        if (correctedValue) {
+          findVar["Corrected Data"] = findVar["Corrected Data"]
+            ? findVar["Corrected Data"] + `, ${columnName}: ${correctedValue}`
+            : `${columnName}: ${correctedValue}`;
+          // Append the corrector's name in "Corrected By"
+          findVar["Corrected By"] = correctedBy;
+        }
       } else {
-        console.log(`No matching row found for primary key '${primary},${primaryKey}'`);
+        console.log(
+          `No matching row found for primary key '${primary}, ${primaryKey}'`
+        );
       }
     });
 
@@ -58,13 +88,15 @@ const DownloadCorrectedCsv = async (req, res) => {
     await fs.writeFile(correctedCsvFilePath, updatedCsv);
 
     // Set original filename in the response header
-    res.setHeader('X-Original-Filename', originalFilename);
+    res.setHeader("X-Original-Filename", originalFilename);
 
     // Send the file as an attachment
-    res.download(correctedCsvFilePath, 'corrected_file.csv', (err) => {
+    res.download(correctedCsvFilePath, "corrected_file.csv", (err) => {
       if (err) {
         console.error("Error sending file:", err);
-        res.status(500).json({ error: "An error occurred while sending the file" });
+        res
+          .status(500)
+          .json({ error: "An error occurred while sending the file" });
       }
     });
   } catch (error) {

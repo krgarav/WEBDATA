@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MdDataSaverOn } from "react-icons/md";
 import { REACT_APP_IP } from "../../services/common";
 import { toast } from "react-toastify";
@@ -15,6 +15,22 @@ const CorrectionField = ({
   // const [inputValues, setInputValues] = useState("");
   const taskId = JSON.parse(localStorage.getItem("taskdata")).id;
   const token = JSON.parse(localStorage.getItem("userData"));
+  const [visited, setVisited] = useState(false);
+  const [visitedCount, setVisitedCount] = useState(0);
+  const [visitedRows, setVisitedRows] = useState({}); // Track visited rows
+  // const firstInputRef = useRef(null); 
+
+  // useEffect(() => {
+  //   if (firstInputRef.current) {
+  //     firstInputRef.current.focus(); // Automatically focus on first input
+  //   }
+  // }, []);
+  const handleVisit = (index) => {
+    if (!visitedRows[index]) {
+      setVisitedRows((prev) => ({ ...prev, [index]: true }));
+      setVisitedCount((prev) => prev + 1);
+    }
+  };
   const [filteredData, setFilterData] = useState(
     correctionData?.previousData?.DATA
   );
@@ -36,6 +52,8 @@ const CorrectionField = ({
   }, [filteredData, PRIMARY]);
   useEffect(() => {
     setFilterData(correctionData?.previousData?.DATA);
+    setVisitedCount(0)
+    setVisitedRows({})
   }, [correctionData?.previousData?.DATA]);
   useEffect(() => {}, []);
   // console.log(inputValue);
@@ -107,7 +125,10 @@ const CorrectionField = ({
     // const updatedValue = dataItem.CORRECTED||"Null";
 
     return (
-      <div key={index} className="flex">
+      <div
+        key={index}
+        className={`flex ${visitedRows[index] ? "bg-green-200" : "bg-red-200"}`}
+      >
         <div className="py-2 px-4 border-b w-1/5">
           {correctionData?.previousData?.PRIMARY}
         </div>
@@ -120,7 +141,10 @@ const CorrectionField = ({
             className="w-full border rounded-xl py-1 px-2 shadow"
             value={inputValue[key] || ""}
             onChange={(e) => handleInputChange(e, key)}
-            onFocus={() => imageFocusHandler(dataItem.COLUMN_NAME)}
+            onFocus={(e) => {
+              imageFocusHandler(dataItem.COLUMN_NAME); // First function
+              handleVisit(index); // Second function
+            }} // Mark row as visited
           />
 
           {/* <div className="flex justify-center items-center">
@@ -142,7 +166,29 @@ const CorrectionField = ({
   return (
     <div className="mx-4 bg-white my-6 px-4 py-4 rounded-md">
       <div className="flex justify-between mb-6 mt-2">
-        <h2 className="text-xl mx-4 font-bold pt-1 text-blue-500 ">{`${correctionData?.previousData?.PRIMARY_KEY} (Primary Key)`}</h2>
+        <h2 className="text-xl mx-4 font-bold pt-1 text-blue-500">
+          {`${correctionData?.previousData?.PRIMARY_KEY} (Primary Key)`}
+        </h2>
+        <h3 className="text-lg font-bold bg-red-100 text-red-600 px-2 py-1 rounded-md shadow-md border border-red-300">
+          Total Errors:{" "}
+          <span className="font-extrabold">{filteredData?.length}</span>
+        </h3>
+
+        {filteredData?.length === visitedCount && (
+          <span className="text-green-700 bg-green-200 font-semibold px-2 py-1 rounded-md shadow-md border border-green-400">
+            ✅ All Visited
+          </span>
+        )}
+        {filteredData?.length !== visitedCount && (
+          <span className="flex items-center text-yellow-800 bg-yellow-200 font-semibold px-3 py-1 rounded-md shadow-md border border-yellow-400">
+            ⚠️ Not All Visited &nbsp;|&nbsp; {visitedCount} of{" "}
+            {filteredData?.length} completed
+          </span>
+        )}
+
+        <h3 className="text-lg font-bold bg-blue-100 text-blue-600 px-2 py-1 rounded-md shadow-md border border-blue-300">
+          Visited: <span className="font-extrabold">{visitedCount}</span>
+        </h3>
         <button
           className="px-6 py-2 bg-teal-600 rounded-lg text-white"
           onClick={onUpdateHandler}
@@ -155,7 +201,7 @@ const CorrectionField = ({
           <div>
             <div className="flex text-center">
               <div className="py-2 px-4 border-b font-semibold w-1/5">
-              {PRIMARY_KEY}
+                {PRIMARY_KEY}
               </div>
               <div className="py-2 px-4 border-b font-semibold w-1/5">
                 Field name
