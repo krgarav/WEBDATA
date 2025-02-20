@@ -244,6 +244,7 @@ const AdminAssined = () => {
   };
 
   const onCompleteHandler = async (currentTask) => {
+    console.log("fdsfdsf");
     try {
       await axios.post(
         `${process.env.REACT_APP_SERVER_IP}/taskupdation/${parseInt(
@@ -420,6 +421,7 @@ const AdminAssined = () => {
                     </div>
                     <div className="divide-y divide-gray-200 bg-white overflow-y-auto h-[250px] ">
                       <AdminCompareTasks
+                      onCompleteHandler={onCompleteHandler}
                         compareTask={compareTask}
                         onCompareTaskStartHandler={onCompareTaskStartHandler}
                       />

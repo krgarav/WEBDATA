@@ -18,6 +18,7 @@ const AdminCompareTasks = ({
   // const modalClose = () => {
   //   setModals(false);
   // };
+ 
   const completeHandler=async(taskId)=>{
 
     const response = await axios.get(

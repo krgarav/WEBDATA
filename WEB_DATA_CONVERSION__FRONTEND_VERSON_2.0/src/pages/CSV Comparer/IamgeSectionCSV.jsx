@@ -24,7 +24,7 @@ const   ImageSectionCSV = ({
       }}
     >
       <img
-        src={`http:\\\\localhost:4000\\images\\${correctionData?.imageDirectoryPath}\\${correctionData?.previousData.IMAGE_NAME}`}
+        src={`http:\\\\localhost:4000\\images\\${correctionData?.previousData.IMAGE_NAME}`}
         alt="Selected"
         ref={imageRef}
         style={{

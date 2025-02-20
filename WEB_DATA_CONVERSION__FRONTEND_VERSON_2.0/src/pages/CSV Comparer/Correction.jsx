@@ -30,7 +30,6 @@ const Correction = () => {
   const navigate = useNavigate();
   const taskdata = location.state;
   const { imageURL, data } = tableData;
-
   useEffect(() => {
     const req = async () => {
       const response = await axios.get(

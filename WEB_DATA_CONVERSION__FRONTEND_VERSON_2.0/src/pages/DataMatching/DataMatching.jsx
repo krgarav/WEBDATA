@@ -753,6 +753,7 @@ const DataMatching = () => {
   };
 
   const onCompleteHandler = async () => {
+    console.log("task completed");
     try {
       await axios.post(
         `${process.env.REACT_APP_SERVER_IP}/taskupdation/${parseInt(

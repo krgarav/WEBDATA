@@ -155,10 +155,10 @@ const ImageScanner = () => {
     const offsetX = e.clientX - boundingRect.left;
     const offsetY = e.clientY - boundingRect.top;
 
-    const container = imageRef.current.parentElement;
-    if (offsetY > container.clientHeight - 10) {
-      container.scrollTop += 5;
-    }
+    // const container = imageRef.current.parentElement;
+    // if (offsetY > container.clientHeight - 10) {
+    //   container.scrollTop += 5;
+    // }
 
     setSelection({
       coordinateX: Math.min(dragStart.x, offsetX),

@@ -155,7 +155,7 @@ const CorrectionField = ({
           <div>
             <div className="flex text-center">
               <div className="py-2 px-4 border-b font-semibold w-1/5">
-                Serial no.
+              {PRIMARY_KEY}
               </div>
               <div className="py-2 px-4 border-b font-semibold w-1/5">
                 Field name
