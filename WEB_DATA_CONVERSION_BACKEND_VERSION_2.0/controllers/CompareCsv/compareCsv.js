@@ -83,7 +83,7 @@ const compareCsv = async (req, res) => {
       zipImageFile,
     } = req.body;
 
-    const firstFilePath = path.join(
+    const secondFilePath = path.join(
       __dirname,
       "../",
       "../",
@@ -91,18 +91,21 @@ const compareCsv = async (req, res) => {
       "multipleCsvCompare",
       firstInputFileName
     );
-    const secondFilePath = path.join(
+    const firstFilePath = path.join(
       __dirname,
       "../",
       "../",
       "csvFile",
       secondInputFileName
     );
+    // console.log(firstFilePath)
+    // console.log(secondFilePath)
+    // return
     // console.log("file name" ,secondFilePath, "secondInputFileName")
     const f1 = await csvToJson(firstFilePath);
     const f2 = await csvToJson(secondFilePath);
 
-    f2.splice(0, 1);
+    f1.splice(0, 1);
 
     if (checkHeadersMatch(f1, f2, skippingKey).match === false) {
       return res.status(501).send({
@@ -132,7 +135,7 @@ const compareCsv = async (req, res) => {
         });
       }
     }
-console.log(f1[0])
+// console.log(f1[0])
     for (let i = 0; i < f1.length; i++) {
       for (let j = 0; j < f2.length; j++) {
         // const pkLength = f1[i][primaryKey];
@@ -147,31 +150,35 @@ console.log(f1[0])
           for (let [key, value] of Object.entries(f1[i])) {
             const val1 = value;
             const val2 = f2[j][key];
-            console.log(f1[i])
+            // console.log(f1[i])
             const imgPathArr = f1[i][imageColName]?.split("\\");
-            console.log(imgPathArr)
+            // console.log(imgPathArr)
             const imgName = imgPathArr[imgPathArr.length - 1];
 
-            if (
-              val1.includes("*") ||
-              val2.includes("*") ||
-              /^\s*$/.test(val1) ||
-              /^\s*$/.test(val2)
-            ) {
-              if (!skippingKey.includes(key) && formFeilds.includes(key)) {
-                const obj = {
-                  PRIMARY: ` ${f1[i][primaryKey]}`,
-                  COLUMN_NAME: key,
-                  FILE_1_DATA: val1,
-                  FILE_2_DATA: val2,
-                  IMAGE_NAME: imgName,
-                  CORRECTED: "",
-                  "CORRECTED BY": "",
-                  "PRIMARY KEY": primaryKey,
-                };
-                diff.push(obj);
-              }
-            } else if (value !== f2[j][key]) {
+            // if (
+            //   val1.includes("*") ||
+            //   val2.includes("*") ||
+            //   /^\s*$/.test(val1) ||
+            //   /^\s*$/.test(val2)
+            // ) {
+            //   if (!skippingKey.includes(key) && formFeilds.includes(key)) {
+            //     const obj = {
+            //       PRIMARY: ` ${f1[i][primaryKey]}`,
+            //       COLUMN_NAME: key,
+            //       FILE_1_DATA: val1,
+            //       FILE_2_DATA: val2,
+            //       IMAGE_NAME: imgName,
+            //       CORRECTED: "",
+            //       "CORRECTED BY": "",
+            //       "PRIMARY KEY": primaryKey,
+            //     };
+            //     diff.push(obj);
+            //   }
+            // } 
+            
+            // else if (value !== f2[j][key]) {
+             if (value !== f2[j][key]|| val1.includes("*") ||
+               val2.includes("*")) {
               if (!skippingKey.includes(key)) {
                 const obj = {
                   PRIMARY: ` ${f1[i][primaryKey]}`,
@@ -190,7 +197,10 @@ console.log(f1[0])
         }
       }
     }
+
+    console.log("diff", diff.length);
     console.log("diff", diff);
+    // return
     if (diff.length === 0) {
         return res.status(501).send({
           err: "No differences found between the two CSV files.",
