@@ -135,7 +135,6 @@ const compareCsv = async (req, res) => {
         });
       }
     }
-// console.log(f1[0])
     for (let i = 0; i < f1.length; i++) {
       for (let j = 0; j < f2.length; j++) {
         // const pkLength = f1[i][primaryKey];
@@ -177,8 +176,7 @@ const compareCsv = async (req, res) => {
             // } 
             
             // else if (value !== f2[j][key]) {
-             if (value !== f2[j][key]|| val1.includes("*") ||
-               val2.includes("*")) {
+             if (value !== f2[j][key]) {
               if (!skippingKey.includes(key)) {
                 const obj = {
                   PRIMARY: ` ${f1[i][primaryKey]}`,
@@ -198,9 +196,6 @@ const compareCsv = async (req, res) => {
       }
     }
 
-    console.log("diff", diff.length);
-    console.log("diff", diff);
-    // return
     if (diff.length === 0) {
         return res.status(501).send({
           err: "No differences found between the two CSV files.",

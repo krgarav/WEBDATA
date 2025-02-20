@@ -43,7 +43,6 @@ const getCsvCompareData = async (req, res) => {
     imageDirectoryPath,
     csvFilePath,
   } = task;
-  console.log(task);
   const taskTempleteId = templeteId;
   const minIndex = parseInt(min);
   const maxIndex = parseInt(max);
@@ -132,6 +131,7 @@ const getCsvCompareData = async (req, res) => {
         // const result = imageFile.replace(prefixToRemove, "");
 
         const result = imageFile.split("extractedFiles\\")[1];
+        console.log(result)
         res.status(200).json({
           message: "Data found",
           data: {
