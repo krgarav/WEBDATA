@@ -27,6 +27,7 @@ import FieldDecision from "./pages/FieldDecision/FieldDecision";
 import CsvTaskStatus from "./pages/CsvTaskStatus/CsvTaskStatus";
 import Settings from "./pages/Settings/Settings";
 import UserCorrectionData from "./pages/CSV Comparer/UserCorrectionData";
+import PartA from "./pages/PartA/PartA";
 
 function App() {
   const datactx = useContext(dataContext);
@@ -98,6 +99,13 @@ function App() {
                     path="datamatching/correct_compare_csv"
                     element={<UserCorrectionData />}
                   />
+                </>
+              )}
+              {/* ------------------PartA------------------ */}
+            {(role === "Admin" ||
+              role === "Moderator") && (
+                <>
+                  <Route path="/partA" element={<PartA />} />
                 </>
               )}
             {/* -----------------csvuploader------------------- */}

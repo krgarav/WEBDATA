@@ -35,6 +35,11 @@ const menuItems = [
     permission: "resultGenerator",
     href: "resultGeneration",
   },
+  {
+    name: "Part A",
+    permission: "resultGenerator",
+    href: "PartA",
+  },
 ];
 
 export default function Navbar() {
