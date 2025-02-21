@@ -35,10 +35,15 @@ const menuItems = [
     permission: "resultGenerator",
     href: "resultGeneration",
   },
+  // {
+  //   name: "Part A",
+  //   permission: "resultGenerator",
+  //   href: "partA",
+  // },
   {
-    name: "Part A",
+    name: "Merge",
     permission: "resultGenerator",
-    href: "PartA",
+    href: "merge",
   },
 ];
 
