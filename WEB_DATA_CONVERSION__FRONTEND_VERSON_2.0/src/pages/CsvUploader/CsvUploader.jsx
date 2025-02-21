@@ -368,10 +368,11 @@ const CsvUploader = () => {
           toast.error("Please upload the correct CSV file. Headers do not match.");
           return;
         }
+        setConfirmationModal(true);
       };
 
       reader.readAsText(csvFile);
-      setConfirmationModal(true);
+
     } catch (error) {
       console.log(error);
       toast.error("Error fetching CSV headers.");
