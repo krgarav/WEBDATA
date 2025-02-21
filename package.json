@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "json2csv": "^6.0.0-alpha.2",
+    "proper-lockfile": "^4.1.2"
+  }
+}

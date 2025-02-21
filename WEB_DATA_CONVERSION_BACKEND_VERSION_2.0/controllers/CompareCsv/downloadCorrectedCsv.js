@@ -40,52 +40,38 @@ const DownloadCorrectedCsv = async (req, res) => {
       return res.status(404).json({ error: "File not found" });
     }
 
-    const jsonData = await csvToJson(originalFilePath);
-    const errorData = await csvToJson(errorFilePath);
-
+    // const jsonData = await csvToJson(originalFilePath);
+    // const errorData = await csvToJson(errorFilePath);
     // errorData.forEach((errorRow) => {
     //   const primaryKey = errorRow["PRIMARY KEY"];
     //   const primary = errorRow["PRIMARY"];
     //   const columnName = errorRow["COLUMN_NAME"];
     //   const correctedValue = errorRow["CORRECTED"];
+    //   const correctedBy = errorRow["CORRECTED BY"] || "Unknown"; // Default to "Unknown" if not present
+
     //   let findVar = jsonData.find((item) => item[primaryKey] == primary.trim());
 
     //   if (findVar) {
+    //     // Apply the correction
     //     findVar[columnName] = correctedValue;
+
+    //     // Append the correction in "Corrected Data"
+    //     if (correctedValue) {
+    //       findVar["Corrected Data"] = findVar["Corrected Data"]
+    //         ? findVar["Corrected Data"] + `, ${columnName}: ${correctedValue}`
+    //         : `${columnName}: ${correctedValue}`;
+    //       // Append the corrector's name in "Corrected By"
+    //       findVar["Corrected By"] = correctedBy;
+    //     }
     //   } else {
-    //     console.log(`No matching row found for primary key '${primary},${primaryKey}'`);
+    //     console.log(
+    //       `No matching row found for primary key '${primary}, ${primaryKey}'`
+    //     );
     //   }
     // });
-    errorData.forEach((errorRow) => {
-      const primaryKey = errorRow["PRIMARY KEY"];
-      const primary = errorRow["PRIMARY"];
-      const columnName = errorRow["COLUMN_NAME"];
-      const correctedValue = errorRow["CORRECTED"];
-      const correctedBy = errorRow["CORRECTED BY"] || "Unknown"; // Default to "Unknown" if not present
 
-      let findVar = jsonData.find((item) => item[primaryKey] == primary.trim());
-
-      if (findVar) {
-        // Apply the correction
-        findVar[columnName] = correctedValue;
-
-        // Append the correction in "Corrected Data"
-        if (correctedValue) {
-          findVar["Corrected Data"] = findVar["Corrected Data"]
-            ? findVar["Corrected Data"] + `, ${columnName}: ${correctedValue}`
-            : `${columnName}: ${correctedValue}`;
-          // Append the corrector's name in "Corrected By"
-          findVar["Corrected By"] = correctedBy;
-        }
-      } else {
-        console.log(
-          `No matching row found for primary key '${primary}, ${primaryKey}'`
-        );
-      }
-    });
-
-    const updatedCsv = await jsonToCsv(jsonData);
-    await fs.writeFile(correctedCsvFilePath, updatedCsv);
+    // const updatedCsv = await jsonToCsv(jsonData);
+    // await fs.writeFile(correctedCsvFilePath, updatedCsv);
 
     // Set original filename in the response header
     res.setHeader("X-Original-Filename", originalFilename);
