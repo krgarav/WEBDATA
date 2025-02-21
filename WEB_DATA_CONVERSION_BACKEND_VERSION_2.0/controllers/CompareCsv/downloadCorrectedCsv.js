@@ -63,7 +63,7 @@ const DownloadCorrectedCsv = async (req, res) => {
           // Append the corrector's name in "Corrected By"
           findVar["Corrected By"] = correctedBy;
         }
-      } else {
+      } else {  
         console.log(
           `No matching row found for primary key '${primary}, ${primaryKey}'`
         );
