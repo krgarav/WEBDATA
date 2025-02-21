@@ -30,7 +30,6 @@ const CsvUploader = () => {
   const [removeModal, setRemoveModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [openPreFile, setOpenPreFile] = useState(false);
-  const [fileDetails, setFileDetails] = useState(null);
   const [confirmation, setConfirmationModal] = useState(false);
   const [preFiles, setPreFiles] = useState([]);
   const dataCtx = useContext(dataContext);
@@ -351,8 +350,7 @@ const CsvUploader = () => {
 
       // If expectedHeaders is empty, skip the validation
       if (expectedHeaders.length === 0) {
-        setFileDetails(response.data);
-        // setConfirmationModal(true);
+        setConfirmationModal(true);
         return;
       }
       // Read the uploaded CSV file and extract headers
