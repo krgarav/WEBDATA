@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const templeteRoutes = require("./routes/templete");
 const userRoutes = require("./routes/userManagement");
 const compareCsv = require("./routes/compareCsv");
+const mergeCsv = require("./routes/merge");
 const Templete = require("./models/TempleteModel/templete");
 const User = require("./models/User");
 const MetaData = require("./models/TempleteModel/metadata");
@@ -49,6 +50,7 @@ app.use("/users", userRoutes);
 app.use(upload);
 app.use(compareCsv);
 app.use(templeteRoutes);
+app.use(mergeCsv)
 app.use("/settings", Settings);
 
 // Handle all other routes and serve 'index.html'
@@ -152,7 +154,7 @@ MappedData.belongsTo(Templete, {
 
 
 sequelize
-  .sync({ force: !true })
+  .sync({ alter: !true })
   .then(async () => {
     // Check if the admin user table exists, if not, create it
     const adminUser = await User.findOne({ where: { role: "admin" } });

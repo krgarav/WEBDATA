@@ -5,8 +5,10 @@ import Multiselect from "multiselect-react-dropdown";
 import {
   fetchFilesAssociatedWithTemplate,
   onGetAllTasksHandler,
+  REACT_APP_IP,
 } from "../../services/common";
 import { use } from "react";
+import axios from "axios";
 
 const Merge = () => {
   const [options, setOptions] = useState([]);
@@ -25,6 +27,18 @@ const Merge = () => {
       fetchFile(selectedTemplate);
     }
   }, [selectedTemplate]);
+  const mergeHandler = async () => {
+    const obj = {
+      templateId: +selectedTemplate,
+      files: selectedValues.map((item) => item.value),
+    };
+    try {
+      const res = await axios.post(`http://${REACT_APP_IP}:4000/checkmergecsv`, obj);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const fetchFile = async (templateId) => {
     try {
       const response = await fetchFilesAssociatedWithTemplate(templateId);
@@ -33,10 +47,8 @@ const Merge = () => {
         label: item.csvFile,
         value: item.id,
       }));
-     
-      
+
       setOptions(csvOptions);
-  
     } catch (error) {
       console.error("Error fetching files:", error);
     }
@@ -105,6 +117,7 @@ const Merge = () => {
           <button
             type="button"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all flex justify-center items-center gap-2"
+            onClick={mergeHandler}
           >
             <MdCompareArrows size={23} /> Compare & Merge
           </button>
