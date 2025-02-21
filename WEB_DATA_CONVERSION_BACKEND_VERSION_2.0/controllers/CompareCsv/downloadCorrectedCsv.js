@@ -42,20 +42,6 @@ const DownloadCorrectedCsv = async (req, res) => {
 
     const jsonData = await csvToJson(originalFilePath);
     const errorData = await csvToJson(errorFilePath);
-
-    // errorData.forEach((errorRow) => {
-    //   const primaryKey = errorRow["PRIMARY KEY"];
-    //   const primary = errorRow["PRIMARY"];
-    //   const columnName = errorRow["COLUMN_NAME"];
-    //   const correctedValue = errorRow["CORRECTED"];
-    //   let findVar = jsonData.find((item) => item[primaryKey] == primary.trim());
-
-    //   if (findVar) {
-    //     findVar[columnName] = correctedValue;
-    //   } else {
-    //     console.log(`No matching row found for primary key '${primary},${primaryKey}'`);
-    //   }
-    // });
     errorData.forEach((errorRow) => {
       const primaryKey = errorRow["PRIMARY KEY"];
       const primary = errorRow["PRIMARY"];

@@ -38,8 +38,18 @@ const menuItems = [
   // {
   //   name: "Part A",
   //   permission: "resultGenerator",
+
   //   href: "PartA",
   // },
+
+  //   href: "partA",
+  // },
+  {
+    name: "Merge",
+    permission: "resultGenerator",
+    href: "merge",
+  },
+ 
 ];
 
 export default function Navbar() {

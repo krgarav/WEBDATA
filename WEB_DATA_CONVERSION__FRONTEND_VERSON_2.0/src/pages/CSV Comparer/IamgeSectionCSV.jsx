@@ -18,13 +18,13 @@ const   ImageSectionCSV = ({
         position: "relative",
         border: "2px solid gray", 
         width: "48rem",
-        height: "23rem",
+        height: "40vh",
         overflow: "auto",
         scrollbarWidth: "thin",
       }}
     >
       <img
-        src={`http:\\\\localhost:4000\\images\\${correctionData?.previousData.IMAGE_NAME}`}
+        src={`http:\\\\192.168.1.17:4000\\images\\${correctionData?.previousData.IMAGE_NAME}`}
         alt="Selected"
         ref={imageRef}
         style={{
