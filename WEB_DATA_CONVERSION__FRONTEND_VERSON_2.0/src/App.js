@@ -109,6 +109,7 @@ function App() {
                   <Route path="/partA" element={<PartA />} />
                 </>
               )} */}
+
               {/* ------------------Merge------------------ */}
             {(role === "Admin" ||
               role === "Moderator") && (
@@ -116,6 +117,7 @@ function App() {
                   <Route path="/merge" element={<Merge />} />
                 </>
               )}
+
             {/* -----------------csvuploader------------------- */}
             {(role === "Admin" ||
               role === "Moderator" ||

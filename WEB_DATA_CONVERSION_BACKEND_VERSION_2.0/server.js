@@ -151,7 +151,6 @@ MappedData.belongsTo(Templete, {
 });
 
 
-
 sequelize
   .sync({ force: !true })
   .then(async () => {
