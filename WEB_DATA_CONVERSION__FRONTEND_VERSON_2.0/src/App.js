@@ -28,6 +28,7 @@ import CsvTaskStatus from "./pages/CsvTaskStatus/CsvTaskStatus";
 import Settings from "./pages/Settings/Settings";
 import UserCorrectionData from "./pages/CSV Comparer/UserCorrectionData";
 import PartA from "./pages/PartA/PartA";
+import Merge from "./pages/Merge/Merge";
 
 function App() {
   const datactx = useContext(dataContext);
@@ -102,10 +103,17 @@ function App() {
                 </>
               )}
               {/* ------------------PartA------------------ */}
-            {(role === "Admin" ||
+            {/* {(role === "Admin" ||
               role === "Moderator") && (
                 <>
                   <Route path="/partA" element={<PartA />} />
+                </>
+              )} */}
+              {/* ------------------Merge------------------ */}
+            {(role === "Admin" ||
+              role === "Moderator") && (
+                <>
+                  <Route path="/merge" element={<Merge />} />
                 </>
               )}
             {/* -----------------csvuploader------------------- */}
