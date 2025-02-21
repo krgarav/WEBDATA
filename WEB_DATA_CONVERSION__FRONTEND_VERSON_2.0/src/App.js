@@ -102,12 +102,12 @@ function App() {
                 </>
               )}
               {/* ------------------PartA------------------ */}
-            {(role === "Admin" ||
+            {/* {(role === "Admin" ||
               role === "Moderator") && (
                 <>
                   <Route path="/partA" element={<PartA />} />
                 </>
-              )}
+              )} */}
             {/* -----------------csvuploader------------------- */}
             {(role === "Admin" ||
               role === "Moderator" ||

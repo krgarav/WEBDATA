@@ -29,6 +29,7 @@ const verifyUpdatedDetails = require("../controllers/Templete/verifyUpdatedDetai
 const getCsvInfoData = require("../controllers/Templete/getCsvInfo");
 const TaskStatusDetails = require("../controllers/Templete/taskStatusDetails");
 const getUserTasksDetails = require('../controllers/Templete/getUserTasksDetails')
+const getCsvHeaderByTemplate = require('../controllers/Templete/getCsvHeaderByTemplate');
 const router = express.Router();
 
 router.get("/get/templetedata/:id", authMiddleware, getTempleteData); //templeteId
@@ -41,6 +42,7 @@ router.get("/get/mappeddata/:id", authMiddleware, getMappedData); //templateId
 router.get("/formcheckeddata", authMiddleware, getFormCheckedData); //fileId
 router.get("/getcsvinfo/:id", authMiddleware, getCsvInfoData); //templateId
 router.get('/get/usertaskdetails/:email', authMiddleware, getUserTasksDetails)
+router.get('/get/csvheader/:template_id', authMiddleware, getCsvHeaderByTemplate)
 
 
 router.post("/updated/details", authMiddleware, updatedDetails); //userId
