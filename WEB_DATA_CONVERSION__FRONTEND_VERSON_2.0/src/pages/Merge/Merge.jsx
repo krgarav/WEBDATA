@@ -17,7 +17,7 @@ const Merge = () => {
           <div className="sm:w-80 md:w-96">
             <NewSelect
               label="Select Template"
-              //   onTemplateSelect={setSelectedTemplate}
+              //   onTemplateSelect={setSelectedTemplate }
             />
           </div>
         </div>

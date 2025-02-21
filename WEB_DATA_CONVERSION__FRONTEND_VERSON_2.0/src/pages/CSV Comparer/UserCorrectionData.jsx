@@ -862,16 +862,52 @@ const UserCorrectionData = () => {
                   imageUrls={imageUrls}
                 />
                 <div>
-                  <ImageSectionCSV
-                    imageContainerRef={imageContainerRef}
-                    currentImageIndex={currentImageIndex}
-                    imageUrls={imageUrls}
-                    imageRef={imageRef}
-                    correctionData={correctionData}
-                    zoomLevel={zoomLevel}
-                    selectedCoordintes={selectedCoordintes}
-                    templateHeaders={templateHeaders}
-                  />
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <button
+                      className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
+                      onClick={() =>
+                        //   onImageHandler(
+                        //     "prev",
+                        //     currentIndex,
+                        //     filteredArray,
+                        //     currentTaskData
+                        //   )
+                        onPrevHandler("prev", currentIndex)
+                      }
+                      endIcon={<ArrowBackIosIcon />}
+                    >
+                      <ArrowBackIosIcon />
+                    </button>
+                    <div className="h-20vh">
+
+                    
+                    <ImageSectionCSV
+                      imageContainerRef={imageContainerRef}
+                      currentImageIndex={currentImageIndex}
+                      imageUrls={imageUrls}
+                      imageRef={imageRef}
+                      correctionData={correctionData}
+                      zoomLevel={zoomLevel}
+                      selectedCoordintes={selectedCoordintes}
+                      templateHeaders={templateHeaders}
+                    />
+                    </div>
+                    <button
+                        className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
+                        onClick={() =>
+                          // onImageHandler(
+                          //   "next",
+                          //   currentIndex,
+                          //   filteredArray,
+                          //   currentTaskData
+                          // )
+                          onNextHandler("next", currentIndex)
+                        }
+                        endIcon={<ArrowForwardIosIcon />}
+                      >
+                       <ArrowForwardIosIcon />
+                      </button>
+                  </div>
 
                   <section>
                     <div className=" flex justify-end mt-5 mr-5">
@@ -881,16 +917,16 @@ const UserCorrectionData = () => {
                             onClick={() => onTaskCompleteHandler()}
                             className="px-4 py-2 bg-teal-600 mx-2 text-white rounded-3xl shadow hover:bg-teal-700"
                           >
-                            Task Completed
+                            Submit task
                           </button>
                         </div>
                       )}
-                      <button
+                      {/* <button
                         onClick={() => navigate("/datamatching")}
                         className=" px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
                       >
                         Back
-                      </button>
+                      </button> */}
                       {/* <Button
                     onClick={onCsvUpdateHandler}
                     variant="contained"
@@ -899,7 +935,7 @@ const UserCorrectionData = () => {
                     update
                   </Button> */}
 
-                      <button
+                      {/* <button
                         className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
                         onClick={() =>
                           //   onImageHandler(
@@ -928,7 +964,7 @@ const UserCorrectionData = () => {
                         endIcon={<ArrowForwardIosIcon />}
                       >
                         Next
-                      </button>
+                      </button> */}
                     </div>
                     <CorrectionField
                       csvCurrentData={csvCurrentData} //whole row data
