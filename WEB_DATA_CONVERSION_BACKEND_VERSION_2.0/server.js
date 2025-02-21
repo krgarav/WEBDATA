@@ -15,8 +15,6 @@ const UpdatedData = require("./models/TempleteModel/updatedData");
 const Settings = require("./routes/settings")
 
 
-
-
 const upload = require("./routes/upload");
 const path = require("path");
 const bcrypt = require("bcryptjs");
@@ -149,7 +147,6 @@ MappedData.belongsTo(Templete, {
   },
   onUpdate: "CASCADE",
 });
-
 
 
 sequelize

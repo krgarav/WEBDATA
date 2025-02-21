@@ -38,6 +38,10 @@ const menuItems = [
   // {
   //   name: "Part A",
   //   permission: "resultGenerator",
+
+  //   href: "PartA",
+  // },
+
   //   href: "partA",
   // },
   {
@@ -45,6 +49,7 @@ const menuItems = [
     permission: "resultGenerator",
     href: "merge",
   },
+ 
 ];
 
 export default function Navbar() {

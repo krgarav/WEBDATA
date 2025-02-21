@@ -19,10 +19,12 @@ const UploadSection = ({
   csvFile,
   onCsvFileHandler,
   imageFolder,
-  onSaveFilesHandler,
+  setOpenPreFile,
+  onGetCsvInfoHandler,
+  onFileHeaderDetailsHandler
 }) => {
 
- 
+
   return (
     <div className="pt-4 xl:pt-0 bg-gradient-to-r from-blue-400 to-blue-600">
       <div className="xl:flex justify-center items-center gap-5 mx-5 pt-20">
@@ -170,7 +172,6 @@ const UploadSection = ({
               htmlFor="image-folder-upload"
             >
               <span>Upload Zip file: {imageFolder?.name}</span>
-
               <input
                 id="image-folder-upload"
                 type="file"
@@ -185,10 +186,22 @@ const UploadSection = ({
           <p className="text-white font-medium my-3">Supported files: .zip</p>
         </div>
       </div>
-      <div className="my-6 w-full flex justify-center">
+      <div className="my-6 w-full flex justify-center gap-4">
+        {selectedId &&
+          <button
+            onClick={() => {
+              setOpenPreFile(true)
+              onGetCsvInfoHandler()
+            }}
+            type="button"
+            className="bg-teal-600 px-8 text-white py-3 text-xl font-medium rounded-3xl"
+          >
+            PRE FILES
+          </button>
+        }
         <button
           type="submit"
-          onClick={onSaveFilesHandler}
+          onClick={onFileHeaderDetailsHandler}
           className="bg-teal-600 px-8 text-white py-3 text-xl font-medium rounded-3xl"
         >
           Save Files
