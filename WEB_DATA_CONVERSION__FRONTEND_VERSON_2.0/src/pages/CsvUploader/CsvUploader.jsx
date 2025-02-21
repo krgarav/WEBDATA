@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import dataContext from "../../Store/DataContext";
 import ModalWithLoadingBar from "../../UI/Modal";
+import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
+
 import {
   onGetTemplateHandler,
   onGetVerifiedUserHandler,
@@ -12,7 +14,7 @@ import {
 import TemplateRemove from "./TemplateRemove";
 import TemplateEdit from "./TemplateEdit";
 import UploadSection from "./UploadSection";
-
+import PreFilesModal from "./PreFilesModal";
 
 const CsvUploader = () => {
   const [csvFile, setCsvFile] = useState(null);
@@ -27,6 +29,9 @@ const CsvUploader = () => {
   const [removeId, setRemoveId] = useState(null);
   const [removeModal, setRemoveModal] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [openPreFile, setOpenPreFile] = useState(false);
+  const [confirmation, setConfirmationModal] = useState(false);
+  const [preFiles, setPreFiles] = useState([]);
   const dataCtx = useContext(dataContext);
   const [progress, setProgress] = useState(0);
   const navigate = useNavigate();
@@ -156,30 +161,8 @@ const CsvUploader = () => {
   };
 
   const onSaveFilesHandler = async () => {
-    if (!selectedId) {
-      toast.error("Please select the template name.");
-      return;
-    }
 
-    if (currentUser.role !== "Admin") {
-      toast.warning("Access denied. Admins only.");
-      return;
-    }
-
-    if (imageNames.length !== data.pageCount) {
-      toast.error("Please fill in all image fields.");
-      return;
-    }
-
-    if (!csvFile) {
-      toast.error("Please upload the CSV file.");
-      return;
-    }
-
-    if (!imageFolder) {
-      toast.error("Please upload the image folder.");
-      return;
-    }
+    setConfirmationModal(false);
 
     const chunkSize = 2 * 1024 * 1024 * 1024 - 1; // 1 byte less than 2GB
     const totalChunks = Math.ceil(imageFolder.size / chunkSize);
@@ -221,9 +204,6 @@ const CsvUploader = () => {
       setLoading(false);
     }
   };
-
-
-
 
   const onTemplateEditHandler = async (id) => {
     try {
@@ -284,6 +264,121 @@ const CsvUploader = () => {
     }
   };
 
+  const onGetCsvInfoHandler = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_IP}/getcsvinfo/${selectedId}`,
+        {
+          headers: {
+            token: token,
+          },
+        }
+      );
+      setPreFiles(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onDownloadFileHandler = async (file) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_IP}/download/csv/${file.id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            token: token,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+
+      a.download = file.csvFile;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+    }
+  };
+
+  const onFileHeaderDetailsHandler = async () => {
+    if (!selectedId) {
+      toast.error("Please select the template name.");
+      return;
+    }
+
+    if (currentUser.role !== "Admin") {
+      toast.warning("Access denied. Admins only.");
+      return;
+    }
+
+    if (imageNames.length !== data.pageCount) {
+      toast.error("Please fill in all image fields.");
+      return;
+    }
+
+    if (!csvFile) {
+      toast.error("Please upload the CSV file.");
+      return;
+    }
+
+    if (!imageFolder) {
+      toast.error("Please upload the image folder.");
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_IP}/get/csvheader/${selectedId}`,
+        {
+          headers: { token },
+        }
+      );
+
+      const expectedHeaders = response.data || [];
+
+      // If expectedHeaders is empty, skip the validation
+      if (expectedHeaders.length === 0) {
+        setConfirmationModal(true);
+        return;
+      }
+      // Read the uploaded CSV file and extract headers
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const csvText = event.target.result;
+        const csvRows = csvText.split("\n").map(row => row.trim());
+        const uploadedHeaders = csvRows[0]?.split(",").map(header => header.trim()) || [];
+
+        // Check if headers match
+        const isMatching = expectedHeaders.length === uploadedHeaders.length &&
+          expectedHeaders.every((header, index) => header === uploadedHeaders[index]);
+
+        if (!isMatching) {
+          toast.error("Please upload the correct CSV file. Headers do not match.");
+          return;
+        }
+        setConfirmationModal(true);
+      };
+
+      reader.readAsText(csvFile);
+
+    } catch (error) {
+      console.log(error);
+      toast.error("Error fetching CSV headers.");
+    }
+  };
+
 
   return (
     <div className="flex justify-center items-center h-auto w-full ">
@@ -307,7 +402,9 @@ const CsvUploader = () => {
             csvFile={csvFile}
             onCsvFileHandler={onCsvFileHandler}
             imageFolder={imageFolder}
-            onSaveFilesHandler={onSaveFilesHandler}
+            setOpenPreFile={setOpenPreFile}
+            onGetCsvInfoHandler={onGetCsvInfoHandler}
+            onFileHeaderDetailsHandler={onFileHeaderDetailsHandler}
           />
         </div>
 
@@ -333,6 +430,21 @@ const CsvUploader = () => {
           onClose={() => { }}
           progress={progress}
           message="Uploading csv and image zip the files..."
+        />
+
+        <PreFilesModal
+          onDownloadFileHandler={onDownloadFileHandler}
+          files={preFiles}
+          setOpenPreFile={setOpenPreFile}
+          openPreFile={openPreFile}
+        />
+
+        <ConfirmationModal
+          confirmationModal={confirmation}
+          onSubmitHandler={onSaveFilesHandler}
+          setConfirmationModal={setConfirmationModal}
+          heading="upload files confirmation"
+          message={"This is for file upload"}
         />
       </div>
     </div>

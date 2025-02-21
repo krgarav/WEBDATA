@@ -18,6 +18,7 @@ const CorrectionField = ({
   const [visited, setVisited] = useState(false);
   const [visitedCount, setVisitedCount] = useState(0);
   const [visitedRows, setVisitedRows] = useState({}); // Track visited rows
+  const inputRefs = useRef([]);
   // const firstInputRef = useRef(null); 
 
   // useEffect(() => {
@@ -55,6 +56,46 @@ const CorrectionField = ({
     setVisitedCount(0)
     setVisitedRows({})
   }, [correctionData?.previousData?.DATA]);
+  useEffect(() => {
+    const handleAltSKey = (e) => {
+      
+      if (e.altKey && e.key.toLowerCase() === "s") {
+        e.preventDefault(); // Prevents browser shortcuts (if any)
+        document.getElementById("update").click();
+      }
+    };
+  
+    document.addEventListener("keydown", handleAltSKey);
+    return () => document.removeEventListener("keydown", handleAltSKey);
+  }, []);
+ useEffect(() => {
+  handleVisit(0);
+ }, []);
+  useEffect(() => {
+    const handleTabKey = (e) => {
+      if (e.key === "Tab") {
+        e.preventDefault(); // Prevent default tab behavior
+  
+        const focusableInputs = inputRefs.current.filter((el) => el);
+        const currentIndex = focusableInputs.indexOf(document.activeElement);
+  
+        if (e.shiftKey) {
+          
+
+          // Shift + Tab (Move Backward)
+          const prevIndex = (currentIndex - 1 + focusableInputs.length) % focusableInputs.length;
+          focusableInputs[prevIndex]?.focus();
+        } else {
+          // Tab (Move Forward)
+          const nextIndex = (currentIndex + 1) % focusableInputs.length;
+          focusableInputs[nextIndex]?.focus();
+        }
+      }
+    };
+  
+    document.addEventListener("keydown", handleTabKey);
+    return () => document.removeEventListener("keydown", handleTabKey);
+  }, []);
   useEffect(() => {}, []);
   // console.log(inputValue);
   const handleInputChange = (e, key) => {
@@ -145,6 +186,7 @@ const CorrectionField = ({
               imageFocusHandler(dataItem.COLUMN_NAME); // First function
               handleVisit(index); // Second function
             }} // Mark row as visited
+             ref={(el) => (inputRefs.current[index] = el)}
           />
 
           {/* <div className="flex justify-center items-center">
@@ -192,6 +234,7 @@ const CorrectionField = ({
         <button
           className="px-6 py-2 bg-teal-600 rounded-lg text-white"
           onClick={onUpdateHandler}
+          id="update"
         >
           Update
         </button>
@@ -217,7 +260,7 @@ const CorrectionField = ({
               </div>
             </div>
           </div>
-          <div className="h-[160px] overflow-y-auto text-center">
+          <div className="h-[180px] overflow-y-auto text-center">
             {errorData}
           </div>
         </div>

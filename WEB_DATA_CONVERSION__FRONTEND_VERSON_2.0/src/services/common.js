@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 // export const SERVER_IP = "http://192.168.1.60:4000";
-export const REACT_APP_IP = "localhost";
+export const REACT_APP_IP = "192.168.1.16";
 
 
 export const onGetTemplateHandler = async () => {
