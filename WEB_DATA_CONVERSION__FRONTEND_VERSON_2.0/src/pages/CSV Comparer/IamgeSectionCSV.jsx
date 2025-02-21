@@ -1,4 +1,5 @@
 import React from "react";
+import { REACT_APP_IP } from "../../services/common";
 
 const   ImageSectionCSV = ({
   imageContainerRef,
@@ -10,6 +11,7 @@ const   ImageSectionCSV = ({
   selectedCoordintes,
   templateHeaders,
 }) => {
+
   return (
     <div
       ref={imageContainerRef} 
@@ -24,7 +26,7 @@ const   ImageSectionCSV = ({
       }}
     >
       <img
-        src={`http:\\\\192.168.1.17:4000\\images\\${correctionData?.previousData.IMAGE_NAME}`}
+        src={`http://${REACT_APP_IP}:4000/images/${correctionData?.previousData.IMAGE_NAME}`}
         alt="Selected"
         ref={imageRef}
         style={{

@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NewSelect from "../../UI/NewSelect";
 import { MdCompareArrows } from "react-icons/md";
 import Multiselect from "multiselect-react-dropdown";
+import {
+  fetchFilesAssociatedWithTemplate,
+  onGetAllTasksHandler,
+} from "../../services/common";
+import { use } from "react";
 
 const Merge = () => {
-  const options = [
-    { name: "Option 1", id: 1 },
-    { name: "Option 2", id: 2 },
-    { name: "Option 3", id: 3 },
-    { name: "Option 4", id: 4 },
-  ];
-
+  const [options, setOptions] = useState([]);
+  const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedValues, setSelectedValues] = useState([]);
 
   const handleSelectAll = () => {
@@ -20,7 +20,27 @@ const Merge = () => {
       setSelectedValues(options);
     }
   };
+  useEffect(() => {
+    if (selectedTemplate) {
+      fetchFile(selectedTemplate);
+    }
+  }, [selectedTemplate]);
+  const fetchFile = async (templateId) => {
+    try {
+      const response = await fetchFilesAssociatedWithTemplate(templateId);
 
+      const csvOptions = response.map((item) => ({
+        label: item.csvFile,
+        value: item.id,
+      }));
+     
+      
+      setOptions(csvOptions);
+  
+    } catch (error) {
+      console.error("Error fetching files:", error);
+    }
+  };
   return (
     <div className="h-[100vh] pt-24 overflow-y-hidden bg-blue-500 flex justify-center items-start">
       <div className="my-auto bg-white p-10 rounded-3xl mx-10">
@@ -34,7 +54,8 @@ const Merge = () => {
           <div className="sm:w-80 md:w-96">
             <NewSelect
               label="Select Template"
-              //   onTemplateSelect={setSelectedTemplate }
+              onTemplateSelect={setSelectedTemplate}
+              values={selectedTemplate}
             />
           </div>
         </div>
@@ -61,7 +82,7 @@ const Merge = () => {
               </button>
               <Multiselect
                 options={options}
-                displayValue="name"
+                displayValue="label"
                 selectedValues={selectedValues}
                 onSelect={setSelectedValues}
                 onRemove={setSelectedValues}
