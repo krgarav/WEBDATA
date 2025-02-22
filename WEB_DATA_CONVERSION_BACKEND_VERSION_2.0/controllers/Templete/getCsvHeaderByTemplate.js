@@ -18,7 +18,7 @@ const getCsvHeaderByTemplate = async (req, res, next) => {
         const fileData = await Files.findOne({ where: { templeteId: template_id } });
 
         if (!fileData) {
-            return res.status(404).json({ error: "File not found" });
+            return res.status(404).json({ error: "File not found",data: [] });
         }
 
         const fileName = fileData.csvFile;
