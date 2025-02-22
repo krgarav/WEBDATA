@@ -8,10 +8,11 @@ import {
 import Multiselect from "multiselect-react-dropdown";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
+const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
   const [merge, setMerge] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
   const [options, setOptions] = useState([]);
+  const [tableName, setTableName] = useState(table);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
         }));
         setOptions(csvOptions);
       }
-      // console.log(response);
+     
     };
     fetchOptions();
   }, [isOpen]);
@@ -42,8 +43,12 @@ const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
     };
     try {
       const res = await axios.post(`http://${REACT_APP_IP}:4000/mergecsv`, obj);
-
-      console.log(res);
+      if (res.data) {
+        toast.success(res.data.message);
+        setMerge(false);
+        setTableName(res.data.tableName);
+      }
+    
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.error);
@@ -57,19 +62,20 @@ const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
     }
   };
   const duplicateHandler = async () => {
-    console.log(tableName);
+    // console.log(tableName);
+    // // templateId
     try {
-        const response = await axios.get(`http://${REACT_APP_IP}:4000/gettabledata/${tableName}`);
-        
-        const headers = response.data.headers
-
-        console.log(headers);
-        navigate("/merge/duplicate", { state: { headers, tableName } });
-
-    } catch (error) {
-        
-    }
+  
     
+      const response = await axios.get(
+        `http://${REACT_APP_IP}:4000/gettabledata/${templateId}`
+      );
+
+      const headers = response.data.headers;
+
+      console.log(headers);
+      navigate("/merge/duplicate", { state: { headers, tableName,templateId } });
+    } catch (error) {}
   };
 
   return (

@@ -46,9 +46,9 @@ async function createDynamicTable(headers) {
   });
 
   await DynamicModel.sync();
-// Extract the actual table name from the model
+  // Extract the actual table name from the model
   const actualTableName = DynamicModel.getTableName();
-  return { tableName:actualTableName, DynamicModel };
+  return { tableName: actualTableName, DynamicModel };
 }
 
 // Function to read CSV files and insert into the dynamic table
@@ -97,6 +97,8 @@ async function mergeCSVFiles(fileNames) {
 
     try {
       await new Promise((resolve, reject) => {
+        let rowIndex = 0; // Row counter
+    
         fs.createReadStream(filePath)
           .pipe(csv())
           .on("headers", (headers) => {
@@ -107,15 +109,22 @@ async function mergeCSVFiles(fileNames) {
             }
           })
           .on("data", (row) => {
+            rowIndex++; // Increment row count
+            
+            if (rowIndex === 2) {
+              // Skip second row
+              return;
+            }
+    
             let formattedRow = {};
-
+    
             // Only keep columns that exist in the first file
             if (firstFileHeaders) {
               firstFileHeaders.forEach((header) => {
                 formattedRow[header] = row[header] ?? null; // Fill missing values with null
               });
             }
-
+    
             mergedRecords.push(formattedRow);
           })
           .on("end", resolve)
@@ -124,6 +133,7 @@ async function mergeCSVFiles(fileNames) {
     } catch (error) {
       console.error(`Error processing file ${fileName}:`, error.message);
     }
+    
   }
 
   return mergedRecords;
@@ -139,8 +149,6 @@ exports.mergeCSV = async (req, res) => {
       return res.status(404).json({ message: "Template not found" });
     }
 
-
-    
     if (!files || !Array.isArray(files) || files.length === 0) {
       return res.status(400).json({ message: "Invalid file input" });
     }
@@ -159,7 +167,6 @@ exports.mergeCSV = async (req, res) => {
     // Process merged CSV data and insert into SQL table
     const tableName = await processAndInsertCSV(mergedData);
     // **Update the Template with the new table name**
-    
 
     template.mergedTableName = tableName; // Assign the table name to the template
     await template.save(); // Save the changes
@@ -168,7 +175,8 @@ exports.mergeCSV = async (req, res) => {
         .status(400)
         .json({ message: "No valid data found after merging CSV files" });
     }
-    res.json({ message: JSON.parse(JSON.stringify(mergedData)) });
+
+    return res.status(200).json({ message: "Merged Files Successfully",tableName });
   } catch (error) {
     console.error("Error merging CSV files:", error);
     res

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { REACT_APP_IP } from "../../services/common";
 import axios from "axios";
 
@@ -7,25 +7,33 @@ const MergeDuplicateDetect = () => {
   const [headers, setHeaders] = useState([]);
 
   const location = useLocation();
+  const navigate = useNavigate();
 
-  const {  tableName } = location.state || {};
+  const { tableName } = location.state || {};
   useEffect(() => {
-    const {headers} = location.state;
-    if(headers){
+    const { headers } = location.state;
+    if (headers) {
       setHeaders(headers);
     }
   }, []);
-  const headerHandler = async(header) => {
-   try {
-    const obj={
-      header,
-      tableName
-    }
-    const response = await axios.post(`http://${REACT_APP_IP}:4000/checkduplicates`,obj);
-   } catch (error) {
-    
-   }
-    console.log(header,tableName);
+  const headerHandler = async (header) => {
+    try {
+      const obj = {
+        header,
+        tableName,
+      };
+      const response = await axios.post(
+        `http://${REACT_APP_IP}:4000/checkduplicates`,
+        obj
+      );
+      const { data } = response;
+      if (data.duplicates.length > 0) {
+        const duplicates = data.duplicates
+        navigate("/merge/duplicate/data", { state: {duplicates ,header} });
+      }
+      console.log(response);
+    } catch (error) {}
+    console.log(header, tableName);
   };
   const allHeaders = headers.map((header) => {
     return (
@@ -38,8 +46,9 @@ const MergeDuplicateDetect = () => {
           </div>
         </div>
         <div className="whitespace-nowrap px-4 py-4 text-right">
-          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
-          onClick={()=>headerHandler(header)}
+          <button
+            className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+            onClick={() => headerHandler(header)}
           >
             Check
           </button>
@@ -70,9 +79,7 @@ const MergeDuplicateDetect = () => {
                       </div>
                     </div>
                     <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px] w-full">
-                      
                       {allHeaders}
-                      
                     </div>
                   </div>
                 </div>

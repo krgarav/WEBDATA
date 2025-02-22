@@ -1,7 +1,11 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import { MdDataSaverOn } from "react-icons/md";
-import { fetchLatestTaskData, REACT_APP_IP } from "../../services/common";
+import {
+  fetchLatestTaskData,
+  fetchTemplateFormData,
+  REACT_APP_IP,
+} from "../../services/common";
 import { toast } from "react-toastify";
 
 const CorrectionField = ({
@@ -36,7 +40,7 @@ const CorrectionField = ({
   const [filteredData, setFilterData] = useState(
     correctionData?.previousData?.DATA
   );
-
+  const [updatedData, setUpdatedData] = useState([]);
   // const filteredData = correctionData?.previousData?.DATA
   const PRIMARY = correctionData?.previousData?.PRIMARY;
   const PRIMARY_KEY = correctionData?.previousData?.PRIMARY_KEY;
@@ -52,6 +56,43 @@ const CorrectionField = ({
     }, {});
     setInputValue(initialValues);
   }, [filteredData, PRIMARY]);
+
+  useEffect(() => {
+    const processTemplateData = async () => {
+      try {
+        if (!taskData?.templeteId || filteredData.length === 0) return;
+
+        const templateId = taskData.templeteId;
+
+        // Fetch form field data for each COLUMN_NAME in parallel
+        const updatedData = await Promise.all(
+          filteredData.map(async (item) => {
+            try {
+              const isFormField = await fetchTemplateFormData(
+                templateId,
+                item.COLUMN_NAME
+              );
+              const type = isFormField?.templateData?.fieldType || "formField"; // Use default "formField" if API fails or returns undefined
+              return { ...item, type };
+            } catch (error) {
+              console.error(
+                `Error fetching data for ${item.COLUMN_NAME}:`,
+                error
+              );
+              return { ...item, type: "formField" }; // Fallback to "formField"
+            }
+          })
+        );
+
+        setUpdatedData(updatedData);
+      } catch (error) {
+        console.error("Error processing template data:", error);
+      }
+    };
+
+    processTemplateData();
+  }, [filteredData]);
+
   useEffect(() => {
     setFilterData(correctionData?.previousData?.DATA);
     setVisitedCount(0);
@@ -172,11 +213,16 @@ const CorrectionField = ({
       toast.error(error.response.data.message);
     }
   };
-  // console.log(filteredData);
-  const errorData = filteredData?.map((dataItem, index) => {
+
+  const errorData = updatedData?.map((dataItem, index) => {
     const key = `${PRIMARY?.trim()}-${dataItem?.COLUMN_NAME?.trim()}`;
     // const updatedValue = dataItem.CORRECTED||"Null";
-
+    // const questionAllowedValues = ["A", "B", "C", "D", "*", " "];
+    // const formAllowed = //allvalues
+    // Allowed values for different field types
+    const questionAllowedValues = ["A", "B", "C", "D", "*", " "];
+    const numberRegex = /^[0-9]*$/; // Allows only numbers (0-9)
+    // const allowedValues = dataItem.type=== "formField"?questionAllowedValues  : "questionsField";
     return (
       <div
         key={index}
@@ -200,10 +246,14 @@ const CorrectionField = ({
             }
             // defaultValue={dataItem?.FILE_1_DATA}
             onChange={(e) => {
-              const allowedValues = ["A", "B", "C", "D", "*", " "]; // Allowed characters
               const input = e.target.value.toUpperCase(); // Convert input to uppercase
 
-              if (input === "" || allowedValues.includes(input)) {
+              // Validate based on field type
+              if (
+                (dataItem.type === "formField" && numberRegex.test(input)) || // Allow only numbers for form fields
+                (dataItem.type !== "formField" &&
+                  (input === "" || questionAllowedValues.includes(input))) // Allow question field values
+              ) {
                 handleInputChange(
                   { ...e, target: { ...e.target, value: input } },
                   key
@@ -215,7 +265,7 @@ const CorrectionField = ({
               handleVisit(index); // Second function
             }} // Mark row as visited
             ref={(el) => (inputRefs.current[index] = el)}
-            maxLength={1}
+            maxLength={dataItem.type !== "formField" && 1}
           />
 
           {/* <div className="flex justify-center items-center">

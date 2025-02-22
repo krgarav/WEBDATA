@@ -202,6 +202,19 @@ const ImageScanner = () => {
         );
         return;
       }
+      const allSelectedCoordinates = selectedCoordinates.filter(
+        (item) => item.fieldType === "questionsField"
+      );
+      if (allSelectedCoordinates.length > 0) {
+        const existingField = questionRange.min + "--" + questionRange.max;
+        const existingFieldData = allSelectedCoordinates.find(
+          (item) => item.attribute === existingField
+        );
+        if (existingFieldData) {
+          toast.warning("This field already exists.");
+          return;
+        }
+      }
     } else {
       if (fieldType === "formField" && inputField.includes("-")) {
         toast.warning("Please refrain from using hyphens (-) in this field.");
@@ -226,6 +239,21 @@ const ImageScanner = () => {
           toast.warning(
             "Ensure the minimum value is less than the maximum value."
           );
+          return;
+        }
+       
+      }
+
+      const allSelectedCoordinates = selectedCoordinates.filter(
+        (item) => item.fieldType === "formField"
+      );
+      if (allSelectedCoordinates.length > 0) {
+        const existingFieldData = allSelectedCoordinates.find(
+          (item) => item.attribute === inputField
+        );
+
+        if (existingFieldData) {
+          toast.warning("This field already exists.");
           return;
         }
       }
