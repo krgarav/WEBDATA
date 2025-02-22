@@ -30,6 +30,8 @@ import UserCorrectionData from "./pages/CSV Comparer/UserCorrectionData";
 import PartA from "./pages/PartA/PartA";
 import Merge from "./pages/Merge/Merge";
 import MergeDuplicateDetect from "./pages/MergeDuplicateDetect/MergeDuplicateDetect";
+import MergeDuplicateData from "./pages/MergeDuplicateDetect/MergeDuplicateData";
+import MergeEditDuplicateData from "./pages/MergeDuplicateDetect/MergeEditDuplicateData";
 
 function App() {
   const datactx = useContext(dataContext);
@@ -117,6 +119,8 @@ function App() {
                 <>
                   <Route path="/merge" element={<Merge />} />
                   <Route path="/merge/duplicate" element={<MergeDuplicateDetect />} />
+                  <Route path="/merge/duplicate/data" element={<MergeDuplicateData />} />
+                  <Route path="/merge/duplicate/data/edit" element={<MergeEditDuplicateData />} />
                 </>
               )}
 
