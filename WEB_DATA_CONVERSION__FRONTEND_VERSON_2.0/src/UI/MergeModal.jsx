@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FaCloudDownloadAlt } from "react-icons/fa";
 import axios from "axios";
 import {
   fetchFilesAssociatedWithTemplate,
@@ -10,6 +9,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
   const [merge, setMerge] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
   const [options, setOptions] = useState([]);
   const navigate = useNavigate();
@@ -59,17 +59,19 @@ const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
   const duplicateHandler = async () => {
     console.log(tableName);
     try {
-        const response = await axios.get(`http://${REACT_APP_IP}:4000/gettabledata/${tableName}`);
-        
-        const headers = response.data.headers
+      setLoading(true);
+      const response = await axios.get(
+        `http://${REACT_APP_IP}:4000/gettabledata/${tableName}`
+      );
 
-        console.log(headers);
-        navigate("/merge/duplicate", { state: { headers, tableName } });
+      const headers = response.data.headers;
 
+      console.log(headers);
+      navigate("/merge/duplicate", { state: { headers, tableName } });
     } catch (error) {
-        
+    } finally {
+      setLoading(false);
     }
-    
   };
 
   return (
@@ -91,14 +93,14 @@ const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
                   <h3
-                    className="text-2xl font-semibold leading-6 text-gray-700"
+                    className="text-2xl font-semibold leading-6 text-gray-700 text-center"
                     id="modal-title"
                   >
                     {message}
                   </h3>
-                  <div>
+                  <div className="mt-2 flex justify-center">
                     <span className="text-red-500">
-                      Total Files:{options.length}
+                      Total Files: {options.length}
                     </span>
                   </div>
                   <div className="mt-6 px-6">
@@ -152,7 +154,7 @@ const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
               <button
                 type="button"
                 onClick={() => onClose()}
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                className="mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-600 sm:mt-0 sm:w-auto bg-red-500 text-white"
               >
                 Cancel
               </button>
@@ -169,9 +171,35 @@ const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
                 <button
                   type="button"
                   onClick={duplicateHandler}
-                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                  className={`mt-3 w-full inline-flex justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600 sm:mt-0 sm:w-auto ${loading ? "bg-green-400":"bg-green-500"} text-white mx-2`}
                 >
-                  Show Duplicates
+                  {loading ? (
+                    <span className="flex">
+                      <svg
+                        className="ml-1 mr-2 h-5 w-5 animate-spin text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
+                      </svg>
+                      Showing...
+                    </span>
+                  ) : (
+                    <span className="w-30">Show Duplicates</span>
+                  )}
                 </button>
               )}
             </div>
