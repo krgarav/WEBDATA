@@ -1,19 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { REACT_APP_IP } from "../../services/common";
+import axios from "axios";
 
 const MergeDuplicateDetect = () => {
   const [headers, setHeaders] = useState([]);
 
   const location = useLocation();
 
-
+  const {  tableName } = location.state || {};
   useEffect(() => {
-    const state = location.state;
-    console.log(state);
-    if(state){
-      setHeaders(state);
+    const {headers} = location.state;
+    if(headers){
+      setHeaders(headers);
     }
   }, []);
+  const headerHandler = async(header) => {
+   try {
+    const obj={
+      header,
+      tableName
+    }
+    const response = await axios.post(`http://${REACT_APP_IP}:4000/checkduplicates`,obj);
+   } catch (error) {
+    
+   }
+    console.log(header,tableName);
+  };
   const allHeaders = headers.map((header) => {
     return (
       <div className="flex justify-between items-center">
@@ -25,7 +38,9 @@ const MergeDuplicateDetect = () => {
           </div>
         </div>
         <div className="whitespace-nowrap px-4 py-4 text-right">
-          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white">
+          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white"
+          onClick={()=>headerHandler(header)}
+          >
             Check
           </button>
         </div>

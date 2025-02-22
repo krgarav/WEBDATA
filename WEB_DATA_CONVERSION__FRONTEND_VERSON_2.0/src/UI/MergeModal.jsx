@@ -64,7 +64,8 @@ const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
         const headers = response.data.headers
 
         console.log(headers);
-        navigate("/merge/duplicate",{state:headers})
+        navigate("/merge/duplicate", { state: { headers, tableName } });
+
     } catch (error) {
         
     }

@@ -114,4 +114,15 @@ export const fetchFilesAssociatedWithTemplate = async (templateId) => {
   } catch (error) {
     console.log(error);
   }
-}
+};
+
+
+export const fetchLatestTaskData = async (taskId) => {
+  const token = JSON.parse(localStorage.getItem("userData"));
+
+  const response = await axios.get(
+    `http://${REACT_APP_IP}:4000/getTask/${taskId}`,
+    { headers: { token } }
+  );
+  return response.data; // Return latest task data
+};
