@@ -1,16 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { FaCloudDownloadAlt } from "react-icons/fa";
 import axios from "axios";
-import { REACT_APP_IP } from "../services/common";
-const MergeModal = ({ isOpen, onClose, taskId, message }) => {
+import {
+  fetchFilesAssociatedWithTemplate,
+  REACT_APP_IP,
+} from "../services/common";
+import Multiselect from "multiselect-react-dropdown";
+import { toast } from "react-toastify";
+const MergeModal = ({ isOpen, onClose, templateId, message }) => {
   const [merge, setMerge] = useState(false);
+  const [selectedValues, setSelectedValues] = useState([]);
+  const [options, setOptions] = useState([]);
+  //   const [files, setFiles] = useState(0);
   useEffect(() => {
-    if (message === "Files Merged Successfully") {
+    const fetchOptions = async () => {
+      const response = await fetchFilesAssociatedWithTemplate(templateId);
+      if (response) {
+        const csvOptions = response.map((item) => ({
+          label: item.csvFile,
+          value: item.id,
+        }));
+        setOptions(csvOptions);
+      }
+      // console.log(response);
+    };
+    fetchOptions();
+  }, [isOpen]);
+  useEffect(() => {
+    if (message !== "Template have merged file") {
       setMerge(true);
     } else {
       setMerge(false);
     }
-  }, []);
+  }, [message]);
+  const mergeHandler = async () => {
+    const obj = {
+      templateId: +templateId,
+      files: selectedValues.map((item) => item.value),
+    };
+    try {
+      const res = await axios.post(`http://${REACT_APP_IP}:4000/mergecsv`, obj);
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.error);
+    }
+  };
+  const handleSelectAll = () => {
+    if (selectedValues.length === options.length) {
+      setSelectedValues([]);
+    } else {
+      setSelectedValues(options);
+    }
+  };
   return (
     <div
       className="relative z-10"
@@ -35,34 +78,53 @@ const MergeModal = ({ isOpen, onClose, taskId, message }) => {
                   >
                     {message}
                   </h3>
+                  <div>
+                    <span className="text-red-500">
+                      Total Files:{options.length}
+                    </span>
+                  </div>
                   <div className="mt-6 px-6">
-                    <div className="flex justify-between my-3 gap-2">
-                      <h3
-                        className="text-lg font-semibold leading-6 text-blue-500 w-40"
-                        id="modal-title"
-                      >
-                        Error Corrected File
-                      </h3>
-                      <button
-                        className="rounded-3xl border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
-                        // onClick={ErrorCorrectedFileHandler}
-                      >
-                        <FaCloudDownloadAlt />
-                      </button>
-                    </div>
-                    <div className="flex justify-between my-3 gap-2">
-                      <h3
-                        className="text-lg font-semibold leading-6 text-blue-500 w-40"
-                        id="modal-title"
-                      >
-                        Corrected File
-                      </h3>
-                      <button
-                        className="rounded-3xl border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
-                        // onClick={CorrectedFileHandler}
-                      >
-                        <FaCloudDownloadAlt />
-                      </button>
+                    <div className="flex flex-row items-start gap-5 lg:gap-7 mt-5">
+                      <div className="sm:w-80 md:w-96">
+                        <div className="lg:w-96">
+                          <button
+                            onClick={handleSelectAll}
+                            className="w-40 text-start mb-2 flex gap-2"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selectedValues.length === options.length}
+                              readOnly
+                            />
+                            <span>
+                              {selectedValues.length === options.length
+                                ? "Deselect All"
+                                : "Select All"}
+                            </span>
+                          </button>
+                          <Multiselect
+                            options={options}
+                            displayValue="label"
+                            selectedValues={selectedValues}
+                            onSelect={setSelectedValues}
+                            onRemove={setSelectedValues}
+                            showCheckbox
+                            placeholder="Select CSV Files"
+                            style={{
+                              multiselectContainer: {
+                                maxHeight: "200px",
+                                overflowY: "auto",
+                                minHeight: "200px",
+                              }, // Set max height and scroll
+                              chips: { background: "#007bff" }, // Optional: Style selected items
+                              searchBox: {
+                                border: "1px solid #ccc",
+                                borderRadius: "5px",
+                              }, // Optional: Style input
+                            }}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -76,10 +138,10 @@ const MergeModal = ({ isOpen, onClose, taskId, message }) => {
               >
                 Cancel
               </button>
-              {merge && (
+              {merge && selectedValues.length > 0 && (
                 <button
                   type="button"
-                  onClick={() => onClose()}
+                  onClick={mergeHandler}
                   className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                 >
                   Merge

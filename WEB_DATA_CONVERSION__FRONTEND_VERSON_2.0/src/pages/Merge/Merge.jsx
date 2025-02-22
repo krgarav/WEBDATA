@@ -47,22 +47,7 @@ const Merge = () => {
       console.log(error);
     }
   }
-  const mergeHandler = async () => {
-    const obj = {
-      templateId: +selectedTemplate,
-      files: selectedValues.map((item) => item.value),
-    };
-    try {
-      const res = await axios.post(
-        `http://${REACT_APP_IP}:4000/mergecsv`,
-        obj
-      );
-     
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   const fetchFile = async (templateId) => {
     try {
       const response = await fetchFilesAssociatedWithTemplate(templateId);
@@ -84,7 +69,8 @@ const Merge = () => {
           isOpen={modals}
           onClose={() => setModals(false)}
           message={message}
-          mergeHandler={mergeHandler}
+          
+          templateId={selectedTemplate}
           // taskId={taskId}
         />
       )}
@@ -105,7 +91,7 @@ const Merge = () => {
               />
             </div>
           </div>
-          <div className="flex flex-row items-start gap-5 lg:gap-7 mt-5">
+          {/* <div className="flex flex-row items-start gap-5 lg:gap-7 mt-5">
             <p className="text-black font-semibold lg:text-xl sm:min-w-40 mb-2">
               Select CSV File :{" "}
             </p>
@@ -149,14 +135,14 @@ const Merge = () => {
                 />
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="flex justify-center items-center mt-10">
             <button
               type="button"
               class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all flex justify-center items-center gap-2"
               onClick={checkMergeHandler}
             >
-              <MdCompareArrows size={23} /> Compare & Merge
+              <MdCompareArrows size={23} /> Check Merge
             </button>
           </div>
         </div>
