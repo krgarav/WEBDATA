@@ -146,7 +146,7 @@ function writeJSONToCSV(filePath, jsonArray) {
 // };
 const csvUpdateData = async (req, res) => {
   try {
-    const { userName, email } = req.user;
+    const { email } = req.user;
     const { taskId } = req.params;
     const updates = req.body;
 
@@ -162,11 +162,8 @@ const csvUpdateData = async (req, res) => {
     const fileData = await Files.findOne({ where: { id: fileId } });
     if (!fileData) return res.status(404).json({ error: "File not found" });
 
-    const originalFilePath = path.resolve(
-      __dirname,
-      "../../csvFile",
-      fileData.csvFile
-    );
+    const originalFilePath = path.resolve(__dirname, "../../csvFile", fileData.csvFile);
+
     try {
       await fs.promises.access(originalFilePath);
     } catch (err) {
@@ -175,19 +172,21 @@ const csvUpdateData = async (req, res) => {
     }
 
     const resolvedErrorFilePath = path.resolve(errorFilePath);
-    if (
-      !(await fs.promises
-        .access(resolvedErrorFilePath)
-        .then(() => true)
-        .catch(() => false))
-    ) {
+    if (!(await fs.promises.access(resolvedErrorFilePath).then(() => true).catch(() => false))) {
       return res.status(400).json({ message: "Error file not found" });
     }
 
-    // Use lockfile to prevent simultaneous access
-    const releaseLock = await lockfile.lock(correctedCsvFilePath, {
-      stale: 5000,
-    });
+    // 🔒 Try acquiring lock, retrying if necessary
+    let releaseLock;
+    try {
+      releaseLock = await lockfile.lock(correctedCsvFilePath, {
+        stale: 5000,
+        retries: { retries: 3, minTimeout: 1000 }, // Retry 3 times with 1s gap
+      });
+    } catch (lockErr) {
+      console.error("Failed to acquire lock:", lockErr);
+      return res.status(423).json({ message: "File is locked. Try again later." });
+    }
 
     try {
       let jsonData = await csvToJson(originalFilePath);
@@ -195,10 +194,7 @@ const csvUpdateData = async (req, res) => {
 
       const updatedErrorJsonFile = errorJsonFile.map((item) => {
         updates.forEach(({ PRIMARY, COLUMN_NAME, CORRECTED }) => {
-          if (
-            item.PRIMARY.trim() === PRIMARY.trim() &&
-            item.COLUMN_NAME.trim() === COLUMN_NAME.trim()
-          ) {
+          if (item.PRIMARY.trim() === PRIMARY.trim() && item.COLUMN_NAME.trim() === COLUMN_NAME.trim()) {
             item.CORRECTED = CORRECTED;
             item["CORRECTED BY"] = email;
           }
@@ -213,9 +209,7 @@ const csvUpdateData = async (req, res) => {
         const correctedValue = errorRow["CORRECTED"];
         const correctedBy = errorRow["CORRECTED BY"] || "Unknown";
 
-        let findVar = jsonData.find(
-          (item) => item[primaryKey] == primary.trim()
-        );
+        let findVar = jsonData.find((item) => item[primaryKey] == primary.trim());
 
         if (findVar) {
           findVar[columnName] = correctedValue;
@@ -228,17 +222,14 @@ const csvUpdateData = async (req, res) => {
         }
       });
 
-      // Write to a temporary file first to prevent corruption
+      // Write to temporary files before renaming
       const tempCorrectedFilePath = correctedCsvFilePath + ".tmp";
       const tempErrorFilePath = resolvedErrorFilePath + ".tmp";
 
       await fs.promises.writeFile(tempCorrectedFilePath, jsonToCsv(jsonData));
-      await fs.promises.writeFile(
-        tempErrorFilePath,
-        jsonToCsv(updatedErrorJsonFile)
-      );
+      await fs.promises.writeFile(tempErrorFilePath, jsonToCsv(updatedErrorJsonFile));
 
-      // Rename the temp files to make the update atomic
+      // Rename the temp files atomically
       await fs.promises.rename(tempCorrectedFilePath, correctedCsvFilePath);
       await fs.promises.rename(tempErrorFilePath, resolvedErrorFilePath);
 
@@ -246,15 +237,15 @@ const csvUpdateData = async (req, res) => {
         message: "Task updated successfully",
         updatedErrorJsonFile,
       });
+
     } finally {
-      // Release the lock
-      releaseLock();
+      if (releaseLock) {
+        await releaseLock(); // 🔓 Ensure the lock is released
+      }
     }
   } catch (error) {
     console.error("Error in csvUpdateData:", error);
-    return res
-      .status(500)
-      .json({ message: "An error occurred while updating the task" });
+    return res.status(500).json({ message: "An error occurred while updating the task" });
   }
 };
 module.exports = csvUpdateData;

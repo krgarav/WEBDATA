@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import { MdDataSaverOn } from "react-icons/md";
-import { REACT_APP_IP } from "../../services/common";
+import { fetchLatestTaskData, REACT_APP_IP } from "../../services/common";
 import { toast } from "react-toastify";
 
 const CorrectionField = ({
@@ -13,13 +13,14 @@ const CorrectionField = ({
   maximum,
 }) => {
   // const [inputValues, setInputValues] = useState("");
+  const taskData = JSON.parse(localStorage.getItem("taskdata"));
   const taskId = JSON.parse(localStorage.getItem("taskdata")).id;
   const token = JSON.parse(localStorage.getItem("userData"));
   const [visited, setVisited] = useState(false);
   const [visitedCount, setVisitedCount] = useState(0);
   const [visitedRows, setVisitedRows] = useState({}); // Track visited rows
   const inputRefs = useRef([]);
-  // const firstInputRef = useRef(null); 
+  // const firstInputRef = useRef(null);
 
   // useEffect(() => {
   //   if (firstInputRef.current) {
@@ -53,37 +54,36 @@ const CorrectionField = ({
   }, [filteredData, PRIMARY]);
   useEffect(() => {
     setFilterData(correctionData?.previousData?.DATA);
-    setVisitedCount(0)
-    setVisitedRows({})
+    setVisitedCount(0);
+    setVisitedRows({});
   }, [correctionData?.previousData?.DATA]);
   useEffect(() => {
     const handleAltSKey = (e) => {
-      
       if (e.altKey && e.key.toLowerCase() === "s") {
         e.preventDefault(); // Prevents browser shortcuts (if any)
         document.getElementById("update").click();
       }
     };
-  
+
     document.addEventListener("keydown", handleAltSKey);
     return () => document.removeEventListener("keydown", handleAltSKey);
   }, []);
- useEffect(() => {
-  handleVisit(0);
- }, []);
+  useEffect(() => {
+    handleVisit(0);
+  }, []);
   useEffect(() => {
     const handleTabKey = (e) => {
       if (e.key === "Tab") {
         e.preventDefault(); // Prevent default tab behavior
-  
+
         const focusableInputs = inputRefs.current.filter((el) => el);
         const currentIndex = focusableInputs.indexOf(document.activeElement);
-  
-        if (e.shiftKey) {
-          
 
+        if (e.shiftKey) {
           // Shift + Tab (Move Backward)
-          const prevIndex = (currentIndex - 1 + focusableInputs.length) % focusableInputs.length;
+          const prevIndex =
+            (currentIndex - 1 + focusableInputs.length) %
+            focusableInputs.length;
           focusableInputs[prevIndex]?.focus();
         } else {
           // Tab (Move Forward)
@@ -92,7 +92,7 @@ const CorrectionField = ({
         }
       }
     };
-  
+
     document.addEventListener("keydown", handleTabKey);
     return () => document.removeEventListener("keydown", handleTabKey);
   }, []);
@@ -117,9 +117,21 @@ const CorrectionField = ({
 
     if (updates.length === 0) return; // Ensure there are values to update
     try {
+      // const response = await axios.post(
+      //   `http://${REACT_APP_IP}:4000/csvUpdateData/${taskId}/batch`,
+      //   updates,
+      //   {
+      //     headers: {
+      //       token: token,
+      //     },
+      //   }
+      // );
+      // Get the latest `updatedAt`
       const response = await axios.post(
         `http://${REACT_APP_IP}:4000/csvUpdateData/${taskId}/batch`,
-        updates,
+
+        updates, // Your update data
+
         {
           headers: {
             token: token,
@@ -180,13 +192,30 @@ const CorrectionField = ({
           <input
             type="text"
             className="w-full border rounded-xl py-1 px-2 shadow"
-            value={inputValue[key] || ""}
-            onChange={(e) => handleInputChange(e, key)}
+            // value={inputValue[key] ?inputValue[key]:dataItem?.FILE_1_DATA}
+            value={
+              inputValue[key] !== undefined
+                ? inputValue[key]
+                : dataItem?.FILE_1_DATA
+            }
+            // defaultValue={dataItem?.FILE_1_DATA}
+            onChange={(e) => {
+              const allowedValues = ["A", "B", "C", "D", "*", " "]; // Allowed characters
+              const input = e.target.value.toUpperCase(); // Convert input to uppercase
+
+              if (input === "" || allowedValues.includes(input)) {
+                handleInputChange(
+                  { ...e, target: { ...e.target, value: input } },
+                  key
+                );
+              }
+            }}
             onFocus={(e) => {
               imageFocusHandler(dataItem.COLUMN_NAME); // First function
               handleVisit(index); // Second function
             }} // Mark row as visited
-             ref={(el) => (inputRefs.current[index] = el)}
+            ref={(el) => (inputRefs.current[index] = el)}
+            maxLength={1}
           />
 
           {/* <div className="flex justify-center items-center">

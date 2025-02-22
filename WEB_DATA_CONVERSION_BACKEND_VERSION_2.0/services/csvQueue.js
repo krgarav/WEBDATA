@@ -1,7 +1,13 @@
 const { Queue } = require("bullmq");
+const Redis = require("ioredis");
 
-const csvQueue = new Queue("csvUpdateQueue", {
-    connection: { host: "127.0.0.1", port: 6379 }
-});
+const redisOptions = {
+  host: "127.0.0.1", // Redis runs on localhost
+  port: 6379, // Default Redis port
+};
 
-module.exports = csvQueue;
+const connection = new Redis(redisOptions);
+
+const updateQueue = new Queue("csvUpdateQueue", { connection });
+
+module.exports = updateQueue;
