@@ -29,6 +29,7 @@ import Settings from "./pages/Settings/Settings";
 import UserCorrectionData from "./pages/CSV Comparer/UserCorrectionData";
 import PartA from "./pages/PartA/PartA";
 import Merge from "./pages/Merge/Merge";
+import MergeDuplicateDetect from "./pages/MergeDuplicateDetect/MergeDuplicateDetect";
 
 function App() {
   const datactx = useContext(dataContext);
@@ -115,6 +116,7 @@ function App() {
               role === "Moderator") && (
                 <>
                   <Route path="/merge" element={<Merge />} />
+                  <Route path="/merge/duplicate" element={<MergeDuplicateDetect />} />
                 </>
               )}
 
