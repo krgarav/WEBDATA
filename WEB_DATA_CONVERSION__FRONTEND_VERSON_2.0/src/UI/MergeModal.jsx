@@ -7,11 +7,13 @@ import {
 } from "../services/common";
 import Multiselect from "multiselect-react-dropdown";
 import { toast } from "react-toastify";
-const MergeModal = ({ isOpen, onClose, templateId, message }) => {
+import { useNavigate } from "react-router-dom";
+const MergeModal = ({ isOpen, onClose, templateId, message, tableName }) => {
   const [merge, setMerge] = useState(false);
   const [selectedValues, setSelectedValues] = useState([]);
   const [options, setOptions] = useState([]);
-  //   const [files, setFiles] = useState(0);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchOptions = async () => {
       const response = await fetchFilesAssociatedWithTemplate(templateId);
@@ -54,6 +56,21 @@ const MergeModal = ({ isOpen, onClose, templateId, message }) => {
       setSelectedValues(options);
     }
   };
+  const duplicateHandler = async () => {
+    console.log(tableName);
+    try {
+        const response = await axios.get(`http://${REACT_APP_IP}:4000/gettabledata/${tableName}`);
+        
+        const headers = response.data.headers
+
+        console.log(headers);
+        navigate("/merge/duplicate",{state:headers})
+    } catch (error) {
+        
+    }
+    
+  };
+
   return (
     <div
       className="relative z-10"
@@ -150,7 +167,7 @@ const MergeModal = ({ isOpen, onClose, templateId, message }) => {
               {!merge && (
                 <button
                   type="button"
-                  onClick={() => onClose()}
+                  onClick={duplicateHandler}
                   className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                 >
                   Show Duplicates

@@ -18,6 +18,7 @@ const Merge = () => {
   const [selectedValues, setSelectedValues] = useState([]);
   const [modals, setModals] = useState(false);
   const [message, setMessage] = useState("");
+  const [tableName, setTableName] = useState("");
   const handleSelectAll = () => {
     if (selectedValues.length === options.length) {
       setSelectedValues([]);
@@ -42,6 +43,7 @@ const Merge = () => {
       );
       setModals(true);
       setMessage(res.data.message);
+      setTableName(res.data.tableName);
       console.log(res);
     } catch (error) {
       console.log(error);
@@ -69,7 +71,7 @@ const Merge = () => {
           isOpen={modals}
           onClose={() => setModals(false)}
           message={message}
-          
+        tableName={tableName}
           templateId={selectedTemplate}
           // taskId={taskId}
         />

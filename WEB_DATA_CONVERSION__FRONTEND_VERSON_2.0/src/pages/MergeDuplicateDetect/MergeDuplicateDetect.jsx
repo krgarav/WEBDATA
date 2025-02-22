@@ -1,6 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const MergeDuplicateDetect = () => {
+  const [headers, setHeaders] = useState([]);
+
+  const location = useLocation();
+
+
+  useEffect(() => {
+    const state = location.state;
+    console.log(state);
+    if(state){
+      setHeaders(state);
+    }
+  }, []);
+  const allHeaders = headers.map((header) => {
+    return (
+      <div className="flex justify-between items-center">
+        <div className="whitespace-nowrap px-4 py-4">
+          <div className="flex items-center">
+            <div className="ml-4 w-full font-semibold">
+              <div className="px-2">{header}</div>
+            </div>
+          </div>
+        </div>
+        <div className="whitespace-nowrap px-4 py-4 text-right">
+          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white">
+            Check
+          </button>
+        </div>
+      </div>
+    );
+  });
   return (
     <div className="flex justify-center items-center w-[100%] pt-20 h-[100vh] bg-blue-500">
       <div className=" w-[800px]">
@@ -24,134 +55,9 @@ const MergeDuplicateDetect = () => {
                       </div>
                     </div>
                     <div className="divide-y divide-gray-200 bg-white overflow-y-auto max-h-[300px] w-full">
-                      <div
-                        className="flex justify-between items-center"
-                      >
-                        <div className="whitespace-nowrap px-4 py-4">
-                          <div className="flex items-center">
-                            <div className="ml-4 w-full font-semibold">
-                              <div className="px-2">bari</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="whitespace-nowrap px-4 py-4 text-right">
-                          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white">
-                            Check
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        className="flex justify-between items-center"
-                      >
-                        <div className="whitespace-nowrap px-4 py-4">
-                          <div className="flex items-center">
-                            <div className="ml-4 w-full font-semibold">
-                              <div className="px-2">bari</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="whitespace-nowrap px-4 py-4 text-right">
-                          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white">
-                            Check
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        className="flex justify-between items-center"
-                      >
-                        <div className="whitespace-nowrap px-4 py-4">
-                          <div className="flex items-center">
-                            <div className="ml-4 w-full font-semibold">
-                              <div className="px-2">bari</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="whitespace-nowrap px-4 py-4 text-right">
-                          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white">
-                            Check
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        className="flex justify-between items-center"
-                      >
-                        <div className="whitespace-nowrap px-4 py-4">
-                          <div className="flex items-center">
-                            <div className="ml-4 w-full font-semibold">
-                              <div className="px-2">bari</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="whitespace-nowrap px-4 py-4 text-right">
-                          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white">
-                            Check
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        className="flex justify-between items-center"
-                      >
-                        <div className="whitespace-nowrap px-4 py-4">
-                          <div className="flex items-center">
-                            <div className="ml-4 w-full font-semibold">
-                              <div className="px-2">bari</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="whitespace-nowrap px-4 py-4 text-right">
-                          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white">
-                            Check
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        className="flex justify-between items-center"
-                      >
-                        <div className="whitespace-nowrap px-4 py-4">
-                          <div className="flex items-center">
-                            <div className="ml-4 w-full font-semibold">
-                              <div className="px-2">bari</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="whitespace-nowrap px-4 py-4 text-right">
-                          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white">
-                            Check
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        className="flex justify-between items-center"
-                      >
-                        <div className="whitespace-nowrap px-4 py-4">
-                          <div className="flex items-center">
-                            <div className="ml-4 w-full font-semibold">
-                              <div className="px-2">bari</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="whitespace-nowrap px-4 py-4 text-right">
-                          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white">
-                            Check
-                          </button>
-                        </div>
-                      </div>
-                      <div
-                        className="flex justify-between items-center"
-                      >
-                        <div className="whitespace-nowrap px-4 py-4">
-                          <div className="flex items-center">
-                            <div className="ml-4 w-full font-semibold">
-                              <div className="px-2">bari</div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="whitespace-nowrap px-4 py-4 text-right">
-                          <button className="rounded-3xl border border-indigo-500 bg-indigo-500 px-10 py-1 font-semibold text-white">
-                            Check
-                          </button>
-                        </div>
-                      </div>
+                      
+                      {allHeaders}
+                      
                     </div>
                   </div>
                 </div>

@@ -47,13 +47,48 @@ exports.getTableData = async (req, res) => {
       }
   
       // Fetch all data from the table using raw SQL
-      const data = await sequelize.query(`SELECT * FROM ${tableName}`, {
+      const [data] = await sequelize.query(`SELECT * FROM ${tableName}`, {
         type: sequelize.QueryTypes.SELECT,
       });
   
       res.json({ success: true, data });
     } catch (error) {
       console.error("Error fetching table data:", error);
+      res.status(500).json({ success: false, message: "Internal server error", error: error.message });
+    }
+  };
+  
+
+  exports.getTableHeaders = async (req, res) => {
+    try {
+      const { tableName } = req.params; // Get the table name from request params
+  
+      if (!tableName) {
+        return res.status(400).json({ success: false, message: "Table name is required" });
+      }
+  
+      // Check if the table exists
+      const [tableExists] = await sequelize.query(
+        `SELECT table_name FROM information_schema.tables WHERE table_name = :tableName`,
+        { replacements: { tableName }, type: sequelize.QueryTypes.SELECT }
+      );
+  
+      if (!tableExists) {
+        return res.status(404).json({ success: false, message: "Table not found" });
+      }
+  
+      // Fetch column names from the table
+      const columns = await sequelize.query(
+        `SELECT COLUMN_NAME FROM information_schema.columns WHERE table_name = :tableName`,
+        { replacements: { tableName }, type: sequelize.QueryTypes.SELECT }
+      );
+  
+      // Extract column names into an array
+      const columnNames = columns.map(col => col.COLUMN_NAME);
+  
+      res.json({ success: true, headers: columnNames });
+    } catch (error) {
+      console.error("Error fetching table headers:", error);
       res.status(500).json({ success: false, message: "Internal server error", error: error.message });
     }
   };

@@ -44,9 +44,11 @@ async function createDynamicTable(headers) {
   const DynamicModel = sequelize.define(tableName, columns, {
     timestamps: false,
   });
-  await DynamicModel.sync();
 
-  return { tableName, DynamicModel };
+  await DynamicModel.sync();
+// Extract the actual table name from the model
+  const actualTableName = DynamicModel.getTableName();
+  return { tableName:actualTableName, DynamicModel };
 }
 
 // Function to read CSV files and insert into the dynamic table
