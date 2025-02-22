@@ -15,7 +15,7 @@ import TemplateRemove from "./TemplateRemove";
 import TemplateEdit from "./TemplateEdit";
 import UploadSection from "./UploadSection";
 import PreFilesModal from "./PreFilesModal";
-
+import Papa from "papaparse";
 const CsvUploader = () => {
   const [csvFile, setCsvFile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -121,7 +121,12 @@ const CsvUploader = () => {
     }
   };
 
-  const uploadChunk = async (zipFile, chunkIndex, totalChunks, overallProgressCallback) => {
+  const uploadChunk = async (
+    zipFile,
+    chunkIndex,
+    totalChunks,
+    overallProgressCallback
+  ) => {
     try {
       // Get the original name of the zip file
       const zipFileName = imageFolder?.name;
@@ -147,7 +152,8 @@ const CsvUploader = () => {
           },
           onUploadProgress: (progressEvent) => {
             // Calculate the progress of the current chunk
-            const chunkProgress = (progressEvent.loaded / progressEvent.total) * 100;
+            const chunkProgress =
+              (progressEvent.loaded / progressEvent.total) * 100;
             // Pass the calculated chunk progress to the callback
             overallProgressCallback(chunkProgress, chunkIndex);
           },
@@ -161,7 +167,6 @@ const CsvUploader = () => {
   };
 
   const onSaveFilesHandler = async () => {
-
     setConfirmationModal(false);
 
     const chunkSize = 2 * 1024 * 1024 * 1024 - 1; // 1 byte less than 2GB
@@ -178,14 +183,20 @@ const CsvUploader = () => {
 
       // Define the overall progress callback to calculate the total progress percentage
       const updateOverallProgress = (chunkProgress, chunkIndex) => {
-        overallProgress = ((chunkIndex + chunkProgress / 100) / totalChunks) * 100;
+        overallProgress =
+          ((chunkIndex + chunkProgress / 100) / totalChunks) * 100;
         setProgress(Math.round(overallProgress));
       };
 
       while (start < imageFolder.size) {
         const chunk = imageFolder.slice(start, start + chunkSize);
 
-        fileId = await uploadChunk(chunk, chunkIndex, totalChunks, updateOverallProgress);
+        fileId = await uploadChunk(
+          chunk,
+          chunkIndex,
+          totalChunks,
+          updateOverallProgress
+        );
 
         start += chunkSize;
         chunkIndex += 1;
@@ -353,32 +364,45 @@ const CsvUploader = () => {
         setConfirmationModal(true);
         return;
       }
-      // Read the uploaded CSV file and extract headers
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const csvText = event.target.result;
-        const csvRows = csvText.split("\n").map(row => row.trim());
-        const uploadedHeaders = csvRows[0]?.split(",").map(header => header.trim()) || [];
 
-        // Check if headers match
-        const isMatching = expectedHeaders.length === uploadedHeaders.length &&
-          expectedHeaders.every((header, index) => header === uploadedHeaders[index]);
+      // Parse the uploaded CSV file using PapaParse
+      Papa.parse(csvFile, {
+        complete: (result) => {
+          if (!result || !result.data || result.data.length === 0) {
+            toast.error("Invalid or empty CSV file.");
+            return;
+          }
 
-        if (!isMatching) {
-          toast.error("Please upload the correct CSV file. Headers do not match.");
-          return;
-        }
-        setConfirmationModal(true);
-      };
+          // Extract headers from the first row
+          const uploadedHeaders = Object.keys(result.data[0]);
 
-      reader.readAsText(csvFile);
+          console.log("Expected Headers:", expectedHeaders);
+          console.log("Uploaded Headers:", uploadedHeaders);
 
+          // Check if headers match
+          const isMatching =
+            expectedHeaders.length === uploadedHeaders.length &&
+            expectedHeaders.every(
+              (header, index) => header === uploadedHeaders[index]
+            );
+
+          if (!isMatching) {
+            toast.error(
+              "Please upload the correct CSV file. Headers do not match."
+            );
+            return;
+          }
+
+          setConfirmationModal(true);
+        },
+        header: true,
+        skipEmptyLines: true,
+      });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Error fetching CSV headers.");
     }
   };
-
 
   return (
     <div className="flex justify-center items-center h-auto w-full ">
@@ -427,7 +451,7 @@ const CsvUploader = () => {
       <div>
         <ModalWithLoadingBar
           isOpen={loading}
-          onClose={() => { }}
+          onClose={() => {}}
           progress={progress}
           message="Uploading csv and image zip the files..."
         />

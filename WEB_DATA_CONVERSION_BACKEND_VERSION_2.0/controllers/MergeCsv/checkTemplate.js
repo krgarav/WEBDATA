@@ -18,7 +18,7 @@ exports.checkTempalte = async (req, res) => {
           tableName: template.mergedTableName,
         });
     }
-    return res.status(200).json({ message: "Template is valid" });
+    return res.status(200).json({ message: "Template has no merged file" });
   } catch (error) {
     console.error("Error checking template:", error.message);
     res.status(500).send("Internal server error");
