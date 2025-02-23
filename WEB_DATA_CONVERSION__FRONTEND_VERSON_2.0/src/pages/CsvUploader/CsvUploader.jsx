@@ -356,7 +356,11 @@ const CsvUploader = () => {
           headers: { token },
         }
       );
-
+      
+      if (response.data?.data.length === 0) {
+        setConfirmationModal(true);
+        return;
+      }
       const expectedHeaders = response.data || [];
 
       // If expectedHeaders is empty, skip the validation

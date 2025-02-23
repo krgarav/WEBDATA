@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 require("dotenv").config()
+const { execSync } = require("child_process");
+const fs = require("fs");
 const sequelize = require("./utils/database");
 const bodyParser = require("body-parser");
 const templeteRoutes = require("./routes/templete");
@@ -25,7 +27,22 @@ const Assigndata = require("./models/TempleteModel/assigndata");
 const RowIndexData = require("./models/TempleteModel/rowIndexData");
 const ImageDataPath = require("./models/TempleteModel/templeteImages");
 const MappedData = require("./models/TempleteModel/mappedData");
-const builtPath = path.join(__dirname, "./build");
+const builtPath = path.join(__dirname, "../../WEBDATA/WEB_DATA_CONVERSION__FRONTEND_VERSON_2.0/build");
+console.log(builtPath)
+
+// Check if build exists, if not, run `npm run build`
+if (!fs.existsSync(path.join(builtPath, "index.html"))) {
+  console.log("⚠️  Build not found! Running `npm run build`...");
+  try {
+    execSync("npm run build", { stdio: "inherit", cwd: "../../WEBDATA/WEB_DATA_CONVERSION__FRONTEND_VERSON_2.0" });
+    console.log("✅ Build completed!");
+  } catch (error) {
+    console.error("❌ Error running `npm run build`:", error);
+    process.exit(1); // Exit process if build fails
+  }
+} else {
+  console.log("✅ Build found, skipping `npm run build`.");
+}
 
 //middlewares
 app.use(cors());
@@ -54,8 +71,8 @@ app.use(mergeCsv)
 app.use("/settings", Settings);
 
 // Handle all other routes and serve 'index.html'
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(builtPath, "index.html"));
 });
 
 
