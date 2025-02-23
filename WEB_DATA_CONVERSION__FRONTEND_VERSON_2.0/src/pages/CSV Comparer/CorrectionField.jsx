@@ -7,6 +7,7 @@ import {
   REACT_APP_IP,
 } from "../../services/common";
 import { toast } from "react-toastify";
+import Loader from "../../UI/Loader";
 
 const CorrectionField = ({
   correctionData,
@@ -24,6 +25,7 @@ const CorrectionField = ({
   const [visitedCount, setVisitedCount] = useState(0);
   const [visitedRows, setVisitedRows] = useState({}); // Track visited rows
   const inputRefs = useRef([]);
+  const [isLoading, setIsLoading] = useState(false);
   // const firstInputRef = useRef(null);
 
   // useEffect(() => {
@@ -146,6 +148,7 @@ const CorrectionField = ({
     }));
   };
   const onUpdateHandler = async () => {
+    setIsLoading(true);
     const updates = Object.entries(inputValue).map(([key, correctedValue]) => {
       const [primary, columnName] = key.split("-");
       return {
@@ -205,12 +208,14 @@ const CorrectionField = ({
       if (currentIndex !== maximum) {
         setInputValue({});
       }
-      console.log(response.data);
+      
       toast.success("Corrected Value is Updated");
       onNextHandler("next", currentIndex);
     } catch (error) {
       console.error("Error updating data:", error.response.data.message);
       toast.error(error.response.data.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -311,11 +316,18 @@ const CorrectionField = ({
           Visited: <span className="font-extrabold">{visitedCount}</span>
         </h3>
         <button
-          className="px-6 py-2 bg-teal-600 rounded-lg text-white"
+          className="px-6 py-2 bg-teal-600 rounded-lg text-white flex items-center justify-center min-w-[120px] h-[40px]"
+
           onClick={onUpdateHandler}
           id="update"
         >
-          Update
+          {isLoading && (
+            <span className="flex">
+              <Loader />
+              {/* Updating */}
+            </span>
+          )}
+          {!isLoading && <span>Update</span>}
         </button>
       </div>
       <div className="overflow-x-auto">
