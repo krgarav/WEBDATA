@@ -356,8 +356,8 @@ const CsvUploader = () => {
           headers: { token },
         }
       );
-      
-      if (response.data?.data.length === 0) {
+     
+      if (response.data?.data?.length === 0) {
         setConfirmationModal(true);
         return;
       }
@@ -379,9 +379,6 @@ const CsvUploader = () => {
 
           // Extract headers from the first row
           const uploadedHeaders = Object.keys(result.data[0]);
-
-          console.log("Expected Headers:", expectedHeaders);
-          console.log("Uploaded Headers:", uploadedHeaders);
 
           // Check if headers match
           const isMatching =
