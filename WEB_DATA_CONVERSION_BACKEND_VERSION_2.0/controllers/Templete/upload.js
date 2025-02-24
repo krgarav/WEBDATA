@@ -7,6 +7,7 @@ const unzipper = require("unzipper");
 const { createExtractorFromFile } = require("node-unrar-js");
 const getAllDirectories = require("../../services/directoryFinder");
 const jsonToCsv = require("../../services/json_to_csv");
+const Templete = require("../../models/TempleteModel/templete");
 
 // Multer memory storage for chunk uploads
 const storage = multer.memoryStorage();
@@ -252,7 +253,10 @@ const handleUpload = async (req, res) => {
           zipFile: `${timestamp}_${zipFileName}`,
           templeteId: id,
         });
-
+        const template =await Templete.findByPk(id);
+       
+        template.imageColName = req.query.imageNames;
+        await template.save(); 
         if (fs.existsSync(csvFilePath)) {
           await processCSV(csvFilePath, res, req, createdFile, pathDir);
         } else {
@@ -260,8 +264,7 @@ const handleUpload = async (req, res) => {
             .status(404)
             .json({ error: "CSV file not found after extraction." });
         }
-      } 
-      else {
+      } else {
         // Step 9: Respond with the status of the chunk upload
         res.status(200).json({ message: `Chunk ${chunkIndex} uploaded.` });
       }

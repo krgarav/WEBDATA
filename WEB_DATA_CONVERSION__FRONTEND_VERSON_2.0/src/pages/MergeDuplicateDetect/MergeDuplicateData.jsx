@@ -3,11 +3,15 @@ import img23 from "./img23.png";
 import MergeEditDeleteDuplicate from "./MergeEditDeleteDuplicate";
 import { useLocation } from "react-router-dom";
 import MergeEditDuplicateData from "./MergeEditDuplicateData";
+import axios from "axios";
+import { REACT_APP_IP } from "../../services/common";
 
 const MergeDuplicateData = () => {
   const [editmodel, setEditmodel] = useState(false);
   const [duplicate, setDuplicate] = useState([]);
-  const [editViewModal,setEditViewModal] = useState(false)
+  const [duplicateData, setDuplicateData] = useState([]);
+  const [editViewModal,setEditViewModal] = useState(false);
+  const [editModalData, setEditModalData] = useState({});
   const location = useLocation();
   const state = location.state;
   const {duplicates,header,templateId}=state;
@@ -18,12 +22,21 @@ const MergeDuplicateData = () => {
   }, []);
   const duplicateViewHandler = async(item)=>{
     try {
-      const obj = {header,item,templateId}
+      // console.log(header);
+      // console.log(item[header])
+      const obj = {colName:header,colValue:item[header],templateId};
+      const res = await axios.post(`http://${REACT_APP_IP}:4000/viewDuplicates`,obj);
+     
+      if(res.data.success){
+        setDuplicateData(res.data.duplicates)
+        setEditmodel(true);
+      }
+      // console.log(res)
       // const res = 
     } catch (error) {
       
     }
-    setEditmodel(true);
+    
   }
   const Duplicates = duplicate.map((item, index) => {
     return (
@@ -41,7 +54,7 @@ const MergeDuplicateData = () => {
               <div className="inline-flex items-center overflow-hidden rounded-2xl border bg-white">
                 <button
                   className="border-e px-3 py-2 bg-blue-500 text-white text-sm/none hover:bg-gray-50 hover:text-gray-700"
-                  onClick={()=>duplicateViewHandler(item[header])}
+                  onClick={()=>duplicateViewHandler(item)}
 
                   
                 >
@@ -106,20 +119,20 @@ const MergeDuplicateData = () => {
       {/* Modal Overlay */}
       {editmodel && !editViewModal  && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-2 w-1/3 relative">
+          <div className="bg-white rounded-lg shadow-lg p-2 w-3/4 relative">
             <button
               className="absolute top-2 right-4 text-gray-600 hover:text-gray-800"
               onClick={() => setEditmodel(false)}
             >
               ✖
             </button>
-            <MergeEditDeleteDuplicate setEditViewModal={setEditViewModal} />
+            <MergeEditDeleteDuplicate setEditModalData={setEditModalData} duplicateData={duplicateData} setEditViewModal={setEditViewModal} />
           </div>
         </div>
       )}
 
       {editViewModal &&(
-        <MergeEditDuplicateData setEditViewModal={setEditViewModal}/>
+        <MergeEditDuplicateData editModalData={editModalData}  setEditViewModal={setEditViewModal} />
       )}
     </>
   );

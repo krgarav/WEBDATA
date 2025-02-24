@@ -1,224 +1,104 @@
-import React, { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import MergeEditDuplicateData from "./MergeEditDuplicateData";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { 
+  GridComponent, 
+  ColumnsDirective, 
+  ColumnDirective, 
+  Inject, 
+  Page, 
+  Edit, 
+  Toolbar 
+} from "@syncfusion/ej2-react-grids";
+import "@syncfusion/ej2-base/styles/material.css";
+import "@syncfusion/ej2-react-grids/styles/material.css";
 
-const MergeEditDeleteDuplicate = ({setEditViewModal}) => {
+const MergeEditDeleteDuplicate = ({setEditModalData, setEditViewModal, duplicateData }) => {
+  const [data, setData] = useState([]);
 
-  const navigate = useNavigate();
-const editHandler = ()=>{
-  setEditViewModal(true)
-}
+  useEffect(() => {
+    if (Array.isArray(duplicateData)) {
+      setData(duplicateData);
+    }
+  }, [duplicateData]);
+
+  // Filtering logic: Stop looping when a key starts with "q"
+  let stopProcessing = false;
+  const columns = [];
+  
+  if (data.length > 0) {
+    for (const key of Object.keys(data[0])) {
+      if (/^q/i.test(key)) {  // Stops looping if key starts with "q" or "Q"
+        stopProcessing = true;
+        break;  // Exit the loop
+      }
+      columns.push({
+        field: key,
+        headerText: key.charAt(0).toUpperCase() + key.slice(1), // Capitalize header
+        width: 150,
+        textAlign: "Center",
+      });
+    }
+  }
+
+  // Add Edit & Delete buttons as action buttons
+  columns.push(
+    {
+      field: "edit",
+      headerText: "Edit",
+      template: (props) => (
+        <button
+          className="px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-700"
+          onClick={() => {
+            console.log("Editing row:", props); // Log entire row data
+            setEditViewModal(true);
+            setEditModalData(props); // Store row data in state
+          }}
+        >
+          Edit
+        </button>
+      ),
+      width: 100,
+      textAlign: "Center",
+    },
+    {
+      field: "delete",
+      headerText: "Delete",
+      template: (props) => (
+        <button
+          className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-700"
+          onClick={() => handleDelete(props)}
+        >
+          Delete
+        </button>
+      ),
+      width: 100,
+      textAlign: "Center",
+    }
+  );
+  
+
+  // Delete handler
+  const handleDelete = (rowData) => {
+    setData((prevData) => prevData.filter((item) => item !== rowData));
+  };
+
   return (
-    <>
-        {/* <div className="w-[100%] pt-20 h-[100vh] bg-blue-500 flex justify-center items-center"> */}
-          <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 h-[71%] md:h-[61%] rounded-lg overflow-auto mx-5">
-            <div className="sm:flex sm:items-start">
-              <div className="mt-3 text-center  sm:mt-0 sm:text-left w-full">
-                <h2 className="font-semibold">Data1</h2>
-                <div className="mt-2">
-                  <div className="min-w-full divide-y divide-gray-200">
-                    <div className="bg-gray-50 ">
-                      <div className="flex">
-                        <div className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
-                          Data1
-                        </div>
-                        <div className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
-                          Row Index
-                        </div>
-                        <div className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
-                          Edit
-                        </div>
-                        <div className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
-                          Remove
-                        </div>
-                      </div>
-                    </div>
-                    <div className="overflow-y-auto h-[400px]">
-                      <div className="">
-                        <div className="bg-white flex-col">
-                          <div className="flex">
-                            <div className="text-center py-4 whitespace-nowrap text-xs font-medium text-gray-900 w-1/4">
-                              154614654
-                            </div>
-                            <div className=" py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/4 text-center">
-                              190
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-sm text-gray-500 w-1/4">
-                              <button
-                                className="border-e px-4 bg-gray-100 py-2 text-sm/none text-blue-600 rounded-3xl hover:bg-blue-200"
-                                onClick={editHandler}
-                                // onClick={() => {
-                                //   navigate("/merge/duplicate/data/edit");
-                                // }}
-                              >
-                                Edit
-                              </button>
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-red-500 text-2xl  w-1/4">
-                              <MdDelete className="mx-auto text-2xl hover:text-3xl" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="">
-                        <div className="bg-white flex-col">
-                          <div className="flex">
-                            <div className="text-center py-4 whitespace-nowrap text-xs font-medium text-gray-900 w-1/4">
-                              154614654
-                            </div>
-                            <div className=" py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/4 text-center">
-                              190
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-sm text-gray-500 w-1/4">
-                              <button
-                                className="border-e px-4 bg-gray-100 py-2 text-sm/none text-blue-600 rounded-3xl hover:bg-blue-200"
-                                onClick={() => {
-                                  navigate("/merge/duplicate/data/edit");
-                                }}
-                              >
-                                Edit
-                              </button>
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-red-500 text-2xl  w-1/4">
-                              <MdDelete className="mx-auto text-2xl hover:text-3xl" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="">
-                        <div className="bg-white flex-col">
-                          <div className="flex">
-                            <div className="text-center py-4 whitespace-nowrap text-xs font-medium text-gray-900 w-1/4">
-                              154614654
-                            </div>
-                            <div className=" py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/4 text-center">
-                              190
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-sm text-gray-500 w-1/4">
-                              <button
-                                className="border-e px-4 bg-gray-100 py-2 text-sm/none text-blue-600 rounded-3xl hover:bg-blue-200"
-                                onClick={() => {
-                                  navigate("/merge/duplicate/data/edit");
-                                }}
-                              >
-                                Edit
-                              </button>
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-red-500 text-2xl  w-1/4">
-                              <MdDelete className="mx-auto text-2xl hover:text-3xl" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="">
-                        <div className="bg-white flex-col">
-                          <div className="flex">
-                            <div className="text-center py-4 whitespace-nowrap text-xs font-medium text-gray-900 w-1/4">
-                              154614654
-                            </div>
-                            <div className=" py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/4 text-center">
-                              190
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-sm text-gray-500 w-1/4">
-                              <button
-                                className="border-e px-4 bg-gray-100 py-2 text-sm/none text-blue-600 rounded-3xl hover:bg-blue-200"
-                                onClick={() => {
-                                  navigate("/merge/duplicate/data/edit");
-                                }}
-                              >
-                                Edit
-                              </button>
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-red-500 text-2xl  w-1/4">
-                              <MdDelete className="mx-auto text-2xl hover:text-3xl" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="">
-                        <div className="bg-white flex-col">
-                          <div className="flex">
-                            <div className="text-center py-4 whitespace-nowrap text-xs font-medium text-gray-900 w-1/4">
-                              154614654
-                            </div>
-                            <div className=" py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/4 text-center">
-                              190
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-sm text-gray-500 w-1/4">
-                              <button
-                                className="border-e px-4 bg-gray-100 py-2 text-sm/none text-blue-600 rounded-3xl hover:bg-blue-200"
-                                onClick={() => {
-                                  navigate("/merge/duplicate/data/edit");
-                                }}
-                              >
-                                Edit
-                              </button>
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-red-500 text-2xl  w-1/4">
-                              <MdDelete className="mx-auto text-2xl hover:text-3xl" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="">
-                        <div className="bg-white flex-col">
-                          <div className="flex">
-                            <div className="text-center py-4 whitespace-nowrap text-xs font-medium text-gray-900 w-1/4">
-                              154614654
-                            </div>
-                            <div className=" py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/4 text-center">
-                              190
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-sm text-gray-500 w-1/4">
-                              <button
-                                className="border-e px-4 bg-gray-100 py-2 text-sm/none text-blue-600 rounded-3xl hover:bg-blue-200"
-                                onClick={() => {
-                                  navigate("/merge/duplicate/data/edit");
-                                }}
-                              >
-                                Edit
-                              </button>
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-red-500 text-2xl  w-1/4">
-                              <MdDelete className="mx-auto text-2xl hover:text-3xl" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="">
-                        <div className="bg-white flex-col">
-                          <div className="flex">
-                            <div className="text-center py-4 whitespace-nowrap text-xs font-medium text-gray-900 w-1/4">
-                              154614654
-                            </div>
-                            <div className=" py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-1/4 text-center">
-                              190
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-sm text-gray-500 w-1/4">
-                              <button
-                                className="border-e px-4 bg-gray-100 py-2 text-sm/none text-blue-600 rounded-3xl hover:bg-blue-200"
-                                onClick={() => {
-                                  navigate("/merge/duplicate/data/edit");
-                                }}
-                              >
-                                Edit
-                              </button>
-                            </div>
-                            <div className="text-center py-4 whitespace-nowrap text-red-500 text-2xl  w-1/4">
-                              <MdDelete className="mx-auto text-2xl hover:text-3xl" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        {/* </div> */}
-    </>
+    <div className="p-4 bg-white rounded shadow">
+      <h2 className="text-lg font-semibold mb-4">Duplicate Data</h2>
+      <GridComponent
+        dataSource={data}
+        allowPaging={true}
+        pageSettings={{ pageSize: 10 }}
+        toolbar={["Search"]}
+        editSettings={{ allowEditing: true, allowDeleting: true }}
+      >
+        <ColumnsDirective>
+          {columns.map((col, index) => (
+            <ColumnDirective key={index} {...col} />
+          ))}
+        </ColumnsDirective>
+        <Inject services={[Page, Edit, Toolbar]} />
+      </GridComponent>
+    </div>
   );
 };
 

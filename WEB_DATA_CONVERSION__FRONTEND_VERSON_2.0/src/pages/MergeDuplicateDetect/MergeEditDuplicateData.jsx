@@ -1,9 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import img23 from "./img23.png";
 import { useNavigate } from "react-router-dom";
 
-const MergeEditDuplicateData = ({ setEditViewModal }) => {
+const MergeEditDuplicateData = ({ editModalData, setEditViewModal }) => {
+  const [editableData, setEditableData] = useState({});
+  const [headerData, setHeaderData] = useState([]);
+  const [imageUrl , setImageUrl] = useState(null)
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const header = Object.keys(editModalData);
+    if (header) {
+      setHeaderData(header);
+    }
+  }, [editModalData]);
+  const alldata = headerData.map((item) => {
+    return (
+      <div className="flex flex-col lg:flex-row justify-center">
+        <div className="py-2 px-2 text-center lg:w-1/2">{item}</div>
+        <div className="py-2 p-2 px-2 text-center lg:w-1/2">
+          <input
+            className="text-center p-2 rounded-3xl lg:w-11/12"
+            type="text"
+            value={editModalData[item]}
+          />
+        </div>
+      </div>
+    );
+  });
   const backHandler = () => {
     setEditViewModal(false);
   };
@@ -17,80 +41,7 @@ const MergeEditDuplicateData = ({ setEditViewModal }) => {
                 <div className="text-center  sm:text-left w-full">
                   <div className=" font-semibold my-2 overflow-x-auto lg:overflow-y-auto lg:h-[70vh]">
                     <div className="divide-y divide-gray-100 text-sm">
-                      <div className="flex lg:block">
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                      </div>
+                      <div className="flex lg:block">{alldata}</div>
                     </div>
                   </div>
                 </div>

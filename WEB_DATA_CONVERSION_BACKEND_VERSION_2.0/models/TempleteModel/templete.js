@@ -36,6 +36,9 @@ const Templete = sequelize.define("templetes", {
   mergedTableName: {
     type: Sequelize.STRING,
   },
+  imageColName: {
+    type: Sequelize.STRING,
+  },
 });
 
 module.exports = Templete;

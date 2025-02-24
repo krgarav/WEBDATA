@@ -9,13 +9,14 @@ const MergeDuplicateDetect = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { tableName } = location.state || {};
+  const { tableName,templateId } = location.state || {};
   useEffect(() => {
     const { headers } = location.state;
     if (headers) {
       setHeaders(headers);
     }
   }, []);
+
   const headerHandler = async (header) => {
     try {
       const obj = {
@@ -29,11 +30,11 @@ const MergeDuplicateDetect = () => {
       const { data } = response;
       if (data.duplicates.length > 0) {
         const duplicates = data.duplicates
-        navigate("/merge/duplicate/data", { state: {duplicates ,header} });
+        navigate("/merge/duplicate/data", { state: {duplicates ,header,templateId} });
       }
-      console.log(response);
+     
     } catch (error) {}
-    console.log(header, tableName);
+    
   };
   const allHeaders = headers.map((header) => {
     return (
