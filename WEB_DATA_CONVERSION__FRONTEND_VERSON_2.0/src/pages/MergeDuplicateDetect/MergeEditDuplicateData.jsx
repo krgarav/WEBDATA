@@ -1,9 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import img23 from "./img23.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { REACT_APP_IP } from "../../services/common";
 
-const MergeEditDuplicateData = ({ setEditViewModal }) => {
+const MergeEditDuplicateData = ({
+  templateId,
+  editModalData,
+  setEditViewModal,
+}) => {
+  const [editableData, setEditableData] = useState({});
+  const [headerData, setHeaderData] = useState([]);
+  const [imageUrl, setImageUrl] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(
+          `http://${REACT_APP_IP}:4000/getImageCol?templateId=${templateId}`
+        );
+        if (res.data.success) {
+          setImageUrl(res.data.imageCol);
+        }
+
+        // console.log(headerData)
+        // console.log(editModalData[imageUrl]);
+      } catch (error) {}
+    };
+    fetchData();
+  }, []);
+  useEffect(() => {
+    console.log(headerData);
+    console.log(editModalData[imageUrl]);
+  }, [imageUrl]);
+
+  useEffect(() => {
+    const header = Object.keys(editModalData);
+    if (header) {
+      setHeaderData(header);
+    }
+  }, [editModalData]);
+  const alldata = headerData.map((item) => {
+    return (
+      <div className="flex flex-col lg:flex-row justify-center">
+        <div className="py-2 px-2 text-center lg:w-1/2">{item}</div>
+        <div className="py-2 p-2 px-2 text-center lg:w-1/2">
+          <input
+            className="text-center p-2 rounded-3xl lg:w-11/12"
+            type="text"
+            value={editModalData[item]}
+          />
+        </div>
+      </div>
+    );
+  });
   const backHandler = () => {
     setEditViewModal(false);
   };
@@ -17,80 +68,7 @@ const MergeEditDuplicateData = ({ setEditViewModal }) => {
                 <div className="text-center  sm:text-left w-full">
                   <div className=" font-semibold my-2 overflow-x-auto lg:overflow-y-auto lg:h-[70vh]">
                     <div className="divide-y divide-gray-100 text-sm">
-                      <div className="flex lg:block">
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                        <div className="flex flex-col lg:flex-row justify-center">
-                          <div className="py-2 px-2 text-center lg:w-1/2">
-                            DATA1
-                          </div>
-                          <div className="py-2 p-2 px-2 text-center lg:w-1/2">
-                            <input
-                              className="text-center p-2 rounded-3xl lg:w-11/12"
-                              type="text"
-                              value={202}
-                            />
-                          </div>
-                        </div>
-                      </div>
+                      <div className="flex lg:block">{alldata}</div>
                     </div>
                   </div>
                 </div>
@@ -134,9 +112,43 @@ const MergeEditDuplicateData = ({ setEditViewModal }) => {
             </div>
           </div>
         </div>
-        <div className="mt-5">
+        {/* <div className="mt-5">
           <h1 className="text-white text-xl text-center mb-3">1 out of 1</h1>
-          <img src={img23} alt="image" />
+          <img
+            src={`http://${REACT_APP_IP}:4000/images/${editModalData[imageUrl]}`}
+            alt="student-answer"
+            style={{
+              maxHeight: "80vh", // Adjust as needed
+              width: "auto", // Keeps aspect ratio
+              objectFit: "contain", // Ensures the image fits without cropping
+            }}
+          />
+        </div> */}
+
+        <div className="mx-auto max-w-screen-xl px-2 lg:py-1 sm:px-6 lg:px-8">
+          <div className=" flex justify-center ">
+            <div className="">
+              {imageUrl && (
+                <div
+                  style={{
+                    position: "relative",
+                  }}
+                  className="w-full overflow-y-auto pb-4"
+                >
+                  <img
+                    // src={`data:image/jpeg;base64,${imageUrl}`}
+                    src={`http://${REACT_APP_IP}:4000/images/${editModalData[imageUrl]}`}
+                    alt="Selected"
+                    style={{
+                      width: "48rem",
+                      height: "49rem",
+                    }}
+                    draggable={false}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </>

@@ -6,7 +6,7 @@ exports.checkDuplicates = async (req, res) => {
     const { header, tableName } = req.body;
 
     // **Validate input to prevent SQL injection**
-    if (!header || !tableName || /[^a-zA-Z0-9_\.]/.test(header) || /[^a-zA-Z0-9_]/.test(tableName)) {
+    if (!header || !tableName ) {
         return res.status(400).json({ error: "Invalid table name or column" });
       }
       
@@ -17,7 +17,7 @@ exports.checkDuplicates = async (req, res) => {
       FROM \`${tableName}\`
       GROUP BY \`${header}\`
       HAVING COUNT(*) > 1;
-    `;
+    `;  
 
     // **Execute the query using Sequelize**
     const duplicates = await sequelize.query(query, {

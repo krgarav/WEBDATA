@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 const UploadSection = ({
@@ -21,10 +21,16 @@ const UploadSection = ({
   imageFolder,
   setOpenPreFile,
   onGetCsvInfoHandler,
-  onFileHeaderDetailsHandler
+  onFileHeaderDetailsHandler,
 }) => {
+  const [enteredImageName, setEnteredImageName] = useState(null);
+  useEffect(() => {
+    if (data?.imageColName) {
+      handleImageNameChange(0, data?.imageColName);
+    }
+  }, [data]);
 
-
+  const changeHandler = (index) => {};
   return (
     <div className="pt-4 xl:pt-0 bg-gradient-to-r from-blue-400 to-blue-600">
       <div className="xl:flex justify-center items-center gap-5 mx-5 pt-20">
@@ -66,14 +72,16 @@ const UploadSection = ({
               <p
                 key={template.id}
                 onClick={() => setSelectedId(template.id)}
-                className={`group flex items-center justify-between w-full cursor-pointer mt-2 rounded-lg px-4 py-2 text-black ${selectedId === template.id ? "bg-blue-100" : ""
-                  }`}
+                className={`group flex items-center justify-between w-full cursor-pointer mt-2 rounded-lg px-4 py-2 text-black ${
+                  selectedId === template.id ? "bg-blue-100" : ""
+                }`}
               >
                 <span
-                  className={`${selectedId === template.id
-                    ? "text-blue-700 font-semibold text-lg hover:text-xl"
-                    : "text-black hover:text-teal-700 text-md font-medium"
-                    }`}
+                  className={`${
+                    selectedId === template.id
+                      ? "text-blue-700 font-semibold text-lg hover:text-xl"
+                      : "text-black hover:text-teal-700 text-md font-medium"
+                  }`}
                 >
                   {template.name}
                 </span>
@@ -101,11 +109,19 @@ const UploadSection = ({
                   Array.from({ length: data.pageCount }).map((_, index) => (
                     <div key={index} className="flex gap-3">
                       <input
+                        disabled={!!data?.imageColName} // Disable only if data.imageColName exists
                         type="text"
-                        value={imageNames[index] || ""}
-                        onChange={(e) =>
-                          handleImageNameChange(index, e.target.value)
+                        value={
+                          imageNames[index] !== undefined
+                            ? imageNames[index]
+                            : data?.imageColName
                         }
+                        onChange={(e) => {
+                          if (!data?.imageColName) {
+                            handleImageNameChange(index, e.target.value);
+                          }
+                        }}
+                        // onChange={()=>changeHandler(index)}
                         required
                         placeholder={
                           data.pageCount === 1
@@ -187,18 +203,18 @@ const UploadSection = ({
         </div>
       </div>
       <div className="my-6 w-full flex justify-center gap-4">
-        {selectedId &&
+        {selectedId && (
           <button
             onClick={() => {
-              setOpenPreFile(true)
-              onGetCsvInfoHandler()
+              setOpenPreFile(true);
+              onGetCsvInfoHandler();
             }}
             type="button"
             className="bg-teal-600 px-8 text-white py-3 text-xl font-medium rounded-3xl"
           >
             PRE FILES
           </button>
-        }
+        )}
         <button
           type="submit"
           onClick={onFileHeaderDetailsHandler}
@@ -208,7 +224,6 @@ const UploadSection = ({
         </button>
       </div>
     </div>
-
   );
 };
 
