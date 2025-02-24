@@ -317,7 +317,7 @@ const CorrectionField = ({
         </h3>
         <button
           className="px-6 py-2 bg-teal-600 rounded-lg text-white flex items-center justify-center min-w-[120px] h-[40px]"
-
+          disabled={isLoading}
           onClick={onUpdateHandler}
           id="update"
         >
