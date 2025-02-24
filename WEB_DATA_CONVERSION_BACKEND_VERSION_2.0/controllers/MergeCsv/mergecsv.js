@@ -22,7 +22,7 @@ async function createDynamicTable(headers) {
   };
 
   headers.forEach((header) => {
-    const normalizedHeader = header.replace(/\s+/g, "_"); // Remove spaces in column names
+    const normalizedHeader = header
 
     // Assign appropriate data types based on column content
     if (
@@ -61,7 +61,7 @@ async function processAndInsertCSV(mergedRecords) {
   let allHeaders = new Set();
   mergedRecords.forEach((record) => {
     Object.keys(record).forEach((key) =>
-      allHeaders.add(key.replace(/\s+/g, "_"))
+      allHeaders.add(key)
     );
   });
 
@@ -104,14 +104,14 @@ async function mergeCSVFiles(fileNames) {
           .on("headers", (headers) => {
             if (index === 0) {
               // Capture headers only from the first file
-              firstFileHeaders = headers.map((h) => h.replace(/\s+/g, "_"));
-              headersSet = new Set(firstFileHeaders);
+              firstFileHeaders = headers;
+              headersSet = new Set(headers);
             }
           })
           .on("data", (row) => {
             rowIndex++; // Increment row count
             
-            if (rowIndex === 2) {
+            if (rowIndex === 1) {
               // Skip second row
               return;
             }

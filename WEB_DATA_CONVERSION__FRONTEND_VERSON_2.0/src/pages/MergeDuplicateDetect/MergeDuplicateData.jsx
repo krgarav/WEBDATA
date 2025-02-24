@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import img23 from "./img23.png";
 import MergeEditDeleteDuplicate from "./MergeEditDeleteDuplicate";
 import { useLocation } from "react-router-dom";
+import MergeEditDuplicateData from "./MergeEditDuplicateData";
 
 const MergeDuplicateData = () => {
   const [editmodel, setEditmodel] = useState(false);
   const [duplicate, setDuplicate] = useState([]);
+  const [editViewModal,setEditViewModal] = useState(false)
   const location = useLocation();
   const state = location.state;
   const {duplicates,header,templateId}=state;
@@ -54,6 +56,7 @@ const MergeDuplicateData = () => {
   });
   return (
     <>
+    { !editViewModal&&
       <div className={`relative w-full h-screen ${editmodel ? "blur-sm" : ""}`}>
         <div className="w-[100%] pt-20 h-[100vh] bg-blue-500 lg:flex gap-10 xl:gap-80 px-5">
           <div className="inline-block align-bottom mt-7 pb-6 lg:h-[85vh] bg-teal-100 rounded-xl lg:ms-4 text-left shadow-md overflow-hidden transform transition-all sm:align-middle w-full md:w-1/2 lg:w-[30%]">
@@ -98,10 +101,10 @@ const MergeDuplicateData = () => {
             <img src={img23} alt="image" />
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* Modal Overlay */}
-      {editmodel && (
+      {editmodel && !editViewModal  && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white rounded-lg shadow-lg p-2 w-1/3 relative">
             <button
@@ -110,9 +113,13 @@ const MergeDuplicateData = () => {
             >
               ✖
             </button>
-            <MergeEditDeleteDuplicate />
+            <MergeEditDeleteDuplicate setEditViewModal={setEditViewModal} />
           </div>
         </div>
+      )}
+
+      {editViewModal &&(
+        <MergeEditDuplicateData setEditViewModal={setEditViewModal}/>
       )}
     </>
   );

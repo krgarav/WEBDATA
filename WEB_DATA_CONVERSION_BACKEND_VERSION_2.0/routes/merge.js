@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/mergecsv", mergeCSV);
 router.post("/checkmergecsv", checkTempalte);
 router.get("/gettabledata/:templateId", getTableHeaders);
-// router.get("/gettabledata/:tableName", getTableHeaders);
+
 router.post("/checkduplicates",checkDuplicates);
 router.post("/viewDuplicates",viewDuplicates)
 

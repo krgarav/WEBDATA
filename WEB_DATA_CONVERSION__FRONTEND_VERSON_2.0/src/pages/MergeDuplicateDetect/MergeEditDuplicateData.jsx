@@ -2,10 +2,11 @@ import React from "react";
 import img23 from "./img23.png";
 import { useNavigate } from "react-router-dom";
 
-const MergeEditDuplicateData = () => {
-
-    const navigate = useNavigate();
-
+const MergeEditDuplicateData = ({ setEditViewModal }) => {
+  const navigate = useNavigate();
+  const backHandler = () => {
+    setEditViewModal(false);
+  };
   return (
     <>
       <div className="w-[100%] pt-20 h-[100vh] bg-blue-500 lg:flex gap-10 xl:gap-80 px-5">
@@ -115,10 +116,12 @@ const MergeEditDuplicateData = () => {
     </div> */}
             <div className="flex  justify-around pb-3 lg:pb-5  px-4 lg:px-7 lg:w-full">
               <button class="group inline-block rounded-3xl bg-blue-500 p-[2px] text-white hover:bg-indigo-600 focus:outline-none focus:ring active:text-opacity-75">
-                <span class="block rounded-sm  px-10 py-2 text-md font-medium group-hover:bg-transparent"
-                onClick={() => {
-                  navigate("/merge/duplicate/data");
-                }}
+                <span
+                  class="block rounded-sm  px-10 py-2 text-md font-medium group-hover:bg-transparent"
+                  onClick={backHandler}
+                  //  onClick={() => {
+                  //     navigate("/merge/duplicate/data");
+                  //   }}
                 >
                   Back
                 </span>
