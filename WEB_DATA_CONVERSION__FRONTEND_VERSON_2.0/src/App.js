@@ -32,7 +32,6 @@ import Merge from "./pages/Merge/Merge";
 import MergeDuplicateDetect from "./pages/MergeDuplicateDetect/MergeDuplicateDetect";
 import MergeDuplicateData from "./pages/MergeDuplicateDetect/MergeDuplicateData";
 import MergeEditDuplicateData from "./pages/MergeDuplicateDetect/MergeEditDuplicateData";
-import Structure from "./pages/MergeDuplicateDetect/Structure";
 
 function App() {
   const datactx = useContext(dataContext);
@@ -122,7 +121,6 @@ function App() {
                   <Route path="/merge/duplicate" element={<MergeDuplicateDetect />} />
                   <Route path="/merge/duplicate/data" element={<MergeDuplicateData />} />
                   <Route path="/merge/duplicate/data/edit" element={<MergeEditDuplicateData />} />
-                  <Route path="/merge/structure" element={<Structure />} />
                 </>
               )}
 
