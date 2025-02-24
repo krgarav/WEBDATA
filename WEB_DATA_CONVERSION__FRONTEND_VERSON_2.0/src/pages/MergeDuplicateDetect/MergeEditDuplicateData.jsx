@@ -3,6 +3,7 @@ import img23 from "./img23.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { REACT_APP_IP } from "../../services/common";
+import { toast } from "react-toastify";
 
 const MergeEditDuplicateData = ({
   templateId,
@@ -72,12 +73,16 @@ const MergeEditDuplicateData = ({
     delete obj["column"];
     delete obj["id"];
     delete obj["index"];
-    delete obj["Serial No."];
+    // delete obj["Serial No."];
     try {
       const res = await axios.put(
         `http://${REACT_APP_IP}:4000/updateRow?templateId=${templateId}&rowId=${formData.id}`,
         obj
       );
+      if (res?.data?.success) {
+        toast.success("Updated the data successfully");
+        setEditViewModal(false);
+      }
       console.log(res.data);
     } catch (error) {}
   };

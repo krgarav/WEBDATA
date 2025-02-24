@@ -17,6 +17,7 @@ router.get("/gettabledata/:templateId", getTableHeaders);
 router.post("/checkduplicates",checkDuplicates);
 router.post("/viewDuplicates",viewDuplicates);
 router.get("/getImageCol",getImageCol);
-router.put("/updateRow",updateDuplicate)
+router.put("/updateRow",updateDuplicate);
+router.delete("/deleteRow",deleteDuplicate);
 
 module.exports = router;
