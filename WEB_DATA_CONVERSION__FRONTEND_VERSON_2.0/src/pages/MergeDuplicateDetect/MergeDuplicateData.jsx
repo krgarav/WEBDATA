@@ -71,8 +71,8 @@ const MergeDuplicateData = () => {
     <>
     { !editViewModal&&
       <div className={`relative w-full h-screen ${editmodel ? "blur-sm" : ""}`}>
-        <div className="w-[100%] pt-20 h-[100vh] bg-blue-500 lg:flex gap-10 xl:gap-80 px-5">
-          <div className="inline-block align-bottom mt-7 pb-6 lg:h-[85vh] bg-teal-100 rounded-xl lg:ms-4 text-left shadow-md overflow-hidden transform transition-all sm:align-middle w-full md:w-1/2 lg:w-[30%]">
+        <div className="w-[100%] pt-20 h-[100vh] bg-blue-500 lg:flex gap-10 xl:gap-80 px-5 justify-center">
+          <div className="inline-block align-bottom mt-7 pb-6 lg:h-[85vh] bg-teal-100 rounded-xl lg:ms-4 text-left shadow-md overflow-hidden transform transition-all sm:align-middle w-4/12">
             <div className="px-4">
               <div className="sm:flex">
                 <div className="text-center sm:mt-0 sm:text-left w-full">
@@ -109,10 +109,10 @@ const MergeDuplicateData = () => {
               </div>
             </div>
           </div>
-          <div className="mt-5">
+          {/* <div className="mt-5">
             <h1 className="text-white text-xl text-center mb-3">1 out of 1</h1>
             <img src={img23} alt="image" />
-          </div>
+          </div> */}
         </div>
       </div>}
 

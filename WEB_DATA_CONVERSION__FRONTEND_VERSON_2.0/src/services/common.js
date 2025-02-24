@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 // export const SERVER_IP = "http://192.168.1.60:4000";
 // export const REACT_APP_IP = window.location.hostname;
-export const REACT_APP_IP ="192.168.1.17"
+export const REACT_APP_IP ="192.168.1.13"
 export const SERVER_IP = process.env.REACT_APP_SERVER_IP;
 
 export const onGetTemplateHandler = async () => {
