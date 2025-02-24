@@ -3,12 +3,14 @@ import img23 from "./img23.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { REACT_APP_IP } from "../../services/common";
+import { toast } from "react-toastify";
 
 const MergeEditDuplicateData = ({
   templateId,
   editModalData,
   setEditViewModal,
 }) => {
+  const [formData, setFormData] = useState(editModalData || {});
   const [editableData, setEditableData] = useState({});
   const [headerData, setHeaderData] = useState([]);
   const [imageUrl, setImageUrl] = useState(null);
@@ -41,6 +43,12 @@ const MergeEditDuplicateData = ({
       setHeaderData(header);
     }
   }, [editModalData]);
+  const handleInputChange = (key, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [key]: value, // Update specific field
+    }));
+  };
   const alldata = headerData.map((item) => {
     return (
       <div className="flex flex-row justify-center">
@@ -49,7 +57,8 @@ const MergeEditDuplicateData = ({
           <input
             className="text-center p-2 rounded-3xl lg:w-11/12"
             type="text"
-            value={editModalData[item]}
+            value={formData[item] || ""}
+            onChange={(e) => handleInputChange(item, e.target.value)}
           />
         </div>
       </div>
@@ -57,6 +66,25 @@ const MergeEditDuplicateData = ({
   });
   const backHandler = () => {
     setEditViewModal(false);
+  };
+
+  const saveHandler = async () => {
+    const obj = { ...formData };
+    delete obj["column"];
+    delete obj["id"];
+    delete obj["index"];
+    // delete obj["Serial No."];
+    try {
+      const res = await axios.put(
+        `http://${REACT_APP_IP}:4000/updateRow?templateId=${templateId}&rowId=${formData.id}`,
+        obj
+      );
+      if (res?.data?.success) {
+        toast.success("Updated the data successfully");
+        setEditViewModal(false);
+      }
+      console.log(res.data);
+    } catch (error) {}
   };
   return (
     <>
@@ -74,6 +102,7 @@ const MergeEditDuplicateData = ({
                 </div>
               </div>
             </div>
+
             {/* <div className="flex flex-col space-y-4 lg:space-y-0 lg:space-x-12 lg:flex-row lg:pt-2 lg:pb-1  px-4 lg:px-7 w-[25%] lg:w-full">
       <button
         onClick={() => setEditModal(false)}
@@ -93,6 +122,10 @@ const MergeEditDuplicateData = ({
       </button>
     </div> */}
             <div className="flex justify-around pb-3 lg:pb-5 lg:w-full">
+
+
+            <div className="flex  justify-around pb-3 lg:pb-5  px-4 lg:px-7 lg:w-full">
+
               <button class="group inline-block rounded-3xl bg-blue-500 p-[2px] text-white hover:bg-indigo-600 focus:outline-none focus:ring active:text-opacity-75">
                 <span
                   class="block rounded-sm  px-10 py-2 text-md font-medium group-hover:bg-transparent"
@@ -104,7 +137,10 @@ const MergeEditDuplicateData = ({
                   Back
                 </span>
               </button>
-              <button class="group inline-block rounded-3xl bg-blue-500 p-[2px] text-white hover:bg-indigo-600 focus:outline-none focus:ring active:text-opacity-75">
+              <button
+                class="group inline-block rounded-3xl bg-blue-500 p-[2px] text-white hover:bg-indigo-600 focus:outline-none focus:ring active:text-opacity-75"
+                onClick={saveHandler}
+              >
                 <span class="block rounded-sm  px-10 py-2 text-md font-medium group-hover:bg-transparent">
                   Save
                 </span>

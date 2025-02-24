@@ -126,7 +126,7 @@ const MergeDuplicateData = () => {
             >
               ✖
             </button>
-            <MergeEditDeleteDuplicate setEditModalData={setEditModalData} duplicateData={duplicateData} setEditViewModal={setEditViewModal} />
+            <MergeEditDeleteDuplicate templateId={templateId} setEditModalData={setEditModalData} duplicateData={duplicateData} setEditViewModal={setEditViewModal} />
           </div>
         </div>
       )}

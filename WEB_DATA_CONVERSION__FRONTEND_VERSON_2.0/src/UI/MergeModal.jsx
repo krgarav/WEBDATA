@@ -25,7 +25,6 @@ const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
         }));
         setOptions(csvOptions);
       }
-     
     };
     fetchOptions();
   }, [isOpen]);
@@ -48,7 +47,6 @@ const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
         setMerge(false);
         setTableName(res.data.tableName);
       }
-    
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.error);
@@ -65,30 +63,21 @@ const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
     // console.log(tableName);
     // // templateId
     try {
-
       setLoading(true);
-     
-  
-    
+
       const response = await axios.get(
         `http://${REACT_APP_IP}:4000/gettabledata/${templateId}`
-
       );
 
       const headers = response.data.headers;
 
-      console.log(headers);
-
-       navigate("/merge/duplicate", { state: { headers, tableName,templateId } });
-    
+      navigate("/merge/duplicate", {
+        state: { headers, tableName, templateId },
+      });
     } catch (error) {
     } finally {
       setLoading(false);
     }
-
-     
-   
-
   };
 
   return (
@@ -188,7 +177,9 @@ const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
                 <button
                   type="button"
                   onClick={duplicateHandler}
-                  className={`mt-3 w-full inline-flex justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600 sm:mt-0 sm:w-auto ${loading ? "bg-green-400":"bg-green-500"} text-white mx-2`}
+                  className={`mt-3 w-full inline-flex justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-green-600 sm:mt-0 sm:w-auto ${
+                    loading ? "bg-green-400" : "bg-green-500"
+                  } text-white mx-2`}
                 >
                   {loading ? (
                     <span className="flex">

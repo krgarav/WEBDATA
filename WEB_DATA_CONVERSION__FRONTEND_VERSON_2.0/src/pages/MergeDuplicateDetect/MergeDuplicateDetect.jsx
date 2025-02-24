@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { REACT_APP_IP } from "../../services/common";
 import axios from "axios";
+
 import MergeDownload from "./MergeDownload";
+
+import { toast } from "react-toastify";
+
 
 const MergeDuplicateDetect = () => {
   const [headers, setHeaders] = useState([]);
@@ -15,6 +19,7 @@ const MergeDuplicateDetect = () => {
   useEffect(() => {
     const { headers } = location.state;
     if (headers) {
+    
       setHeaders(headers);
     }
   }, []);
@@ -31,10 +36,11 @@ const MergeDuplicateDetect = () => {
       );
       const { data } = response;
       if (data.duplicates.length > 0) {
-        const duplicates = data.duplicates;
-        navigate("/merge/duplicate/data", {
-          state: { duplicates, header, templateId },
-        });
+
+        const duplicates = data.duplicates
+        navigate("/merge/duplicate/data", { state: {duplicates ,header,templateId} });
+      }else{
+        toast.warning("No Duplicates Found")
       }
     } catch (error) {}
   };

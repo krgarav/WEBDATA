@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { 
-  GridComponent, 
-  ColumnsDirective, 
-  ColumnDirective, 
-  Inject, 
-  Page, 
-  Edit, 
-  Toolbar 
+import {
+  GridComponent,
+  ColumnsDirective,
+  ColumnDirective,
+  Inject,
+  Page,
+  Edit,
+  Toolbar,
 } from "@syncfusion/ej2-react-grids";
 import "@syncfusion/ej2-base/styles/material.css";
 import "@syncfusion/ej2-react-grids/styles/material.css";
+import axios from "axios";
+import { REACT_APP_IP } from "../../services/common";
 
-const MergeEditDeleteDuplicate = ({setEditModalData, setEditViewModal, duplicateData }) => {
+const MergeEditDeleteDuplicate = ({
+  templateId,
+  setEditModalData,
+  setEditViewModal,
+  duplicateData,
+}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -23,12 +30,13 @@ const MergeEditDeleteDuplicate = ({setEditModalData, setEditViewModal, duplicate
   // Filtering logic: Stop looping when a key starts with "q"
   let stopProcessing = false;
   const columns = [];
-  
+
   if (data.length > 0) {
     for (const key of Object.keys(data[0])) {
-      if (/^q/i.test(key)) {  // Stops looping if key starts with "q" or "Q"
+      if (/^q/i.test(key)) {
+        // Stops looping if key starts with "q" or "Q"
         stopProcessing = true;
-        break;  // Exit the loop
+        break; // Exit the loop
       }
       columns.push({
         field: key,
@@ -48,7 +56,6 @@ const MergeEditDeleteDuplicate = ({setEditModalData, setEditViewModal, duplicate
         <button
           className="px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-700"
           onClick={() => {
-            console.log("Editing row:", props); // Log entire row data
             setEditViewModal(true);
             setEditModalData(props); // Store row data in state
           }}
@@ -74,11 +81,20 @@ const MergeEditDeleteDuplicate = ({setEditModalData, setEditViewModal, duplicate
       textAlign: "Center",
     }
   );
-  
 
   // Delete handler
-  const handleDelete = (rowData) => {
-    setData((prevData) => prevData.filter((item) => item !== rowData));
+  const handleDelete = async (rowData) => {
+    const result = window.confirm("Are you sure you want to delete this item?");
+    if (!result) {
+      return;
+    }
+    try {
+      const obj = { rowId: rowData.id, templateId };
+      console.log(obj);
+      const res = await axios.delete(`http://${REACT_APP_IP}:4000/deleteRow?rowId=${rowData.id}&templateId=${templateId}`)
+      console.log(res)
+    } catch (error) {}
+    // setData((prevData) => prevData.filter((item) => item !== rowData));
   };
 
   return (
