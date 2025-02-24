@@ -132,7 +132,7 @@ const MergeDuplicateData = () => {
       )}
 
       {editViewModal &&(
-        <MergeEditDuplicateData editModalData={editModalData}  setEditViewModal={setEditViewModal} />
+        <MergeEditDuplicateData templateId={templateId} editModalData={editModalData}  setEditViewModal={setEditViewModal} />
       )}
     </>
   );

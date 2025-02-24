@@ -2,6 +2,7 @@ const Template = require("../../models/TempleteModel/templete");
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../../utils/database");
 const { QueryTypes } = require("sequelize");
+const Templete = require("../../models/TempleteModel/templete");
 exports.viewDuplicates = async (req, res) => {
     try {
       const { colName, colValue, templateId } = req.body;
@@ -55,3 +56,30 @@ exports.viewDuplicates = async (req, res) => {
       });
     }
   };
+
+  exports.getImageCol = async (req, res) => {
+    try {
+      const { templateId } = req.query;
+  
+      if (!templateId) {
+        return res.status(400).json({ success: false, message: "Template ID is required" });
+      }
+  
+      const template = await Templete.findByPk(templateId);
+  
+      if (!template) {
+        return res.status(404).json({ success: false, message: "Template not found" });
+      }
+  
+      const imageCol = template.imageColName; // Corrected variable
+  
+      console.log("Template ID:", templateId);
+  
+      return res.json({ success: true, imageCol: imageCol });
+  
+    } catch (error) {
+      console.error("Error fetching imageCol:", error);
+      return res.status(500).json({ success: false, message: "Server error" });
+    }
+  };
+  
