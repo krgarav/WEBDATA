@@ -100,7 +100,7 @@ exports.deleteDuplicate = async (req, res) => {
     // Use a parameterized query with dynamic table name
     const deleteQuery = `
       DELETE FROM \`${tableName}\`
-      WHERE id != :rowId
+      WHERE id = :rowId
     `;
 
     const result = await sequelize.query(deleteQuery, {
@@ -110,7 +110,7 @@ exports.deleteDuplicate = async (req, res) => {
 
     res.status(200).json({
       message: "Duplicate entries deleted successfully",
-      // affectedRows: result[1], // Number of deleted rows
+      affectedRows: result[1], // Number of deleted rows
     });
   } catch (error) {
     console.error("Error deleting duplicates:", error);
