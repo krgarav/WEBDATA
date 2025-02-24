@@ -19,6 +19,8 @@ const Merge = () => {
   const [modals, setModals] = useState(false);
   const [message, setMessage] = useState("");
   const [tableName, setTableName] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const handleSelectAll = () => {
     if (selectedValues.length === options.length) {
       setSelectedValues([]);
@@ -37,6 +39,7 @@ const Merge = () => {
       files: selectedValues.map((item) => item.value),
     };
     try {
+      setLoading(true);
       const res = await axios.post(
         `http://${REACT_APP_IP}:4000/checkmergecsv`,
         obj
@@ -47,6 +50,8 @@ const Merge = () => {
       console.log(res);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -141,10 +146,36 @@ const Merge = () => {
           <div className="flex justify-center items-center mt-10">
             <button
               type="button"
-              class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-all flex justify-center items-center gap-2"
+              class={`text-white focus:outline-none focus:ring-2 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 transition-all ${loading ? "bg-blue-500":"bg-blue-700 hover:bg-blue-800"}`}
               onClick={checkMergeHandler}
             >
-              <MdCompareArrows size={23} /> Check Merge
+              {loading ? (
+                    <span className="flex">
+                      <svg
+                        className="ml-1 mr-2 h-5 w-5 animate-spin text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
+                      </svg>
+                      Checking...
+                    </span>
+                  ) : (
+                    <span className="flex justify-center items-center gap-2"><MdCompareArrows size={23} /> Check Merge</span>
+                  )}
             </button>
           </div>
         </div>
