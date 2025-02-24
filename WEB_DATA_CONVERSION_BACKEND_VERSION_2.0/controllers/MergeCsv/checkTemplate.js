@@ -90,7 +90,8 @@ exports.getTableHeaders = async (req, res) => {
       `SELECT COLUMN_NAME 
        FROM information_schema.columns 
        WHERE table_name = :tableName 
-       AND table_schema = DATABASE()`, // Ensure correct schema
+       AND table_schema = DATABASE()
+       ORDER BY ORDINAL_POSITION`, // Ensure correct schema
       { replacements: { tableName }, type: QueryTypes.SELECT }
     );
 

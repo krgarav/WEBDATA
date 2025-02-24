@@ -48,7 +48,6 @@ const MergeEditDeleteDuplicate = ({setEditModalData, setEditViewModal, duplicate
         <button
           className="px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-700"
           onClick={() => {
-            console.log("Editing row:", props); // Log entire row data
             setEditViewModal(true);
             setEditModalData(props); // Store row data in state
           }}
