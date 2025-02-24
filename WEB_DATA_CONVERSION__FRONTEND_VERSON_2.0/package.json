@@ -36,7 +36,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+   "set-ip": "node set-ip.js",
+  "build": "npm run set-ip && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -76,7 +76,7 @@ const Merge = () => {
           isOpen={modals}
           onClose={() => setModals(false)}
           message={message}
-        tableName={tableName}
+        table={tableName}
           templateId={selectedTemplate}
           // taskId={taskId}
         />

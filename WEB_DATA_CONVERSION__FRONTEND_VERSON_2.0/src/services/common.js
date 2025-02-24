@@ -2,8 +2,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 // export const SERVER_IP = "http://192.168.1.60:4000";
-export const REACT_APP_IP = "192.168.1.17";
-
+export const REACT_APP_IP = window.location.hostname;
+export const SERVER_IP = process.env.REACT_APP_SERVER_IP;
 
 export const onGetTemplateHandler = async () => {
   const token = JSON.parse(localStorage.getItem("userData"));
@@ -59,7 +59,7 @@ export const onGetVerifiedUserHandler = async () => {
     );
 
     return response.data;
-  } catch (error) { }
+  } catch (error) {}
 };
 
 export const onGetAllTasksHandler = async () => {
@@ -97,16 +97,15 @@ export const onGetTaskHandler = async (id) => {
   }
 };
 
-
-
 export const fetchFilesAssociatedWithTemplate = async (templateId) => {
   const token = JSON.parse(localStorage.getItem("userData"));
 
   try {
-    const response = await axios.post(`http://${REACT_APP_IP}:4000/getUploadedFiles/${templateId}`,
+    const response = await axios.post(
+      `http://${REACT_APP_IP}:4000/getUploadedFiles/${templateId}`,
       {
         headers: {
-          token: token, 
+          token: token,
         },
       }
     );
@@ -116,12 +115,21 @@ export const fetchFilesAssociatedWithTemplate = async (templateId) => {
   }
 };
 
-
 export const fetchLatestTaskData = async (taskId) => {
   const token = JSON.parse(localStorage.getItem("userData"));
 
   const response = await axios.get(
     `http://${REACT_APP_IP}:4000/getTask/${taskId}`,
+    { headers: { token } }
+  );
+  return response.data; // Return latest task data
+};
+export const fetchTemplateFormData = async (templateId, colName) => {
+  const token = JSON.parse(localStorage.getItem("userData"));
+  const obj = { templateId, colName };
+  const response = await axios.post(
+    `http://${REACT_APP_IP}:4000/formfileddetails/`,
+    obj,
     { headers: { token } }
   );
   return response.data; // Return latest task data

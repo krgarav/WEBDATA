@@ -31,12 +31,12 @@ const UserTaskAssined = ({
       : taskType === "completed"
       ? allTasks?.filter((task) => task?.taskStatus === true)
       : allTasks;
-
+      console.log(filteredTasks)
   return (
     <div className="h-[100vh] flex justify-center bg-gradient-to-r from-blue-400 to-blue-600 items-center templatemapping">
       <div className="">
         {/* MAIN SECTION  */}
-        <section className="mx-auto max-w-4xl  px-12 py-10 bg-white rounded-xl w-[100vw]">
+        <section className="mx-auto max-w-5xl  px-10 py-10 bg-white rounded-xl w-[100vw]">
           <div className="flex flex-col space-y-4  md:flex-row md:items-center md:justify-between md:space-y-0">
             <div>
               <h2 className="text-3xl font-semibold">Assigned Tasks</h2>
@@ -83,7 +83,9 @@ const UserTaskAssined = ({
                         <div className=" py-3.5 px-4 text-center text-xl font-semibold text-gray-700 w-[150px]">
                           <span>Templates</span>
                         </div>
-
+                        <div className=" py-3.5 px-4 text-center text-xl font-semibold text-gray-700 w-[150px]">
+                          <span>Task Name</span>
+                        </div>
                         <div className=" py-3.5 px-4 text-center  text-xl font-semibold text-gray-700 w-[100px]">
                           Min
                         </div>
@@ -109,6 +111,12 @@ const UserTaskAssined = ({
                             <div className="whitespace-nowrap w-[150px] px-4">
                               <div className="text-md text-center">
                                 {taskData.templateName}
+                              </div>
+                            </div>
+                            
+                            <div className="whitespace-nowrap w-[150px] px-4">
+                              <div className="text-md text-center">
+                                {taskData.taskName}
                               </div>
                             </div>
                             <div className="whitespace-nowrap w-[100px] px-4">
@@ -298,6 +306,11 @@ const UserTaskAssined = ({
                             <div className="whitespace-nowrap w-[150px] px-4">
                               <div className="text-md text-center">
                                 {taskData.templateName}
+                              </div>
+                            </div>
+                            <div className="whitespace-nowrap w-[150px] px-4">
+                              <div className="text-md text-center">
+                                {taskData.taskName}
                               </div>
                             </div>
                             <div className="whitespace-nowrap w-[100px] px-4">

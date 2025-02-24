@@ -16,6 +16,7 @@ const { getUploadedFilesByTemplateId } = require("../controllers/CompareCsv/getU
 const downloadCorrectedCsv = require("../controllers/CompareCsv/downloadCorrectedCsv");
 const downlaodErrorCorrectedFile = require("../controllers/CompareCsv/downlaodErrorCorrectedFile");
 const { getCsvHeaders } = require("../controllers/CompareCsv/uploadedHeader");
+const { formFieldDetails } = require("../controllers/CompareCsv/formFieldDetails");
 
 const router = express.Router();
 
@@ -34,6 +35,6 @@ router.get("/submitTask/:taskId", authMiddleware, submitTask);
 router.post("/mult_error", authMiddleware,multerUpload, blank);
 router.post('/getUploadedFiles/:templateId', getUploadedFilesByTemplateId);
 router.get('/getUploadedFileHeader', getCsvHeaders);
-
+router.post("/formfileddetails",formFieldDetails)
 module.exports = router;
 

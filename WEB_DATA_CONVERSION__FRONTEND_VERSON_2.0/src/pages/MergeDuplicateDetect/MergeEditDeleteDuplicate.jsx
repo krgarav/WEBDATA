@@ -3,10 +3,12 @@ import { MdDelete } from "react-icons/md";
 import MergeEditDuplicateData from "./MergeEditDuplicateData";
 import { useNavigate } from "react-router-dom";
 
-const MergeEditDeleteDuplicate = () => {
+const MergeEditDeleteDuplicate = ({setEditViewModal}) => {
 
   const navigate = useNavigate();
-
+const editHandler = ()=>{
+  setEditViewModal(true)
+}
   return (
     <>
         {/* <div className="w-[100%] pt-20 h-[100vh] bg-blue-500 flex justify-center items-center"> */}
@@ -45,9 +47,10 @@ const MergeEditDeleteDuplicate = () => {
                             <div className="text-center py-4 whitespace-nowrap text-sm text-gray-500 w-1/4">
                               <button
                                 className="border-e px-4 bg-gray-100 py-2 text-sm/none text-blue-600 rounded-3xl hover:bg-blue-200"
-                                onClick={() => {
-                                  navigate("/merge/duplicate/data/edit");
-                                }}
+                                onClick={editHandler}
+                                // onClick={() => {
+                                //   navigate("/merge/duplicate/data/edit");
+                                // }}
                               >
                                 Edit
                               </button>
