@@ -33,8 +33,8 @@ const CSVFormDataSection = ({
   // }, []);
 
   return (
-    <div className="border-e lg:w-3/12 xl:w-[20%] order-lg-1">
-      <div className="overflow-hidden w-[100%]">
+    <div className="border-e order-lg-1 w-60">
+      <div className="overflow-hidden">
         <article
           style={{ scrollbarWidth: "thin" }}
           className="py-10 mt-5 lg:mt-16 shadow transition hover:shadow-lg mx-auto overflow-y-auto lg:h-[80vh] rounded-lg flex flex-row lg:flex-col lg:items-center w-[95%] bg-blue-500"

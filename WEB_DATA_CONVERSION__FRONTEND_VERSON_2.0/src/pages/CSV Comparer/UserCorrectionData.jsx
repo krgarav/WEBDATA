@@ -816,7 +816,7 @@ const UserCorrectionData = () => {
         </div>
       )}
       {!popUp && (
-        <div className=" flex flex-col lg:flex-row  bg-gradient-to-r from-blue-400 to-blue-500 dataEntry pt-20">
+        <div className=" flex flex-col lg:flex-row  bg-gradient-to-r from-blue-400 to-blue-500 dataEntry pt-16 xl:pt-20 xl:h-screen">
           {/* LEFT SECTION */}
           <CSVFormDataSection
             csvCurrentData={csvCurrentData}
