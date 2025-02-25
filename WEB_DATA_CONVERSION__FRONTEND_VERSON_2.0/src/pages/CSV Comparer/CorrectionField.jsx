@@ -290,12 +290,12 @@ const CorrectionField = ({
   });
 
   return (
-    <div className="mx-4 bg-white my-6 px-4 py-4 rounded-md">
+    <div className="mx-4 bg-white xl:my-4 px-4 py-2 rounded-md">
       <div className="flex justify-between mb-6 mt-2">
-        <h2 className="text-xl mx-4 font-bold pt-1 text-blue-500">
+        <h2 className="xl:text-xl mx-4 font-bold pt-1 text-blue-500 bg-blue-200 p-2 rounded-lg border border-blue-400">
           {`${correctionData?.previousData?.PRIMARY_KEY} (Primary Key)`}
         </h2>
-        <h3 className="text-lg font-bold bg-red-100 text-red-600 px-2 py-1 rounded-md shadow-md border border-red-300">
+        <h3 className="xl:text-lg font-bold bg-red-100 text-red-600 px-2 py-1 rounded-md shadow-md border border-red-300">
           Total Errors:{" "}
           <span className="font-extrabold">{filteredData?.length}</span>
         </h3>
