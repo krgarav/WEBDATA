@@ -51,11 +51,11 @@ const MergeEditDuplicateData = ({
   };
   const alldata = headerData.map((item) => {
     return (
-      <div className="flex flex-col lg:flex-row justify-center">
-        <div className="py-2 px-2 text-center lg:w-1/2">{item}</div>
-        <div className="py-2 p-2 px-2 text-center lg:w-1/2">
+      <div className="flex justify-center overflow-y-auto">
+        <div className="py-2 px-2 text-center w-1/3">{item}</div>
+        <div className="py-2 p-2 px-2 text-center">
           <input
-            className="text-center p-2 rounded-3xl lg:w-11/12"
+            className="text-center p-2 rounded-3xl"
             type="text"
             value={formData[item] || ""}
             onChange={(e) => handleInputChange(item, e.target.value)}
@@ -88,22 +88,22 @@ const MergeEditDuplicateData = ({
   };
   return (
     <>
-      <div className="w-[100%] pt-20 h-[100vh] bg-blue-500 lg:flex gap-10 xl:gap-80 px-5">
-        <div className="flex flex-row lg:flex-col justify-center items-center lg:ms-3 w-full md:w-1/2 lg:w-[25%]">
-          <div className="mx-6 inline-block align-bottom lg:mt-2  bg-teal-100 rounded-xl  text-left shadow-md transform transition-all  sm:align-middle  w-[90%] lg:w-full">
+      <div className="w-[100%] pt-20 lg:h-[100vh] bg-blue-500 lg:flex gap-10 xl:gap-80 px-5">
+        <div className="flex flex-row lg:flex-col justify-center items-center lg:ms-3 w-full md:w-[70%] lg:w-[35%] mx-auto">
+          <div className="mx-6 inline-block align-bottom lg:mt-2  bg-teal-100 rounded-xl  text-left shadow-md transform transition-all  sm:align-middle  w-[100%]  lg:w-[98%] 2xl:w-[72%]">
             <div className="px-4 py-2 lg:py-3">
               <div className="sm:flex w-full">
                 <div className="text-center  sm:text-left w-full">
-                  <div className=" font-semibold my-2 overflow-x-auto lg:overflow-y-auto lg:h-[70vh]">
+                  <div className=" font-semibold my-2 overflow-auto h-[70vh]">
                     <div className="divide-y divide-gray-100 text-sm">
-                      <div className="flex lg:block">{alldata}</div>
+                      <div className="flex flex-col">{alldata}</div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex  justify-around pb-3 lg:pb-5  px-4 lg:px-7 lg:w-full">
+            <div className="flex  justify-around pb-3 lg:w-full">
               <button class="group inline-block rounded-3xl bg-blue-500 p-[2px] text-white hover:bg-indigo-600 focus:outline-none focus:ring active:text-opacity-75">
                 <span
                   class="block rounded-sm  px-10 py-2 text-md font-medium group-hover:bg-transparent"
@@ -140,23 +140,23 @@ const MergeEditDuplicateData = ({
         </div> */}
 
         <div className="mx-auto max-w-screen-xl px-2 lg:py-1 sm:px-6 lg:px-8">
-          <div className=" flex justify-center ">
-            <div className="">
+          <div className=" flex justify-center h-full">
+            <div className="pt-4">
               {imageUrl && (
                 <div
                   style={{
                     position: "relative",
                   }}
-                  className="w-full overflow-y-auto pb-4"
+                  className="w-full pb-4 overflow-auto h-[97%]"
                 >
                   <img
                     // src={`data:image/jpeg;base64,${imageUrl}`}
                     src={`http://${REACT_APP_IP}:4000/images/${editModalData[imageUrl]}`}
                     alt="Selected"
-                    style={{
-                      width: "48rem",
-                      height: "49rem",
-                    }}
+                    // style={{
+                    //   width: "48rem",
+                    //   height: "49rem",
+                    // }}
                     draggable={false}
                   />
                 </div>
