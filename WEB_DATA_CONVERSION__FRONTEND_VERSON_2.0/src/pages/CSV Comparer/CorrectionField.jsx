@@ -26,6 +26,7 @@ const CorrectionField = ({
   const [visitedRows, setVisitedRows] = useState({}); // Track visited rows
   const inputRefs = useRef([]);
   const [isLoading, setIsLoading] = useState(false);
+  const isUpdatingRef = useRef(false);
   // const firstInputRef = useRef(null);
 
   // useEffect(() => {
@@ -115,6 +116,10 @@ const CorrectionField = ({
     handleVisit(0);
   }, []);
   useEffect(() => {
+    return () => setIsLoading(false);
+ }, []);
+ 
+  useEffect(() => {
     const handleTabKey = (e) => {
       if (e.key === "Tab") {
         e.preventDefault(); // Prevent default tab behavior
@@ -148,76 +153,47 @@ const CorrectionField = ({
     }));
   };
   const onUpdateHandler = async () => {
+    if (isUpdatingRef.current) return;
+    isUpdatingRef.current = true;
     setIsLoading(true);
-    const updates = Object.entries(inputValue).map(([key, correctedValue]) => {
-      const [primary, columnName] = key.split("-");
-      return {
-        PRIMARY: primary,
-        PRIMARY_KEY,
-        CORRECTED: correctedValue, // Allow empty values
-        COLUMN_NAME: columnName,
-      };
-    });
-
-    if (updates.length === 0) return; // Ensure there are values to update
+ 
     try {
-      // const response = await axios.post(
-      //   `http://${REACT_APP_IP}:4000/csvUpdateData/${taskId}/batch`,
-      //   updates,
-      //   {
-      //     headers: {
-      //       token: token,
-      //     },
-      //   }
-      // );
-      // Get the latest `updatedAt`
-      const response = await axios.post(
-        `http://${REACT_APP_IP}:4000/csvUpdateData/${taskId}/batch`,
-
-        updates, // Your update data
-
-        {
-          headers: {
-            token: token,
-          },
-        }
-      );
-
-      // Update the local state with the new corrected values
-      setCorrectionData((prevState) => {
-        const updatedData = prevState?.previousData?.DATA?.map((item) => {
-          const update = updates.find(
-            (u) =>
-              u?.PRIMARY?.trim() === item?.PRIMARY?.trim() &&
-              u?.COLUMN_NAME?.trim() === item?.COLUMN_NAME?.trim()
-          );
-          if (update) {
-            return { ...item, CORRECTED: update?.CORRECTED };
-          }
-          return item;
-        });
-
-        return {
-          ...prevState,
-          previousData: {
-            ...prevState?.previousData,
-            DATA: updatedData,
-          },
-        };
-      });
-      if (currentIndex !== maximum) {
-        setInputValue({});
-      }
-      
-      toast.success("Corrected Value is Updated");
-      onNextHandler("next", currentIndex);
+       const updates = Object.entries(inputValue).map(([key, correctedValue]) => {
+          const [primary, columnName] = key.split("-");
+          return { PRIMARY: primary, PRIMARY_KEY, CORRECTED: correctedValue, COLUMN_NAME: columnName };
+       });
+ 
+       if (updates.length === 0) return;
+ 
+       const response = await axios.post(`http://${REACT_APP_IP}:4000/csvUpdateData/${taskId}/batch`, updates, {
+          headers: { token: token },
+       });
+ 
+       setCorrectionData((prevState) => {
+          const updatedData = prevState?.previousData?.DATA?.map((item) => {
+             const update = updates.find(
+                (u) => u?.PRIMARY?.trim() === item?.PRIMARY?.trim() && u?.COLUMN_NAME?.trim() === item?.COLUMN_NAME?.trim()
+             );
+             return update ? { ...item, CORRECTED: update?.CORRECTED } : item;
+          });
+ 
+          return { ...prevState, previousData: { ...prevState?.previousData, DATA: updatedData } };
+       });
+ 
+       if (currentIndex !== maximum) {
+          setInputValue({});
+       }
+ 
+       toast.success("Corrected Value is Updated");
+       onNextHandler("next", currentIndex);
     } catch (error) {
-      console.error("Error updating data:", error.response.data.message);
-      toast.error(error.response.data.message);
+       console.error("Error updating data:", error?.response?.data?.message || error);
+       toast.error(error?.response?.data?.message || "An error occurred");
     } finally {
-      setIsLoading(false);
+       setIsLoading(false);
+       isUpdatingRef.current = false;
     }
-  };
+ };
 
   const errorData = updatedData?.map((dataItem, index) => {
     const key = `${PRIMARY?.trim()}-${dataItem?.COLUMN_NAME?.trim()}`;

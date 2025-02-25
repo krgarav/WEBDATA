@@ -6,7 +6,7 @@ import {
   onGetTaskHandler,
   onGetTemplateHandler,
   onGetVerifiedUserHandler,
-  REACT_APP_IP
+  REACT_APP_IP,
 } from "../../services/common";
 import { useNavigate } from "react-router-dom";
 import AdminAssined from "./AdminAssined";
@@ -44,7 +44,7 @@ const DataMatching = () => {
   const inputRefs = useRef([]);
   const [errorKey, setErrorKey] = useState(null);
   const [focusedIndex, setFocusedIndex] = useState(null);
-  const [os, setOs] = useState('Unknown OS');
+  const [os, setOs] = useState("Unknown OS");
 
   useEffect(() => {
     if (errorKey && inputRefs.current) {
@@ -53,29 +53,26 @@ const DataMatching = () => {
         inputRefs.current[index].focus();
       }
     }
-    setErrorKey(null)
+    setErrorKey(null);
   }, [errorKey, csvCurrentData, inputRefs]);
-
-
 
   useEffect(() => {
     const userAgent = window.navigator.userAgent;
     const platform = window.navigator.platform;
-    if (platform.includes('Win')) {
-      setOs('Windows');
-    } else if (platform.includes('Mac')) {
-      setOs('macOS');
-    } else if (userAgent.includes('Ubuntu')) {
-      setOs('Ubuntu');
-    } else if (platform.includes('Linux') || userAgent.includes('Linux')) {
-      setOs('Linux');
+    if (platform.includes("Win")) {
+      setOs("Windows");
+    } else if (platform.includes("Mac")) {
+      setOs("macOS");
+    } else if (userAgent.includes("Ubuntu")) {
+      setOs("Ubuntu");
+    } else if (platform.includes("Linux") || userAgent.includes("Linux")) {
+      setOs("Linux");
     } else if (/Android/.test(userAgent)) {
-      setOs('Android');
+      setOs("Android");
     } else if (/iPhone|iPad|iPod/.test(userAgent)) {
-      setOs('iOS');
+      setOs("iOS");
     }
   }, []);
-
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -156,37 +153,51 @@ const DataMatching = () => {
       });
 
     for (let i = 0; i < filteredFormData.length; i++) {
-      let { dataFieldType, fieldLength, fieldRange, csvHeaderKey } = filteredFormData[i];
+      let { dataFieldType, fieldLength, fieldRange, csvHeaderKey } =
+        filteredFormData[i];
       let keyValue = csvCurrentData[csvHeaderKey];
       fieldLength = Number(fieldLength);
       keyValue = keyValue.toString();
 
       if (dataFieldType === "number") {
         const [min, max] = fieldRange.split("--").map(Number);
-        const blankDefinition = templateHeaders?.blankDefination === "space" ? " " : templateHeaders?.blankDefination;
+        const blankDefinition =
+          templateHeaders?.blankDefination === "space"
+            ? " "
+            : templateHeaders?.blankDefination;
 
         if (keyValue.includes(templateHeaders?.patternDefinition)) {
           setErrorKey(csvHeaderKey);
-          toast.warning(`The value for ${csvHeaderKey} includes the pattern definition ${"    " + templateHeaders?.patternDefinition}.`);
+          toast.warning(
+            `The value for ${csvHeaderKey} includes the pattern definition ${
+              "    " + templateHeaders?.patternDefinition
+            }.`
+          );
           return;
         }
 
         if (keyValue.includes(blankDefinition)) {
           setErrorKey(csvHeaderKey);
-          toast.warning(`The value for ${csvHeaderKey} should not include the specified blank definition.`);
+          toast.warning(
+            `The value for ${csvHeaderKey} should not include the specified blank definition.`
+          );
           return;
         }
 
         const keyValueNumber = Number(keyValue);
         if (keyValue.length !== fieldLength) {
           setErrorKey(csvHeaderKey);
-          toast.warning(`The length of ${csvHeaderKey} should be ${fieldLength}.`);
+          toast.warning(
+            `The length of ${csvHeaderKey} should be ${fieldLength}.`
+          );
           return;
         }
 
         if (keyValueNumber < min || keyValueNumber > max) {
           setErrorKey(csvHeaderKey);
-          toast.warning(`Number ${csvHeaderKey} is out of range. It should be between ${min} and ${max}.`);
+          toast.warning(
+            `Number ${csvHeaderKey} is out of range. It should be between ${min} and ${max}.`
+          );
           return;
         }
       } else if (dataFieldType === "text") {
@@ -198,7 +209,9 @@ const DataMatching = () => {
 
         if (keyValue.length > fieldLength) {
           setErrorKey(csvHeaderKey);
-          toast.warning(`The length of ${csvHeaderKey} should be ${fieldLength}.`);
+          toast.warning(
+            `The length of ${csvHeaderKey} should be ${fieldLength}.`
+          );
           return;
         }
 
@@ -217,7 +230,9 @@ const DataMatching = () => {
 
         if (keyValue.length > fieldLength) {
           setErrorKey(csvHeaderKey);
-          toast.warning(`The length of ${csvHeaderKey} should be ${fieldLength}.`);
+          toast.warning(
+            `The length of ${csvHeaderKey} should be ${fieldLength}.`
+          );
           return;
         }
 
@@ -238,12 +253,14 @@ const DataMatching = () => {
 
     try {
       await axios.post(
-        `${process.env.REACT_APP_SERVER_IP}/updatecsvdata/${parseInt(currentTaskData?.fileId)}`,
+        `${process.env.REACT_APP_SERVER_IP}/updatecsvdata/${parseInt(
+          currentTaskData?.fileId
+        )}`,
         {
           updatedData: csvCurrentData,
           index: csvCurrentData.rowIndex + 1,
           updatedColumn: modifiedKeys,
-          imageNameArray: imageUrls
+          imageNameArray: imageUrls,
         },
         {
           headers: {
@@ -273,8 +290,12 @@ const DataMatching = () => {
         if (event.ctrlKey && event.key === "ArrowLeft") {
           setPopUp(true);
         } else if (
-          (os !== 'Ubuntu' && event.altKey && (event.key === 's' || event.key === 'S')) ||
-          (os === 'Ubuntu' && event.shiftKey && (event.key === 's' || event.key === 'S'))
+          (os !== "Ubuntu" &&
+            event.altKey &&
+            (event.key === "s" || event.key === "S")) ||
+          (os === "Ubuntu" &&
+            event.shiftKey &&
+            (event.key === "s" || event.key === "S"))
         ) {
           setCsvCurrentData((prevData) => ({
             ...prevData,
@@ -408,10 +429,10 @@ const DataMatching = () => {
       let allImagePaths;
       if (direction === "initial") {
         const objects = csvData[newIndex];
-        if (objects && typeof objects === 'object') {
+        if (objects && typeof objects === "object") {
           const trimmedObjects = Object.fromEntries(
             Object.entries(objects).map(([key, value]) => {
-              return [key, typeof value === 'string' ? value.trim() : value];
+              return [key, typeof value === "string" ? value.trim() : value];
             })
           );
           allImagePaths = imageNames.map((key) => trimmedObjects[key]);
@@ -422,12 +443,12 @@ const DataMatching = () => {
         if (newIndex > 0 && newIndex < csvData.length) {
           setCurrentIndex(newIndex);
           const objects = csvData[newIndex];
-          if (objects && typeof objects === 'object') {
+          if (objects && typeof objects === "object") {
             // Create a new object with trimmed values
             const trimmedObjects = Object.fromEntries(
               Object.entries(objects).map(([key, value]) => {
                 // Trim the value if it's a string
-                return [key, typeof value === 'string' ? value.trim() : value];
+                return [key, typeof value === "string" ? value.trim() : value];
               })
             );
 
@@ -446,7 +467,7 @@ const DataMatching = () => {
           return;
         }
       }
-      setImageUrls(allImagePaths)
+      setImageUrls(allImagePaths);
       await axios.post(
         `${process.env.REACT_APP_SERVER_IP}/get/image`,
         {
@@ -491,7 +512,6 @@ const DataMatching = () => {
       setImageNotFound(false);
     }
   };
-
 
   const changeCurrentCsvDataHandler = (key, newValue) => {
     if (!imageNotFound) {
@@ -708,7 +728,6 @@ const DataMatching = () => {
     setSelectedCoordinates(true);
   };
 
-
   const onTaskStartHandler = async (taskData) => {
     try {
       const response = await axios.post(
@@ -742,18 +761,21 @@ const DataMatching = () => {
       onImageHandler("initial", matchingIndex, response.data, taskData);
       setPopUp(false);
     } catch (error) {
-      setConfirmationModal(true)
+      setConfirmationModal(true);
       toast.error(error?.response?.data?.error);
     }
   };
 
   const onCompareTaskStartHandler = (taskdata) => {
+    if (taskdata.taskStatus) {
+      toast.warning("Task already completed");
+      return
+    }
     localStorage.setItem("taskdata", JSON.stringify(taskdata));
     navigate("/datamatching/correct_compare_csv", { state: taskdata });
   };
 
   const onCompleteHandler = async () => {
-    console.log("task completed");
     try {
       await axios.post(
         `${process.env.REACT_APP_SERVER_IP}/taskupdation/${parseInt(
@@ -773,8 +795,8 @@ const DataMatching = () => {
           return { ...task, taskStatus: true };
         }
         return task;
-      })
-      setAllTasks(updatedTasks)
+      });
+      setAllTasks(updatedTasks);
       setPopUp(true);
       setConfirmationModal(false);
       toast.success("task complted successfully.");
@@ -801,7 +823,6 @@ const DataMatching = () => {
       imageRef.current.style.transformOrigin = "initial";
     }
   };
-
 
   return (
     <>

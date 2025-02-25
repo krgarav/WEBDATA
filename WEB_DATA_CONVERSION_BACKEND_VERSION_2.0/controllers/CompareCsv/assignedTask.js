@@ -13,7 +13,7 @@ const assignedTask = async (req, res) => {
         const { id, userId,taskName, templeteId, max, min, taskStatus, moduleType } =
           data;
         const user = await User.findOne({ where: { id: userId } });
-        // const template = await Template.findOne({ where: { id: templeteId } });
+        const template = await Template.findOne({ where: { id: templeteId } });
 
         return {
           userName: user.userName,
@@ -23,6 +23,7 @@ const assignedTask = async (req, res) => {
           min,
           taskStatus,
           id,
+          templateName:template.name,
         };
       })
     );

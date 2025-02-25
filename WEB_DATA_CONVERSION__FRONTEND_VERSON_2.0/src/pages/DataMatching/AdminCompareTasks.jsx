@@ -11,6 +11,7 @@ const AdminCompareTasks = ({
   onCompleteHandler,
   setTaskEdit,
   setTaskEditId,
+  setCompareTask,
 }) => {
   const [modals, setModals] = useState(false);
   const [taskId, setTaskId] = useState(null);
@@ -18,9 +19,8 @@ const AdminCompareTasks = ({
   // const modalClose = () => {
   //   setModals(false);
   // };
- 
-  const completeHandler=async(taskId)=>{
 
+  const completeHandler = async (taskId) => {
     const response = await axios.get(
       `http://${REACT_APP_IP}:4000/submitTask/${taskId}`,
       {
@@ -29,9 +29,17 @@ const AdminCompareTasks = ({
         },
       }
     );
-   
-    console.log(response);
-  }  
+    setCompareTask((prev) =>
+      prev.map((task) => {
+        if (task.id === taskId) {
+          return { ...task, taskStatus: true };
+        }
+        return task;
+      })
+    );
+
+    // console.log(response);
+  };
 
   return (
     <div>
@@ -45,13 +53,14 @@ const AdminCompareTasks = ({
       {compareTask?.map((taskData) => (
         <div key={taskData.id} className="flex justify-center ">
           <div className="whitespace-nowrap  w-[100px] py-2">
-            <div className="text-md text-center ">{taskData.taskName}</div>
+            <div className="text-md text-center ">{taskData.templateName}</div>
+          </div>
+          
+          <div className="whitespace-nowrap w-[100px] py-2">
+            <div className="text-md text-center">{taskData.userName}</div>
           </div>
           <div className="whitespace-nowrap  w-[100px] py-2">
             <div className="text-md text-center ">{taskData.taskName}</div>
-          </div>
-          <div className="whitespace-nowrap w-[100px] py-2">
-            <div className="text-md text-center">{taskData.userName}</div>
           </div>
           <div className="whitespace-nowrap w-[100px] py-2">
             <div className="text-md text-center">{taskData.min}</div>
@@ -135,6 +144,7 @@ const AdminCompareTasks = ({
               onClick={() => {
                 setTaskId(taskData.id);
                 setModals(true);
+              
               }}
               className="rounded-3xl px-4 py-1 font-semibold bg-indigo-500 text-white border border-indigo-500"
             >
@@ -153,7 +163,7 @@ const AdminCompareTasks = ({
             </button>
           </div>
           <div
-            onClick={()=>completeHandler(taskData.id)}
+            onClick={() => completeHandler(taskData.id)}
             className="whitespace-nowrap text-center w-[100px] py-2"
           >
             <button className="rounded border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white">

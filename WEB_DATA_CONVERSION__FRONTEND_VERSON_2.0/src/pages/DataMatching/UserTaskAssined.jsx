@@ -301,6 +301,7 @@ const UserTaskAssined = ({
                         </div>
                       ))} */}
                       {compareTask?.map((taskData) => (
+                    
                         <>
                           <div key={taskData.id} className="flex  py-2 w-full">
                             <div className="whitespace-nowrap w-[150px] px-4">
@@ -308,6 +309,7 @@ const UserTaskAssined = ({
                                 {taskData.templateName}
                               </div>
                             </div>
+                    
                             <div className="whitespace-nowrap w-[150px] px-4">
                               <div className="text-md text-center">
                                 {taskData.taskName}
@@ -387,6 +389,7 @@ const UserTaskAssined = ({
                                   onCompareTaskStartHandler(taskData)
                                 }
                                 type="button"
+                                // disabled
                                 disabled={loadingTaskId === taskData.id}
                                 className={`relative rounded-3xl border border-indigo-500 bg-indigo-500 px-6 py-1 font-semibold text-white ${
                                   loadingTaskId === taskData.id

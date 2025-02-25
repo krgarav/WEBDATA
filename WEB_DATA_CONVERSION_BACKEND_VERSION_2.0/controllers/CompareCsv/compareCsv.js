@@ -98,10 +98,6 @@ const compareCsv = async (req, res) => {
       "csvFile",
       secondInputFileName
     );
-    // console.log(firstFilePath)
-    // console.log(secondFilePath)
-    // return
-    // console.log("file name" ,secondFilePath, "secondInputFileName")
     const f1 = await csvToJson(firstFilePath);
     const f2 = await csvToJson(secondFilePath);
 
@@ -135,72 +131,101 @@ const compareCsv = async (req, res) => {
         });
       }
     }
-    for (let i = 0; i < f1.length; i++) {
-      for (let j = 0; j < f2.length; j++) {
-        // const pkLength = f1[i][primaryKey];
-        // const str = " ".repeat(pkLength);
+    // for (let i = 0; i < f1.length; i++) {
+    //   for (let j = 0; j < f2.length; j++) {
+    //     // const pkLength = f1[i][primaryKey];
+    //     // const str = " ".repeat(pkLength);
 
-        if (
-          f1[i][primaryKey] === f2[j][primaryKey] 
-          // f1[i][primaryKey] !== str &&
-          // f2[j][primaryKey] !== str
-        ) {
-         
-          for (let [key, value] of Object.entries(f1[i])) {
-            const val1 = value;
-            const val2 = f2[j][key];
-            // console.log(f1[i])
-            const imgPathArr = f1[i][imageColName]?.split("\\");
-            // console.log(imgPathArr)
-            const imgName = imgPathArr[imgPathArr.length - 1];
+    //     if (
+    //       f1[i][primaryKey] === f2[j][primaryKey]
+    //       // f1[i][primaryKey] !== str &&
+    //       // f2[j][primaryKey] !== str
+    //     ) {
 
-            // if (
-            //   val1.includes("*") ||
-            //   val2.includes("*") ||
-            //   /^\s*$/.test(val1) ||
-            //   /^\s*$/.test(val2)
-            // ) {
-            //   if (!skippingKey.includes(key) && formFeilds.includes(key)) {
-            //     const obj = {
-            //       PRIMARY: ` ${f1[i][primaryKey]}`,
-            //       COLUMN_NAME: key,
-            //       FILE_1_DATA: val1,
-            //       FILE_2_DATA: val2,
-            //       IMAGE_NAME: imgName,
-            //       CORRECTED: "",
-            //       "CORRECTED BY": "",
-            //       "PRIMARY KEY": primaryKey,
-            //     };
-            //     diff.push(obj);
-            //   }
-            // } 
-            
-            // else if (value !== f2[j][key]) {
-             if (value !== f2[j][key]) {
-              if (!skippingKey.includes(key)) {
-                const obj = {
-                  PRIMARY: ` ${f1[i][primaryKey]}`,
-                  COLUMN_NAME: key,
-                  FILE_1_DATA: val1,
-                  FILE_2_DATA: val2,
-                  IMAGE_NAME: imgName,
-                  CORRECTED: "",
-                  "CORRECTED BY": "",
-                  "PRIMARY KEY": primaryKey,
-                };
-                diff.push(obj);
-              }
-            }
-          }
+    //       for (let [key, value] of Object.entries(f1[i])) {
+    //         const val1 = value;
+    //         const val2 = f2[j][key];
+    //         // console.log(f1[i])
+    //         const imgPathArr = f1[i][imageColName]?.split("\\");
+    //         // console.log(imgPathArr)
+    //         const imgName = imgPathArr[imgPathArr.length - 1];
+
+    //         // if (
+    //         //   val1.includes("*") ||
+    //         //   val2.includes("*") ||
+    //         //   /^\s*$/.test(val1) ||
+    //         //   /^\s*$/.test(val2)
+    //         // ) {
+    //         //   if (!skippingKey.includes(key) && formFeilds.includes(key)) {
+    //         //     const obj = {
+    //         //       PRIMARY: ` ${f1[i][primaryKey]}`,
+    //         //       COLUMN_NAME: key,
+    //         //       FILE_1_DATA: val1,
+    //         //       FILE_2_DATA: val2,
+    //         //       IMAGE_NAME: imgName,
+    //         //       CORRECTED: "",
+    //         //       "CORRECTED BY": "",
+    //         //       "PRIMARY KEY": primaryKey,
+    //         //     };
+    //         //     diff.push(obj);
+    //         //   }
+    //         // }
+
+    //         // else if (value !== f2[j][key]) {
+    //          if (value !== f2[j][key]) {
+    //           if (!skippingKey.includes(key)) {
+    //             const obj = {
+    //               PRIMARY: ` ${f1[i][primaryKey]}`,
+    //               COLUMN_NAME: key,
+    //               FILE_1_DATA: val1,
+    //               FILE_2_DATA: val2,
+    //               IMAGE_NAME: imgName,
+    //               CORRECTED: "",
+    //               "CORRECTED BY": "",
+    //               "PRIMARY KEY": primaryKey,
+    //             };
+    //             diff.push(obj);
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    // Convert f2 into a Map for O(1) lookups
+    const f2Map = new Map(f2.map((item) => [item[primaryKey], item]));
+
+    for (const item1 of f1) {
+      const key = item1[primaryKey];
+
+      // Directly access corresponding object in f2 using the map
+      const item2 = f2Map.get(key);
+      if (!item2) continue; // Skip if no matching primary key in f2
+
+      for (const [colKey, val1] of Object.entries(item1)) {
+        const val2 = item2[colKey];
+
+        if (val1 !== val2 && !skippingKey.includes(colKey)) {
+          const imgPathArr = item1[imageColName]?.split("\\");
+          const imgName = imgPathArr?.[imgPathArr.length - 1] || "";
+
+          diff.push({
+            PRIMARY: ` ${key}`,
+            COLUMN_NAME: colKey,
+            FILE_1_DATA: val1,
+            FILE_2_DATA: val2,
+            IMAGE_NAME: imgName,
+            CORRECTED: "",
+            "CORRECTED BY": "",
+            "PRIMARY KEY": primaryKey,
+          });
         }
       }
     }
 
     if (diff.length === 0) {
-        return res.status(501).send({
-          err: "No differences found between the two CSV files.",
-        })
-    
+      return res.status(501).send({
+        err: "No differences found between the two CSV files.",
+      });
     }
     const csvData = parse(diff);
     const correctedCsv = parse(f1);

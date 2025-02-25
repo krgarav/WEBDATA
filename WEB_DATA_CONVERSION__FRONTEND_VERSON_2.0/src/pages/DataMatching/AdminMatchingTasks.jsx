@@ -31,7 +31,7 @@ const AdminMatchingTasks = ({
           }
           return task;
         }));
-        console.log(response);
+        
       } 
   const onFilteredTasksHandler = (tasks) => {
     

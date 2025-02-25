@@ -35,7 +35,7 @@ const AdminAssined = () => {
           }
         );
         const AssignedData = response.data.assignedData;
-        console.log(AssignedData);
+
         // const verifiedUser = await onGetVerifiedUserHandler();
         // const tasks = await onGetTaskHandler(verifiedUser.user.id);
         // const templateData = await onGetTemplateHandler();
@@ -257,14 +257,14 @@ const AdminAssined = () => {
           },
         }
       );
-      const updatedTasks = matchingTask.map((task) => {
+      const updatedTasks = compareTask.map((task) => {
         if (task.id === currentTask.id) {
           return { ...task, taskStatus: false };
         }
         return task;
       });
-
-      setMatchingTask(updatedTasks);
+      setCompareTask(updatedTasks);
+      // setMatchingTask(updatedTasks);
       toast.success("Task status updated.");
     } catch (error) {
       toast.error(error.message);
@@ -416,14 +416,15 @@ const AdminAssined = () => {
                         </div>
                         <div className="py-3 text-center text font-semibold text-gray-700 w-[100px]">
                           Complete
-                        </div>  
+                        </div>
                       </div>
                     </div>
                     <div className="divide-y divide-gray-200 bg-white overflow-y-auto h-[250px] ">
                       <AdminCompareTasks
-                      onCompleteHandler={onCompleteHandler}
+                        onCompleteHandler={onCompleteHandler}
                         compareTask={compareTask}
                         onCompareTaskStartHandler={onCompareTaskStartHandler}
+                        setCompareTask={setCompareTask}
                       />
                       <AdminMatchingTasks
                         onCompleteHandler={onCompleteHandler}
