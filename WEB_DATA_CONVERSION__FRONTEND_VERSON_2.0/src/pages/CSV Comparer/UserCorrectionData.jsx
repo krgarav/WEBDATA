@@ -62,7 +62,8 @@ const UserCorrectionData = () => {
   const location = useLocation();
   const token = JSON.parse(localStorage.getItem("userData"));
   const [header, setHeader] = useState(null);
-  const [filterResults, setFilterResults]= useState(null)
+  const [filterResults, setFilterResults] = useState(null);
+  const [mappedData, setMappedData] = useState([]);
   // const { imageURL, data } = tableData;
   // console.log(location.state, "----------------");
   const task = JSON.parse(localStorage.getItem("taskdata"));
@@ -214,6 +215,7 @@ const UserCorrectionData = () => {
       setFilteredArray(response?.data?.data?.filteredData);
       setFilterResults(response?.data?.data?.filteredResults);
       setMinimum(parseInt(response?.data?.data?.min));
+      setMappedData(response?.data?.data?.mappedReponse);
     };
     req();
   }, [currentIndex]);
@@ -637,23 +639,22 @@ const UserCorrectionData = () => {
   };
 
   const imageFocusHandler = (headerName) => {
-    const csvDataKeys = Object.keys(filterResults);
-    console.log(headerName)
     let matchedValue = null;
-    console.log(csvDataKeys);
-    for (const key of csvDataKeys) {
-      console.log( filterResults[key],key);
-      if (key === headerName) {
-        matchedValue = filterResults[key];
-        console.log( filterResults[key],key);
+    for (let i = 0; i < mappedData?.length; i++) {
+      if (mappedData[i][headerName]) {
+        matchedValue = mappedData[i][headerName];
         break;
       }
     }
-    console.log(matchedValue)
+
+    if (matchedValue === null) {
+      toast.error("Header not found: " + headerName);
+      return;
+    }
+
     const matchedCoordinate = templateHeaders?.templetedata?.find(
       (data) => data.attribute === matchedValue
     );
-    // console.log(matchedCoordinate);
 
     if (matchedCoordinate) {
       setCurrentImageIndex(matchedCoordinate.pageNo);
@@ -671,17 +672,9 @@ const UserCorrectionData = () => {
       toast.error("Header not found: " + headerName);
       return;
     }
+  
 
-    const metaDataEntry = templateHeaders.templetedata.find(
-      (entry) => entry.attribute === filterResults[headerName]
-    );
-
-    if (!metaDataEntry) {
-      toast.warning("Metadata entry not found for " + headerName);
-      return;
-    }
-
-    const { coordinateX, coordinateY, width, height } = metaDataEntry;
+    const { coordinateX, coordinateY, width, height } = matchedCoordinate;
 
     const containerWidth = imageContainerRef?.current?.offsetWidth;
     const containerHeight = imageContainerRef?.current?.offsetHeight;
@@ -892,7 +885,6 @@ const UserCorrectionData = () => {
                         imageUrls={imageUrls}
                         imageRef={imageRef}
                         currentData={currentData}
-            
                         zoomLevel={zoomLevel}
                         selectedCoordintes={selectedCoordintes}
                         templateHeaders={templateHeaders}
