@@ -62,8 +62,8 @@ const UserCorrectionData = () => {
   const location = useLocation();
   const token = JSON.parse(localStorage.getItem("userData"));
   const [header, setHeader] = useState(null);
-  const [filterResults, setFilterResults] = useState(null);
-  const [mappedData, setMappedData] = useState([]);
+  const [filterResults, setFilterResults]  = useState(null);
+  const [mappedData, setMappedData] = useState([]);;
   // const { imageURL, data } = tableData;
   // console.log(location.state, "----------------");
   const task = JSON.parse(localStorage.getItem("taskdata"));
@@ -72,6 +72,8 @@ const UserCorrectionData = () => {
       ? location.state.id
       : JSON.parse(localStorage.getItem("taskdata")).id
   );
+
+  const [loading, setLoading] = useState(false);
 
   // console.log(currentTaskData)
   //   useEffect(() => {
@@ -198,6 +200,7 @@ const UserCorrectionData = () => {
   // }, []);
 
   useEffect(() => {
+    setLoading(true);
     const req = async () => {
       const response = await axios.post(
         `http://${REACT_APP_IP}:4000/getCompareCsvData/${taskId}`,
@@ -215,6 +218,7 @@ const UserCorrectionData = () => {
       setFilteredArray(response?.data?.data?.filteredData);
       setFilterResults(response?.data?.data?.filteredResults);
       setMinimum(parseInt(response?.data?.data?.min));
+      setLoading(false);
       setMappedData(response?.data?.data?.mappedReponse);
     };
     req();
@@ -369,6 +373,7 @@ const UserCorrectionData = () => {
 
   const onNextHandler = async (direction, currentIndex) => {
     try {
+      setLoading(true);
       currentIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
       if (currentIndex >= minimum && currentIndex <= maximum) {
         setCurrentIndex(currentIndex);
@@ -400,11 +405,14 @@ const UserCorrectionData = () => {
       console.log(error);
       toast.error("Image not found!.");
       setImageNotFound(false);
+    } finally {
+      setLoading(false);
     }
   };
 
   const onPrevHandler = async (direction, currentIndex) => {
     try {
+      setLoading(true);
       currentIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
       if (currentIndex >= minimum && currentIndex <= maximum) {
         setCurrentIndex(currentIndex);
@@ -436,6 +444,8 @@ const UserCorrectionData = () => {
       console.log(error);
       toast.error("Image not found!.");
       setImageNotFound(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -803,14 +813,45 @@ const UserCorrectionData = () => {
               </button>
             </div>
             <div className="mt-16 flex gap-2">
-              <button
-                className="block rounded-lg px-4 py-2 ms-auto transition bg-blue-500 text-white hover:bg-blue-600"
-                onClick={() => {
-                  compareHandler();
-                }}
-              >
-                <span className="text-lg">Get Started</span>
-              </button>
+              {loading ? (
+                <button
+                  className=" rounded-lg px-4 py-2 ms-auto transition bg-blue-400 text-white hover:bg-blue-600 flex justify-center items-center cursor-not-allowed"
+                  disabled={loading}
+                >
+                  <svg
+                    className="mr-2 h-5 w-5 animate-spin text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                    />
+                  </svg>
+                  <span className="text-lg">
+                    Getting files ready for you...
+                  </span>
+                </button>
+              ) : (
+                <button
+                  className="block rounded-lg px-4 py-2 ms-auto transition bg-blue-500 text-white hover:bg-blue-600"
+                  onClick={() => {
+                    compareHandler();
+                  }}
+                >
+                  <span className="text-lg">Get Started</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -864,6 +905,7 @@ const UserCorrectionData = () => {
                 <div>
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <button
+                      disabled={loading}
                       className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
                       onClick={() =>
                         //   onImageHandler(
@@ -891,6 +933,7 @@ const UserCorrectionData = () => {
                       />
                     </div>
                     <button
+                      disabled={loading}
                       className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
                       onClick={() =>
                         // onImageHandler(
