@@ -72,7 +72,7 @@ const UserCorrectionData = () => {
       : JSON.parse(localStorage.getItem("taskdata")).id
   );
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // console.log(currentTaskData)
   //   useEffect(() => {
