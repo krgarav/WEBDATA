@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaCloudDownloadAlt } from "react-icons/fa";
 import axios from "axios";
 import { REACT_APP_IP } from "../services/common";
 const token = JSON.parse(localStorage.getItem("userData"));
 
 const DeactivateModal = ({ isOpen, onClose, taskId }) => {
+  const [errorLoading, setErrorLoading] = useState(false);
+  const [correctLoading, setCorrectLoading] = useState(false);
 
   const ErrorCorrectedFileHandler = async () => {
     try {
+      setErrorLoading(true);
       const response = await axios.get(
         `http://${REACT_APP_IP}:4000/download/errorCorrectedCsv/${taskId}`,
         {
@@ -17,20 +20,20 @@ const DeactivateModal = ({ isOpen, onClose, taskId }) => {
           },
         }
       );
-  
+
       // Extract the filename from the response headers
-      const contentDisposition = response.headers['content-disposition'];
+      const contentDisposition = response.headers["content-disposition"];
       const fileName = contentDisposition
-        ? contentDisposition.split('filename=')[1].replace(/"/g, '')
-        : 'error_corrected_file';
-  
+        ? contentDisposition.split("filename=")[1].replace(/"/g, "")
+        : "error_corrected_file";
+
       // Append the current timestamp to the filename
-      const timestamp = new Date().toISOString().replace(/:/g, '-');
+      const timestamp = new Date().toISOString().replace(/:/g, "-");
       const fullFileName = `${fileName}_${timestamp}.csv`;
-  
+
       // Create a URL for the blob
       const url = window.URL.createObjectURL(new Blob([response.data]));
-  
+
       // Create a temporary link element and trigger the download
       const link = document.createElement("a");
       link.href = url;
@@ -38,61 +41,66 @@ const DeactivateModal = ({ isOpen, onClose, taskId }) => {
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
-  
+
       // Clean up the URL object
       window.URL.revokeObjectURL(url);
-  
     } catch (error) {
       console.error("Error downloading the file", error);
+    } finally {
+      setErrorLoading(false);
     }
   };
-  
-  
+
   const CorrectedFileHandler = async () => {
     try {
+      setCorrectLoading(true);
       // Fetch the corrected file from the server
       const response = await axios.get(
         `http://${REACT_APP_IP}:4000/download/correctedCsv/${taskId}`,
         {
-          responseType: 'blob', // Important for downloading files
+          responseType: "blob", // Important for downloading files
           headers: {
             token: token,
           },
         }
       );
-  
+
       // Log all response headers for debugging
-      console.log('Response Headers:', response.headers);
-  
+      console.log("Response Headers:", response.headers);
+
       // Extract the original filename from the response headers
-      const originalFilenameWithTimestamp = response.headers['x-original-filename'] || 'corrected_file.csv';
-      console.log('Original Filename:', originalFilenameWithTimestamp);
-  
+      const originalFilenameWithTimestamp =
+        response.headers["x-original-filename"] || "corrected_file.csv";
+      console.log("Original Filename:", originalFilenameWithTimestamp);
+
       // Remove everything before the underscore, including the underscore itself
-      const filenameWithUnderscore = originalFilenameWithTimestamp.replace(/^[^_]*_/, '');
-      
+      const filenameWithUnderscore = originalFilenameWithTimestamp.replace(
+        /^[^_]*_/,
+        ""
+      );
+
       // Append the new timestamp to the filename
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const fullFileName = `${filenameWithUnderscore}_${timestamp}.csv`;
-      
+
       // Create a URL for the file and initiate download
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', fullFileName); // Specify the file name with new timestamp
+      link.setAttribute("download", fullFileName); // Specify the file name with new timestamp
       document.body.appendChild(link);
       link.click();
-  
+
       // Clean up
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url); // Optionally, release the URL object
-  
     } catch (error) {
-      console.error('Error downloading the file:', error);
+      console.error("Error downloading the file:", error);
+    } finally {
+      setCorrectLoading(false);
     }
   };
-  
-  
+
   return (
     <div
       className="relative z-10"
@@ -125,12 +133,41 @@ const DeactivateModal = ({ isOpen, onClose, taskId }) => {
                       >
                         Error Corrected File
                       </h3>
-                      <button
-                        className="rounded-3xl border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
-                        onClick={ErrorCorrectedFileHandler}
+                      {errorLoading ? (
+                        <button
+                          className="rounded-3xl border border-indigo-500 bg-indigo-400 px-4 py-1 font-semibold text-white flex justify-center items-center"
+                          disabled={errorLoading}
+                        >
+                          <svg
+                        className="mr-2 h-5 w-5 animate-spin text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
                       >
-                        <FaCloudDownloadAlt />
-                      </button>
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
+                      </svg>
+                          Compiling & Downloading..
+                        </button>
+                      ) : (
+                        <button
+                          className="rounded-3xl border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
+                          onClick={ErrorCorrectedFileHandler}
+                        >
+                          <FaCloudDownloadAlt />
+                        </button>
+                      )}
                     </div>
                     <div className="flex justify-between my-3 gap-2">
                       <h3
@@ -139,12 +176,41 @@ const DeactivateModal = ({ isOpen, onClose, taskId }) => {
                       >
                         Corrected File
                       </h3>
-                      <button
-                        className="rounded-3xl border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
-                        onClick={CorrectedFileHandler}
+                      {correctLoading ? (
+                        <button
+                          className="rounded-3xl border border-indigo-500 bg-indigo-400 px-4 py-1 font-semibold text-white flex justify-center items-center"
+                          disabled={correctLoading}
+                        >
+                          <svg
+                        className="mr-2 h-5 w-5 animate-spin text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
                       >
-                        <FaCloudDownloadAlt />
-                      </button>
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
+                      </svg>
+                          Compiling & Downloading..
+                        </button>
+                      ) : (
+                        <button
+                          className="rounded-3xl border border-indigo-500 bg-indigo-500 px-4 py-1 font-semibold text-white"
+                          onClick={CorrectedFileHandler}
+                        >
+                          <FaCloudDownloadAlt />
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
