@@ -23,6 +23,17 @@ function readCSVAndConvertToJSON(filePath) {
   });
 }
 let csvCache = null; // Store CSV data in-memory
+let cacheTimeout = null;
+
+const clearCache = () => {
+  csvCache = null;
+  console.log("CSV cache cleared due to inactivity");
+};
+
+const resetCacheTimer = () => {
+  if (cacheTimeout) clearTimeout(cacheTimeout);
+  cacheTimeout = setTimeout(clearCache, 30 * 60 * 1000); // 30 minutes
+};
 
 // Load CSV into memory on server start
 const loadCsvIntoMemory = (csvFilePath,PRIMARY_KEY) => {
@@ -323,7 +334,7 @@ const getCsvCompareData = async (req, res) => {
     // Construct Image Pathcd 
     const imageFile = path.join(__dirname, "../../extractedFiles", imageDirectoryPath);
     const relativeImagePath = imageFile.split("extractedFiles\\")[1];
-
+    resetCacheTimer();
     res.status(200).json({
       message: "Data found",
       data: {
