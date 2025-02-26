@@ -640,9 +640,14 @@ const UserCorrectionData = () => {
 
   const imageFocusHandler = (headerName) => {
     let matchedValue = null;
-    for (let i = 0; i < mappedData?.length; i++) {
-      if (mappedData[i][headerName]) {
-        matchedValue = mappedData[i][headerName];
+    const data = JSON.parse(JSON.stringify(mappedData));
+    const arrayOfObjects = Object.entries(data).map(([key, value]) => ({
+      [key]: value,
+    }));
+
+    for (let i = 0; i < arrayOfObjects?.length; i++) {
+      if (arrayOfObjects[i][headerName]) {
+        matchedValue = arrayOfObjects[i][headerName];
         break;
       }
     }
@@ -672,7 +677,6 @@ const UserCorrectionData = () => {
       toast.error("Header not found: " + headerName);
       return;
     }
-  
 
     const { coordinateX, coordinateY, width, height } = matchedCoordinate;
 
@@ -714,7 +718,7 @@ const UserCorrectionData = () => {
           },
         }
       );
-     
+
       await axios.post(
         `http://${REACT_APP_IP}:4000/taskupdation/${parseInt(
           currentTaskData?.id
@@ -849,6 +853,7 @@ const UserCorrectionData = () => {
                   currentIndex={currentIndex}
                   csvData={csvData}
                   // correctionData={correctionData}
+                  currentData={currentData}
                   max={maximum}
                   zoomInHandler={zoomInHandler}
                   onInialImageHandler={onInialImageHandler}

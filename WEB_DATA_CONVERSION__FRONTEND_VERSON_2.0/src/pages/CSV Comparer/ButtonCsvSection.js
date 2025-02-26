@@ -11,8 +11,9 @@ const ButtonCsvSection = ({
   zoomOutHandler,
   currentImageIndex,
   imageUrls,
+  currentData
 }) => {
-
+console.log(currentData)
   return (
     <div className="flex justify-evenly items-center ml-2">
       <h3 className="xl:text-lg font-semibold py-3 text-white mr-4">
@@ -40,7 +41,7 @@ const ButtonCsvSection = ({
         </button>
       </div>
       <h3 className=" xl:text-lg font-semibold py-3 text-white px-4">
-        Image Name - {correctionData?.previousData?.IMAGE_NAME}
+        Image Name - {currentData?.IMAGE_NAME}
       </h3>
     </div>
   );

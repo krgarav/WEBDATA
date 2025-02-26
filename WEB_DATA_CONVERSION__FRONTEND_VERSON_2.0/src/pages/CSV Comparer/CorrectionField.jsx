@@ -152,7 +152,6 @@ const CorrectionField = ({
       [key]: e.target.value,
     }));
   };
-  console.log(inputValue);
   const onUpdateHandler = async () => {
     if (isUpdatingRef.current) return;
     isUpdatingRef.current = true;
