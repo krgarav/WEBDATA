@@ -714,10 +714,7 @@ const UserCorrectionData = () => {
           },
         }
       );
-      // if(!response.data.success) {
-      //   throw new Error("Network response was not ok");
-      // }
-
+     
       await axios.post(
         `http://${REACT_APP_IP}:4000/taskupdation/${parseInt(
           currentTaskData?.id
@@ -820,9 +817,7 @@ const UserCorrectionData = () => {
           <CSVFormDataSection
             csvCurrentData={csvCurrentData}
             csvData={csvData}
-            // headerData={headerData}
             filterResults={filterResults}
-            // correctionData={correctionData}
             templateHeaders={templateHeaders}
             imageColName={imageColName}
             currentFocusIndex={currentFocusIndex}

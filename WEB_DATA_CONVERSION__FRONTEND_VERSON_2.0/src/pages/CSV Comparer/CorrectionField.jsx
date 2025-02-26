@@ -39,7 +39,6 @@ const CorrectionField = ({
   //     firstInputRef.current.focus(); // Automatically focus on first input
   //   }
   // }, []);
-  console.log(currentData);
   const handleVisit = (index) => {
     if (!visitedRows[index]) {
       setVisitedRows((prev) => ({ ...prev, [index]: true }));
@@ -172,8 +171,7 @@ const CorrectionField = ({
           };
         }
       );
-      // console.log(updates)
-      // return
+
       if (updates.length === 0) return;
 
       const response = await axios.post(
@@ -226,7 +224,7 @@ const CorrectionField = ({
     const questionAllowedValues = ["A", "B", "C", "D", "*", " "];
     const numberRegex = /^[0-9]*$/; // Allows only numbers (0-9)
     // const allowedValues = dataItem.type=== "formField"?questionAllowedValues  : "questionsField";
-    console.log(dataItem);
+
     return (
       <div
         key={index}
@@ -244,7 +242,7 @@ const CorrectionField = ({
             value={
               inputValue[key] !== undefined
                 ? inputValue[key]
-                : dataItem?.FILE_1_DATA
+                : dataItem?.CORRECTED
             }
             // value={dataItem?.CORRECTED?dataItem?.CORRECTED:""}
             // defaultValue={dataItem?.CORRECTED}
