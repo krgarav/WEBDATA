@@ -244,7 +244,7 @@ const CorrectionField = ({
             value={
               inputValue[key] !== undefined
                 ? inputValue[key]
-                : dataItem?.FILE_1_DATA
+                : dataItem?.CORRECTED
             }
             // value={dataItem?.CORRECTED?dataItem?.CORRECTED:""}
             // defaultValue={dataItem?.CORRECTED}
