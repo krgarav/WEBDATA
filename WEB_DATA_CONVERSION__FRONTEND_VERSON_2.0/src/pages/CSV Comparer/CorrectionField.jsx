@@ -24,10 +24,15 @@ const CorrectionField = ({
   const token = JSON.parse(localStorage.getItem("userData"));
   const [visitedCount, setVisitedCount] = useState(0);
   const [visitedRows, setVisitedRows] = useState({}); // Track visited rows
+  const [dataRow,setDataRow] = useState(currentData.DATA);
+  const [updatedData,setUpdatedData] = useState([])
   const inputRefs = useRef([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const isUpdatingRef = useRef(false);
+  useEffect(()=>{
+    setDataRow(currentData.DATA)
+  },[currentData.DATA])
   useEffect(() => {
     setVisitedCount(0);
     setVisitedRows({});
@@ -60,41 +65,41 @@ const CorrectionField = ({
   //   // setInputValue(initialValues);
   // }, [currentData]);
 
-  // useEffect(() => {
-  //   const processTemplateData = async () => {
-  //     try {
-  //       if (!taskData?.templeteId || filteredData.length === 0) return;
+  useEffect(() => {
+    const processTemplateData = async () => {
+      try {
+        if (!taskData?.templeteId || dataRow.length === 0) return;
 
-  //       const templateId = taskData.templeteId;
+        const templateId = taskData.templeteId;
 
-  //       // Fetch form field data for each COLUMN_NAME in parallel
-  //       const updatedData = await Promise.all(
-  //         filteredData.map(async (item) => {
-  //           try {
-  //             const isFormField = await fetchTemplateFormData(
-  //               templateId,
-  //               item.COLUMN_NAME
-  //             );
-  //             const type = isFormField?.templateData?.fieldType || "formField"; // Use default "formField" if API fails or returns undefined
-  //             return { ...item, type };
-  //           } catch (error) {
-  //             console.error(
-  //               `Error fetching data for ${item.COLUMN_NAME}:`,
-  //               error
-  //             );
-  //             return { ...item, type: "formField" }; // Fallback to "formField"
-  //           }
-  //         })
-  //       );
+        // Fetch form field data for each COLUMN_NAME in parallel
+        const updatedData = await Promise.all(
+          dataRow.map(async (item) => {
+            try {
+              const isFormField = await fetchTemplateFormData(
+                templateId,
+                item.COLUMN_NAME
+              );
+              const type = isFormField?.templateData?.fieldType || "formField"; // Use default "formField" if API fails or returns undefined
+              return { ...item, type };
+            } catch (error) {
+              console.error(
+                `Error fetching data for ${item.COLUMN_NAME}:`,
+                error
+              );
+              return { ...item, type: "formField" }; // Fallback to "formField"
+            }
+          })
+        );
 
-  //       setUpdatedData(updatedData);
-  //     } catch (error) {
-  //       console.error("Error processing template data:", error);
-  //     }
-  //   };
+        setUpdatedData(updatedData);
+      } catch (error) {
+        console.error("Error processing template data:", error);
+      }
+    };
 
-  //   processTemplateData();
-  // }, [filteredData]);
+    processTemplateData();
+  }, [dataRow]);
 
   useEffect(() => {
     // setFilterData(correctionData?.previousData?.DATA);
@@ -214,8 +219,8 @@ const CorrectionField = ({
       isUpdatingRef.current = false;
     }
   };
-  const errorData = currentData.DATA?.map((dataItem, index) => {
-    const key = `${currentData?.DATA?.PRIMARY?.trim()}-${dataItem?.COLUMN_NAME?.trim()}`;
+  const errorData = updatedData?.map((dataItem, index) => {
+    const key = `${updatedData?.PRIMARY?.trim()}-${dataItem?.COLUMN_NAME?.trim()}`;
     // const updatedValue = dataItem.CORRECTED||"Null";
     // const questionAllowedValues = ["A", "B", "C", "D", "*", " "];
     // const formAllowed = //allvalues
