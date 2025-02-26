@@ -48,6 +48,7 @@ const UserCorrectionData = () => {
   const [imageUrls, setImageUrls] = useState([]);
   const [currIndex, setCurrIndex] = useState(1);
   const [tableData, setTableData] = useState({});
+  const [currentData, setCurrentData] = useState(null);
   const [correctionData, setCorrectionData] = useState([]);
   const [minimum, setMinimum] = useState(0);
   const [maximum, setMaximum] = useState(0);
@@ -61,6 +62,7 @@ const UserCorrectionData = () => {
   const location = useLocation();
   const token = JSON.parse(localStorage.getItem("userData"));
   const [header, setHeader] = useState(null);
+  const [filterResults, setFilterResults]= useState(null)
   // const { imageURL, data } = tableData;
   // console.log(location.state, "----------------");
   const task = JSON.parse(localStorage.getItem("taskdata"));
@@ -150,11 +152,11 @@ const UserCorrectionData = () => {
     const fetchTemplate = async () => {
       try {
         const response = await onGetTemplateHandler();
-        // console.log(currentTaskData, "===========");
+
         const templateData = response.find(
           (data) => data.id === parseInt(currentTaskData.templeteId)
         );
-        // console.log(templateData)
+
         setTemplateHeaders(templateData);
       } catch (error) {
         console.log(error);
@@ -205,15 +207,16 @@ const UserCorrectionData = () => {
           },
         }
       );
+      setCurrentData(response?.data?.data?.previousData);
       setHeaderData(response?.data?.data?.headers);
       setHeader(response?.data?.data?.headers);
       setMaximum(parseInt(response?.data?.data?.max));
       setFilteredArray(response?.data?.data?.filteredData);
-      setCorrectionData(response?.data?.data);
+      setFilterResults(response?.data?.data?.filteredResults);
       setMinimum(parseInt(response?.data?.data?.min));
     };
     req();
-  }, []);
+  }, [currentIndex]);
   // const onCsvUpdateHandler = async () => {
   //   if (!modifiedKeys) {
   //     onImageHandler("next", currentIndex, headerData, currentTaskData);
@@ -634,16 +637,19 @@ const UserCorrectionData = () => {
   };
 
   const imageFocusHandler = (headerName) => {
-    const csvDataKeys = Object.keys(headerData[0]);
+    const csvDataKeys = Object.keys(filterResults);
+    console.log(headerName)
     let matchedValue = null;
-    // console.log(headerName);
+    console.log(csvDataKeys);
     for (const key of csvDataKeys) {
+      console.log( filterResults[key],key);
       if (key === headerName) {
-        matchedValue = headerData[0][key];
-        // console.log(matchedValue);
+        matchedValue = filterResults[key];
+        console.log( filterResults[key],key);
         break;
       }
     }
+    console.log(matchedValue)
     const matchedCoordinate = templateHeaders?.templetedata?.find(
       (data) => data.attribute === matchedValue
     );
@@ -661,13 +667,13 @@ const UserCorrectionData = () => {
       setPopUp(true);
     }
 
-    if (!headerData[0].hasOwnProperty(headerName)) {
+    if (!filterResults.hasOwnProperty(headerName)) {
       toast.error("Header not found: " + headerName);
       return;
     }
 
     const metaDataEntry = templateHeaders.templetedata.find(
-      (entry) => entry.attribute === headerData[0][headerName]
+      (entry) => entry.attribute === filterResults[headerName]
     );
 
     if (!metaDataEntry) {
@@ -821,8 +827,9 @@ const UserCorrectionData = () => {
           <CSVFormDataSection
             csvCurrentData={csvCurrentData}
             csvData={csvData}
-            headerData={headerData}
-            correctionData={correctionData}
+            // headerData={headerData}
+            filterResults={filterResults}
+            // correctionData={correctionData}
             templateHeaders={templateHeaders}
             imageColName={imageColName}
             currentFocusIndex={currentFocusIndex}
@@ -853,7 +860,7 @@ const UserCorrectionData = () => {
                 <ButtonCsvSection
                   currentIndex={currentIndex}
                   csvData={csvData}
-                  correctionData={correctionData}
+                  // correctionData={correctionData}
                   max={maximum}
                   zoomInHandler={zoomInHandler}
                   onInialImageHandler={onInialImageHandler}
@@ -879,34 +886,33 @@ const UserCorrectionData = () => {
                       <ArrowBackIosIcon />
                     </button>
                     <div className="h-20vh">
-
-                    
-                    <ImageSectionCSV
-                      imageContainerRef={imageContainerRef}
-                      currentImageIndex={currentImageIndex}
-                      imageUrls={imageUrls}
-                      imageRef={imageRef}
-                      correctionData={correctionData}
-                      zoomLevel={zoomLevel}
-                      selectedCoordintes={selectedCoordintes}
-                      templateHeaders={templateHeaders}
-                    />
+                      <ImageSectionCSV
+                        imageContainerRef={imageContainerRef}
+                        currentImageIndex={currentImageIndex}
+                        imageUrls={imageUrls}
+                        imageRef={imageRef}
+                        currentData={currentData}
+            
+                        zoomLevel={zoomLevel}
+                        selectedCoordintes={selectedCoordintes}
+                        templateHeaders={templateHeaders}
+                      />
                     </div>
                     <button
-                        className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
-                        onClick={() =>
-                          // onImageHandler(
-                          //   "next",
-                          //   currentIndex,
-                          //   filteredArray,
-                          //   currentTaskData
-                          // )
-                          onNextHandler("next", currentIndex)
-                        }
-                        endIcon={<ArrowForwardIosIcon />}
-                      >
-                       <ArrowForwardIosIcon />
-                      </button>
+                      className="px-6 py-2 bg-blue-600 text-white rounded-3xl mx-2 hover:bg-blue-700"
+                      onClick={() =>
+                        // onImageHandler(
+                        //   "next",
+                        //   currentIndex,
+                        //   filteredArray,
+                        //   currentTaskData
+                        // )
+                        onNextHandler("next", currentIndex)
+                      }
+                      endIcon={<ArrowForwardIosIcon />}
+                    >
+                      <ArrowForwardIosIcon />
+                    </button>
                   </div>
 
                   <section>
@@ -970,7 +976,7 @@ const UserCorrectionData = () => {
                       csvCurrentData={csvCurrentData} //whole row data
                       csvData={csvData}
                       tableData={tableData}
-                      correctionData={correctionData}
+                      currentData={currentData}
                       setCorrectionData={setCorrectionData}
                       currentIndex={currentIndex} //error questions data
                       setCurrentIndex={setCurrentIndex}

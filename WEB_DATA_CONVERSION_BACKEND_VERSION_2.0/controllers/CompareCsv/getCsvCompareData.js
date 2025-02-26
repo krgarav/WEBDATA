@@ -119,9 +119,9 @@ const getCsvCompareData = async (req, res) => {
           "../",
           "../",
           "extractedFiles",
-          imageDirectoryPath,
+          imageDirectoryPath
         );
-       
+
         const imageFolders = getAllDirectories(imageFile);
         imageFolders.forEach((folder) => {
           imageFile = path.join(imageFile, folder);
@@ -131,16 +131,14 @@ const getCsvCompareData = async (req, res) => {
         // const result = imageFile.replace(prefixToRemove, "");
 
         const result = imageFile.split("extractedFiles\\")[1];
-        console.log(result)
+        console.log(groupedData[currentIndex - 1]);
         res.status(200).json({
           message: "Data found",
           data: {
             previousData: groupedData[currentIndex - 1],
-            headers: resultsWithIndex,
             max: maxIndex,
             min: minIndex,
             filteredResults: filteredResults[currentIndex - 1],
-            filteredData: filteredResults,
             imageDirectoryPath: result,
           },
         });
