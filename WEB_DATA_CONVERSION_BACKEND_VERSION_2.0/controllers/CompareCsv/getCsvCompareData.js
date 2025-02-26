@@ -220,10 +220,11 @@ const getCsvCompareData = async (req, res) => {
 
     // Handle Image Path Processing Efficiently
     let imageFile = path.join(__dirname, "../../extractedFiles", imageDirectoryPath);
-    const imageFolders = getAllDirectories(imageFile);
-    imageFolders.forEach((folder) => (imageFile = path.join(imageFile, folder)));
+    // console.log(imageFile)
+    // const imageFolders = getAllDirectories(imageFile);
+    // imageFolders.forEach((folder) => (imageFile = path.join(imageFile, folder)));
     const relativeImagePath = imageFile.split("extractedFiles\\")[1];
-
+console.log(relativeImagePath)
     res.status(200).json({
       message: "Data found",
       data: {
