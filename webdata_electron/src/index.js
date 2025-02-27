@@ -24,7 +24,7 @@ const createWindow = () => {
   // Remove default menu (File, Edit, Window, Help, etc.)
   Menu.setApplicationMenu(null);
   // Open DevTools for debugging
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 };
 
 // Start Electron app

@@ -100,3 +100,4 @@ src/OmrImagesZipfile
 src/ErrorCsv
 src/COMPARECSV_FILES
 src/TempleteImages
+dist

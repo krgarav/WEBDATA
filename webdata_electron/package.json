@@ -29,9 +29,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1",
     "adm-zip": "^0.5.15",
-    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "busboy": "^1.6.0",
@@ -40,6 +38,7 @@
     "csv-parser": "^3.0.0",
     "csv-writer": "^1.6.0",
     "dotenv": "^16.4.5",
+    "electron-squirrel-startup": "^1.0.1",
     "express": "^4.19.2",
     "fast-csv": "^5.0.1",
     "fs-extra": "^11.2.0",
@@ -52,10 +51,30 @@
     "mysql2": "^3.9.4",
     "node-unrar-js": "^2.0.2",
     "nodemon": "^3.1.0",
+    "proper-lockfile": "^4.1.2",
     "sequelize": "^6.37.3",
     "sharp": "^0.33.3",
     "socket.io": "^4.7.5",
     "unzipper": "^0.11.5",
     "xlsx": "^0.18.5"
+  },
+  "build": {
+    "productName": "Question sets generator",
+    "icon": "assets/icon.ico",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "ia32"
+          ]
+        }
+      ],
+      "asar": true
+    },
+    "defaultArch": "ia32",
+    "directories": {
+      "output": "dist"
+    }
   }
 }

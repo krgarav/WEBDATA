@@ -2,7 +2,9 @@ const Files = require("../../models/TempleteModel/files");
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
-
+const { app } = require("electron");
+const documentsPath = app.getPath("documents");
+const basePath = path.join(documentsPath, "Webdata");
 const getHeaderData = (req, res, next) => {
   const userRole = req.role;
 
@@ -20,7 +22,7 @@ const getHeaderData = (req, res, next) => {
       }
 
       const fileName = fileData.csvFile;
-      const filePath = path.join(__dirname, "../../csvFile", fileName);
+      const filePath = path.join(basePath, "csvFile", fileName);
 
       if (fs.existsSync(filePath)) {
         const workbook = XLSX.readFile(filePath);

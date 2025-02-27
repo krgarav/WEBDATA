@@ -362,7 +362,7 @@ const CsvUploader = () => {
         return;
       }
       const expectedHeaders = response.data || [];
-
+console.log(expectedHeaders)
       // If expectedHeaders is empty, skip the validation
       if (expectedHeaders.length === 0) {
         setConfirmationModal(true);
@@ -376,7 +376,7 @@ const CsvUploader = () => {
             toast.error("Invalid or empty CSV file.");
             return;
           }
-
+console.log(result)
           // Extract headers from the first row
           const uploadedHeaders = Object.keys(result.data[0]);
 
@@ -399,6 +399,7 @@ const CsvUploader = () => {
         header: true,
         skipEmptyLines: true,
       });
+
     } catch (error) {
       console.error(error);
       toast.error("Error fetching CSV headers.");

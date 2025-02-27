@@ -4,9 +4,13 @@ const Files = require("../../models/TempleteModel/files");
 const path = require("path");
 const fs = require("fs-extra");
 const unzipper = require("unzipper");
+const { app } = require("electron");
 const { createExtractorFromFile } = require("node-unrar-js");
 const getAllDirectories = require("../../services/directoryFinder");
 const jsonToCsv = require("../../services/json_to_csv");
+const Templete = require("../../models/TempleteModel/templete");
+const documentsPath = app.getPath("documents");
+const basePath = path.join(documentsPath, "Webdata");
 
 // Multer memory storage for chunk uploads
 const storage = multer.memoryStorage();
@@ -178,9 +182,12 @@ const handleUpload = async (req, res) => {
       return res.status(400).json({ error: "No chunk file uploaded." });
     }
 
-    const uploadDir = path.join(__dirname, "..", "..", "zipFile");
+    // const uploadDir = path.join(__dirname, "..", "..", "zipFile");
+    // const chunkDir = path.join(uploadDir, "chunks");
+    // const csvFileDir = path.join(__dirname, "../../csvFile");
+    const uploadDir = path.join(basePath, "zipFile");
     const chunkDir = path.join(uploadDir, "chunks");
-    const csvFileDir = path.join(__dirname, "../../csvFile");
+    const csvFileDir = path.join(basePath, "csvFile");
 
     try {
       // Ensure necessary directories exist
@@ -219,8 +226,8 @@ const handleUpload = async (req, res) => {
 
         // Step 7: Extract the final ZIP file
         const destinationFolderPath = path.join(
-          __dirname,
-          "../../extractedFiles",
+          basePath,
+          "extractedFiles",
           `${timestamp}_${zipFileName}`
         );
 
@@ -252,7 +259,10 @@ const handleUpload = async (req, res) => {
           zipFile: `${timestamp}_${zipFileName}`,
           templeteId: id,
         });
+        const template = await Templete.findByPk(id);
 
+        template.imageColName = req.query.imageNames;
+        await template.save();
         if (fs.existsSync(csvFilePath)) {
           await processCSV(csvFilePath, res, req, createdFile, pathDir);
         } else {
@@ -260,14 +270,13 @@ const handleUpload = async (req, res) => {
             .status(404)
             .json({ error: "CSV file not found after extraction." });
         }
-      } 
-      else {
+      } else {
         // Step 9: Respond with the status of the chunk upload
         res.status(200).json({ message: `Chunk ${chunkIndex} uploaded.` });
       }
     } catch (error) {
       console.error("Error during chunk upload:", error);
-      res.status(500).json({ error: "Chunk upload failed." });
+      res.status(500).json({ error: "Chunk upload failed.", message: error });
     }
   });
 };

@@ -15,13 +15,15 @@ const blank = require("../controllers/CompareCsv/blank");
 const { getUploadedFilesByTemplateId } = require("../controllers/CompareCsv/getUploadedFilesByTemplateId");
 const downloadCorrectedCsv = require("../controllers/CompareCsv/downloadCorrectedCsv");
 const downlaodErrorCorrectedFile = require("../controllers/CompareCsv/downlaodErrorCorrectedFile");
+const { getCsvHeaders } = require("../controllers/CompareCsv/uploadedHeader");
+const { formFieldDetails } = require("../controllers/CompareCsv/formFieldDetails");
 
 const router = express.Router();
 
 router.post("/uploadcsv", authMiddleware, multerUpload, uploadCsv);
 router.post("/compareData", authMiddleware, multipleMulterUpload, compareCsv)
 router.get("/compareAssigned/:taskId", authMiddleware, userData);
-router.get("/download/correctedCsv/:taskId",authMiddleware, downloadCorrectedCsv); 
+router.get("/download/correctedCsv/:taskId", downloadCorrectedCsv); 
 router.get("/download/errorCorrectedCsv/:taskId",authMiddleware, downlaodErrorCorrectedFile); 
 router.post("/saveAnswer/:taskId", authMiddleware, saveData);
 router.post("/assign", authMiddleware, assignTask);
@@ -32,5 +34,7 @@ router.get("/download_error_file/:assignId", authMiddleware, errorFile);
 router.get("/submitTask/:taskId", authMiddleware, submitTask);
 router.post("/mult_error", authMiddleware,multerUpload, blank);
 router.post('/getUploadedFiles/:templateId', getUploadedFilesByTemplateId);
-
+router.get('/getUploadedFileHeader', getCsvHeaders);
+router.post("/formfileddetails",formFieldDetails)
 module.exports = router;
+

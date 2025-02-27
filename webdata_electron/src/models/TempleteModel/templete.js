@@ -17,9 +17,9 @@ const Templete = sequelize.define("templetes", {
     type: Sequelize.INTEGER,
   },
   TempleteType: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   typeOption: {
     type: Sequelize.STRING,
   },
@@ -32,6 +32,12 @@ const Templete = sequelize.define("templetes", {
   },
   isPermittedToEdit: {
     type: Sequelize.BOOLEAN,
+  },
+  mergedTableName: {
+    type: Sequelize.STRING,
+  },
+  imageColName: {
+    type: Sequelize.STRING,
   },
 });
 

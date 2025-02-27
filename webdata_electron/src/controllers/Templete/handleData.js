@@ -5,7 +5,8 @@ const Files = require("../../models/TempleteModel/files");
 const MappedData = require("../../models/TempleteModel/mappedData");
 const jsonToCsv = require("../../services/json_to_csv");
 const csvToJson = require("../../services/csv_to_json");
-
+const { app } = require("electron");
+const basePath = path.join(app.getPath("documents"), "Webdata");
 const handleData = async (req, res, next) => {
   const userRole = req.role;
   if (userRole !== "Admin") {
@@ -29,7 +30,7 @@ const handleData = async (req, res, next) => {
     }
 
     const filename = fileData.csvFile;
-    const filePath = path.join(__dirname, "../../csvFile", filename);
+    const filePath = path.join(basePath, "csvFile", filename);
 
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ error: "File not found" });

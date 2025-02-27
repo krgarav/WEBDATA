@@ -16,7 +16,7 @@
 
 const Sequelize = require("sequelize");
 
-const sequelize = new Sequelize("webdataconversion_2", "root", "root", {
+const sequelize = new Sequelize("webdata", "root", "root", {
   dialect: "mysql",
   host: "localhost",
   logging: false,

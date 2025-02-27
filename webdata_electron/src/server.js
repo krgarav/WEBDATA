@@ -24,7 +24,7 @@ const Assigndata = require("./models/TempleteModel/assigndata");
 const RowIndexData = require("./models/TempleteModel/rowIndexData");
 const ImageDataPath = require("./models/TempleteModel/templeteImages");
 const MappedData = require("./models/TempleteModel/mappedData");
-const builtPath = path.join(__dirname, "./build");
+const builtPath = path.join(__dirname, "./dist");
 
 //middlewares
 app.use(cors());
@@ -53,7 +53,7 @@ app.use("/settings", Settings);
 
 // Handle all other routes and serve 'index.html'
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 

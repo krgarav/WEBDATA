@@ -192,6 +192,7 @@ const compareCsv = async (req, res) => {
     //   }
     // }
     // Convert f2 into a Map for O(1) lookups
+
     const f2Map = new Map(f2.map((item) => [item[primaryKey], item]));
 
     for (const item1 of f1) {
@@ -201,13 +202,32 @@ const compareCsv = async (req, res) => {
       const item2 = f2Map.get(key);
       if (!item2) continue; // Skip if no matching primary key in f2
 
+      // Extract image name once (optimization)
+      const imgPathArr = item1[imageColName]?.split("\\");
+      const imgName = imgPathArr?.[imgPathArr.length - 1] || "";
+
       for (const [colKey, val1] of Object.entries(item1)) {
         const val2 = item2[colKey];
 
-        if (val1 !== val2 && !skippingKey.includes(colKey)) {
-          const imgPathArr = item1[imageColName]?.split("\\");
-          const imgName = imgPathArr?.[imgPathArr.length - 1] || "";
+        // ✅ Check for "*" or blank values in formFields columns
+        if (
+          formFeilds.includes(colKey) &&
+          (val1 === "*" || val1.trim() === "")
+        ) {
+          diff.push({
+            PRIMARY: ` ${key}`,
+            COLUMN_NAME: colKey,
+            FILE_1_DATA: val1,
+            FILE_2_DATA: val2,
+            IMAGE_NAME: imgName,
+            CORRECTED: "",
+            "CORRECTED BY": "",
+            "PRIMARY KEY": primaryKey,
+          });
+        }
 
+        // ✅ Check for value mismatch (excluding skipping keys)
+        else if (val1 !== val2 && !skippingKey.includes(colKey)) {
           diff.push({
             PRIMARY: ` ${key}`,
             COLUMN_NAME: colKey,

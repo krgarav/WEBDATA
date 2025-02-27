@@ -2,7 +2,8 @@ const Files = require("../../models/TempleteModel/files");
 const fs = require("fs").promises;
 const path = require("path");
 const csvToJson = require("../../services/csv_to_json");
-
+const { app } = require("electron");
+const basePath = path.join(app.getPath("documents"), "Webdata");
 const MAX_CONCURRENT_FILE_OPS = 10;
 
 const duplicateFinder = async (req, res, next) => {
@@ -19,7 +20,7 @@ const duplicateFinder = async (req, res, next) => {
     }
 
     const filename = fileData.csvFile;
-    const filePath = path.resolve(__dirname, "../../csvFile", filename);
+    const filePath = path.join(basePath, "csvFile", filename);
 
     try {
       await fs.access(filePath);

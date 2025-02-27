@@ -5,8 +5,8 @@ const fs = require("fs").promises;
 const path = require("path");
 const ImageData = require("../../models/TempleteModel/templeteImages");
 
-const baseFolder = path.join(__dirname, "../../TempleteImages");
-
+// const baseFolder = path.join(__dirname, "../../TempleteImages");
+const baseFolder = "TempleteImages/";
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
     if (!(await fs.access(baseFolder).catch(() => false))) {

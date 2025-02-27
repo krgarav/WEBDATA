@@ -6,7 +6,8 @@ const Templete = require("../../models/TempleteModel/templete");
 const FormCheckedData = require("../../models/TempleteModel/formcheckeddata");
 const MetaData = require("../../models/TempleteModel/metadata");
 const { Op } = require("sequelize");
-
+const {app} = require("electron");
+const basePath = path.join(app.getPath("documents"), "Webdata");
 const escapeRegExp = (string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 };
@@ -35,7 +36,7 @@ const getCsvData = async (req, res, next) => {
     }
 
     const filename = fileData.csvFile;
-    const filePath = path.join(__dirname, "../../csvFile", filename);
+    const filePath = path.join(basePath, "csvFile", filename);
 
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ error: "CSV file not found" });
