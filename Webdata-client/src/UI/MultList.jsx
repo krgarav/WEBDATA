@@ -11,7 +11,7 @@ import {
 import CommentIcon from "@mui/icons-material/Comment";
 import { debounce } from "lodash";
 import dataContext from "../Store/DataContext";
-
+import { toast } from "react-toastify";
 const MultList = () => {
   const [checked, setChecked] = useState([]);
   const dataCtx = useContext(dataContext);
@@ -19,6 +19,10 @@ const MultList = () => {
   const handleToggle = useMemo(
     () =>
       debounce((value) => {
+         if (dataCtx.skippingKey.includes(value)) {
+                  toast.warn("Key selected in skipping fields");
+                  return;
+                }
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
 

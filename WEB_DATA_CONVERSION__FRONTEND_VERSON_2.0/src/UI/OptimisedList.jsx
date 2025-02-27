@@ -20,11 +20,9 @@ const OptimisedList = () => {
   const handleToggle = useMemo(
     () =>
       debounce((value) => {
-       
-
         if (dataCtx.formFeilds.includes(value)) {
           toast.warn("Key selected in formfields");
-          return
+          return;
         }
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
