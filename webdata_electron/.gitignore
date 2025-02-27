@@ -91,12 +91,12 @@ typings/
 # Electron-Forge
 out/
 # Files 
-csvFile
-extractedFiles
-zipFile
-multipleCsvCompare
-OmrImages
-OmrImagesZipfile
-ErrorCsv
-COMPARECSV_FILES
-TempleteImages
+src/csvFile
+src/extractedFiles
+src/zipFile
+src/multipleCsvCompare
+src/OmrImages
+src/OmrImagesZipfile
+src/ErrorCsv
+src/COMPARECSV_FILES
+src/TempleteImages
