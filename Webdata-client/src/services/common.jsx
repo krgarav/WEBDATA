@@ -1,8 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-import.meta.env.VITE_API_URL
-
 export const REACT_APP_IP = window.location.hostname;
 export const SERVER_IP = import.meta.env.VITE_API_URL;
 

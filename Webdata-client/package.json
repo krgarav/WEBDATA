@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "set-ip": "node set-ip.cjs",
+    "build": "npm run set-ip && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
