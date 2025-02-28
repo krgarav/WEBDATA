@@ -43,7 +43,7 @@ const CsvTaskStatus = () => {
     const onGetAllCsvHandler = async (id) => {
         setLoadingTemplates(true);
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/getcsvinfo/${id}`,
+            const response = await axios.get(`${window.SERVER_IP}/getcsvinfo/${id}`,
                 {
                     headers: {
                         token: token,
@@ -63,7 +63,7 @@ const CsvTaskStatus = () => {
         setLoadingCsv(true)
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/get/headerdata/${fileId}`,
+                `${window.SERVER_IP}/get/headerdata/${fileId}`,
                 {
                     headers: {
                         token: token,
@@ -91,7 +91,7 @@ const CsvTaskStatus = () => {
         }
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/gettaskstatusdetails/${selectedCsvId}`,
+            const response = await axios.post(`${window.SERVER_IP}/gettaskstatusdetails/${selectedCsvId}`,
                 {
                     selectedHeader: selectedHeader,
                     headerValue: headerValue
@@ -130,7 +130,7 @@ const CsvTaskStatus = () => {
         }
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/users/getuseractivitydetails/${email}`,
+                `${window.SERVER_IP}/users/getuseractivitydetails/${email}`,
                 {
                     headers: {
                         token: token
@@ -160,7 +160,7 @@ const CsvTaskStatus = () => {
 
         try {
             const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/get/usertaskdetails/${email}`,
+                `${window.SERVER_IP}/get/usertaskdetails/${email}`,
                 {
                     headers: {
                         token: token

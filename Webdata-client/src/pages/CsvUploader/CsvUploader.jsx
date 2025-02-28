@@ -143,7 +143,7 @@ const CsvUploader = () => {
       const imageNamesString = imageNames.join(",");
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/upload/${selectedId}?imageNames=${imageNamesString}`,
+        `${window.SERVER_IP}/upload/${selectedId}?imageNames=${imageNamesString}`,
         formData,
         {
           headers: {
@@ -219,7 +219,7 @@ const CsvUploader = () => {
   const onTemplateEditHandler = async (id) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/edit/template/${id}`,
+        `${window.SERVER_IP}/edit/template/${id}`,
         {},
         {
           headers: {
@@ -257,7 +257,7 @@ const CsvUploader = () => {
   const onTemplateRemoveHandler = async (id) => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/delete/template/${id}`,
+        `${window.SERVER_IP}/delete/template/${id}`,
         {},
         {
           headers: {
@@ -278,7 +278,7 @@ const CsvUploader = () => {
   const onGetCsvInfoHandler = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/getcsvinfo/${selectedId}`,
+        `${window.SERVER_IP}/getcsvinfo/${selectedId}`,
         {
           headers: {
             token: token,
@@ -294,7 +294,7 @@ const CsvUploader = () => {
   const onDownloadFileHandler = async (file) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/download/csv/${file.id}`,
+        `${window.SERVER_IP}/download/csv/${file.id}`,
         {
           method: "GET",
           headers: {
@@ -351,7 +351,7 @@ const CsvUploader = () => {
 
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/get/csvheader/${selectedId}`,
+        `${window.SERVER_IP}/get/csvheader/${selectedId}`,
         {
           headers: { token },
         }

@@ -1,14 +1,14 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export const REACT_APP_IP = window.location.hostname;
-export const SERVER_IP = import.meta.env.VITE_API_URL;
+export const REACT_APP_IP = window.REACT_APP_IP;
+export const SERVER_IP = window.SERVER_IP;
 
 export const onGetTemplateHandler = async () => {
   const token = JSON.parse(localStorage.getItem("userData"));
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/get/templetes`,
+      `${window.SERVER_IP}/get/templetes`,
       {},
       {
         headers: {
@@ -27,7 +27,7 @@ export const onGetAllUsersHandler = async () => {
 
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/users/getallusers`,
+      `${window.SERVER_IP}/users/getallusers`,
       {},
       {
         headers: {
@@ -48,7 +48,7 @@ export const onGetVerifiedUserHandler = async () => {
   }
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/users/getuser`,
+      `${window.SERVER_IP}/users/getuser`,
       {},
       {
         headers: {
@@ -66,7 +66,7 @@ export const onGetAllTasksHandler = async () => {
 
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/get/alltasks`,
+      `${window.SERVER_IP}/get/alltasks`,
       {
         headers: {
           token: token,
@@ -83,7 +83,7 @@ export const onGetTaskHandler = async (id) => {
   const token = JSON.parse(localStorage.getItem("userData"));
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/get/task/${id}`,
+      `${window.SERVER_IP}/get/task/${id}`,
       {
         headers: {
           token: token,

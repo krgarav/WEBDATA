@@ -133,7 +133,7 @@ export default function Navbar() {
       name: "Logout",
       onClick: async () => {
         try {
-          await axios.post(`${import.meta.env.VITE_API_URL}/users/logout`, {
+          await axios.post(`${window.SERVER_IP}/users/logout`, {
             userId: userData.id,
           });
           localStorage.clear();

@@ -36,6 +36,7 @@ import MergeEditDuplicateData from "./pages/MergeDuplicateDetect/MergeEditDuplic
 function App() {
   const datactx = useContext(dataContext);
   const [user, setUser] = useState({});
+  const [serverIP, setServerIP] = useState("");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -80,7 +81,10 @@ function App() {
                 <>
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/comparecsv" element={<CsvHomepage />} />
-                  <Route path="/datamatching/csvtaskstatus" element={<CsvTaskStatus />} />
+                  <Route
+                    path="/datamatching/csvtaskstatus"
+                    element={<CsvTaskStatus />}
+                  />
                   <Route
                     path="/comparecsv/assign_operator/:id"
                     element={<Assignee />}
@@ -105,7 +109,7 @@ function App() {
                   />
                 </>
               )}
-              {/* ------------------PartA------------------ */}
+            {/* ------------------PartA------------------ */}
             {/* {(role === "Admin" ||
               role === "Moderator") && (
                 <>
@@ -113,16 +117,24 @@ function App() {
                 </>
               )} */}
 
-              {/* ------------------Merge------------------ */}
-            {(role === "Admin" ||
-              role === "Moderator") && (
-                <>
-                  <Route path="/merge" element={<Merge />} />
-                  <Route path="/merge/duplicate" element={<MergeDuplicateDetect />} />
-                  <Route path="/merge/duplicate/data" element={<MergeDuplicateData />} />
-                  <Route path="/merge/duplicate/data/edit" element={<MergeEditDuplicateData />} />
-                </>
-              )}
+            {/* ------------------Merge------------------ */}
+            {(role === "Admin" || role === "Moderator") && (
+              <>
+                <Route path="/merge" element={<Merge />} />
+                <Route
+                  path="/merge/duplicate"
+                  element={<MergeDuplicateDetect />}
+                />
+                <Route
+                  path="/merge/duplicate/data"
+                  element={<MergeDuplicateData />}
+                />
+                <Route
+                  path="/merge/duplicate/data/edit"
+                  element={<MergeEditDuplicateData />}
+                />
+              </>
+            )}
 
             {/* -----------------csvuploader------------------- */}
             {(role === "Admin" ||

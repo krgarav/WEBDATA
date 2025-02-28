@@ -116,7 +116,7 @@ const CreateUser = () => {
     }
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/users/createuser`,
+        `${window.SERVER_IP}/users/createuser`,
         { userData: userData },
         {
           headers: {

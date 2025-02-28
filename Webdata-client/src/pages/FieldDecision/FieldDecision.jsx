@@ -24,7 +24,7 @@ const FieldDecision = () => {
       try {
         const template = await onGetTemplateHandler();
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/get/mappeddata/${id}`,
+          `${window.SERVER_IP}/get/mappeddata/${id}`,
           {
             headers: {
               token: token,
@@ -118,7 +118,7 @@ const FieldDecision = () => {
     setLoading(true);
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/formcheckeddata`,
+        `${window.SERVER_IP}/formcheckeddata`,
         { formCheckedData: checkedData, fileID: fileId },
         {
           headers: {

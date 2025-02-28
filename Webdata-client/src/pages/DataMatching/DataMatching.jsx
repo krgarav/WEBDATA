@@ -253,7 +253,7 @@ const DataMatching = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/updatecsvdata/${parseInt(
+        `${window.SERVER_IP}/updatecsvdata/${parseInt(
           currentTaskData?.fileId
         )}`,
         {
@@ -469,7 +469,7 @@ const DataMatching = () => {
       }
       setImageUrls(allImagePaths);
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/get/image`,
+        `${window.SERVER_IP}/get/image`,
         {
           imageNameArray: allImagePaths,
           rowIndex: csvData[newIndex].rowIndex,
@@ -731,7 +731,7 @@ const DataMatching = () => {
   const onTaskStartHandler = async (taskData) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/get/csvdata`,
+        `${window.SERVER_IP}/get/csvdata`,
         { taskData: taskData },
         {
           headers: {
@@ -778,7 +778,7 @@ const DataMatching = () => {
   const onCompleteHandler = async () => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/taskupdation/${parseInt(
+        `${window.SERVER_IP}/taskupdation/${parseInt(
           currentTaskData?.id
         )}`,
         {

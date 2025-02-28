@@ -90,7 +90,7 @@ const TableCol = (props) => {
     const { COLUMN_NAME } = data;
     const req = async () => {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/saveAnswer/${taskId}`,
+        `${window.SERVER_IP}/saveAnswer/${taskId}`,
 
         {
           currentIndexValue: index,

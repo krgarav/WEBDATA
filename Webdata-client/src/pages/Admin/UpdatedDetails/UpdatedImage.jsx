@@ -67,7 +67,7 @@ const Modal = ({
                     <div className="relative overflow-auto" style={{ maxHeight: '60vh', maxWidth: '100%' }}>
                         {updatedImages.length > 0 && (
                             <img
-                                src={`${import.meta.env.VITE_API_URL}/images/${updatedImages[currentImageIndex]}`}
+                                src={`${window.SERVER_IP}/images/${updatedImages[currentImageIndex]}`}
                                 alt="Modal Content"
                                 className="w-full h-auto"
                                 style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}

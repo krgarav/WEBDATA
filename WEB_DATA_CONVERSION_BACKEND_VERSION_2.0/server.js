@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-require("dotenv").config()
+require("dotenv").config();
 const { execSync } = require("child_process");
 const fs = require("fs");
 const sequelize = require("./utils/database");
@@ -15,10 +15,9 @@ const User = require("./models/User");
 const MetaData = require("./models/TempleteModel/metadata");
 const Files = require("./models/TempleteModel/files");
 const UpdatedData = require("./models/TempleteModel/updatedData");
-const Settings = require("./routes/settings")
+const Settings = require("./routes/settings");
 
 // require("./services/csvWorker");
-
 
 const upload = require("./routes/upload");
 const path = require("path");
@@ -27,14 +26,19 @@ const Assigndata = require("./models/TempleteModel/assigndata");
 const RowIndexData = require("./models/TempleteModel/rowIndexData");
 const ImageDataPath = require("./models/TempleteModel/templeteImages");
 const MappedData = require("./models/TempleteModel/mappedData");
-const builtPath = path.join(__dirname, "../../WEBDATA/WEB_DATA_CONVERSION__FRONTEND_VERSON_2.0/build");
-c
+const builtPath = path.join(
+  __dirname,
+  "../../WEBDATA/WEB_DATA_CONVERSION__FRONTEND_VERSON_2.0/build"
+);
 
 // Check if build exists, if not, run `npm run build`
 if (!fs.existsSync(path.join(builtPath, "index.html"))) {
   console.log("⚠️  Build not found! Running `npm run build`...");
   try {
-    execSync("npm run build", { stdio: "inherit", cwd: "../../WEBDATA/WEB_DATA_CONVERSION__FRONTEND_VERSON_2.0" });
+    execSync("npm run build", {
+      stdio: "inherit",
+      cwd: "../../WEBDATA/WEB_DATA_CONVERSION__FRONTEND_VERSON_2.0",
+    });
     console.log("✅ Build completed!");
   } catch (error) {
     console.error("❌ Error running `npm run build`:", error);
@@ -62,19 +66,17 @@ app.use("/images", express.static(imageDirectoryPath));
 app.use("/images", express.static(path.join(__dirname, "extractedFiles")));
 app.use(express.static(builtPath));
 
-
 app.use("/users", userRoutes);
 app.use(upload);
 app.use(compareCsv);
 app.use(templeteRoutes);
-app.use(mergeCsv)
+app.use(mergeCsv);
 app.use("/settings", Settings);
 
 // Handle all other routes and serve 'index.html'
 app.get("*", (req, res) => {
   res.sendFile(path.join(builtPath, "index.html"));
 });
-
 
 // Define associations with cascading deletes
 Templete.hasMany(MetaData, {
@@ -168,7 +170,6 @@ MappedData.belongsTo(Templete, {
   },
   onUpdate: "CASCADE",
 });
-
 
 sequelize
   .sync({ force: !true })

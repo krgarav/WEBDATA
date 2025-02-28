@@ -40,7 +40,7 @@ const TemplateMapping = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/get/headerdata/${fileId}`,
+          `${window.SERVER_IP}/get/headerdata/${fileId}`,
           {
             headers: {
               token: token,
@@ -134,7 +134,7 @@ const TemplateMapping = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/data`,
+        `${window.SERVER_IP}/data`,
         { mappedData },
         {
           headers: {

@@ -21,7 +21,7 @@ const dataContext = React.createContext({
   uploadZipImage: [],
   formFeilds: [],
   templateData: {},
-
+  backendIP: 'localhost',
   modifyTemplateData: () => {},
   modifyUserData: () => {},
   modifyLoginData: () => {},
@@ -43,6 +43,7 @@ const dataContext = React.createContext({
   setCsvDataWithImage: () => {},
   setUploadZipImage: () => {},
   setFormFeilds: () => {},
+  setBackendIP : () => {},
 });
 
 export default dataContext;

@@ -68,7 +68,7 @@ function UpdatedDetails() {
   const onUpdatedDetailsHandler = async (taskData) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/updated/details`,
+        `${window.SERVER_IP}/updated/details`,
         { taskData },
         {
           headers: {
@@ -182,7 +182,7 @@ function UpdatedDetails() {
   const onVerifyDetailHandler = async () => {
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/verify/updateddetails`,
+        `${window.SERVER_IP}/verify/updateddetails`,
         { updatedId: openImageDetails?.id },
         {
           headers: {

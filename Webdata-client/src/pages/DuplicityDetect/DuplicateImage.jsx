@@ -19,7 +19,7 @@ const DuplicateImage = ({ currentImageIndex, currentRowData, imageUrl }) => {
             >
               <img
                 // src={`data:image/jpeg;base64,${imageUrl}`}
-                src={`${import.meta.env.VITE_API_URL}/images/${imageUrl}`}
+                src={`${window.SERVER_IP}/images/${imageUrl}`}
                 alt="Selected"
                 style={{
                   width: "48rem",

@@ -82,7 +82,7 @@ export function AllUser() {
     e.preventDefault();
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/users/updateuser/${selectedUser.id}`,
+        `${window.SERVER_IP}/users/updateuser/${selectedUser.id}`,
         { selectedUser },
         {
           headers: {
@@ -135,7 +135,7 @@ export function AllUser() {
         return;
       }
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/users/deleteuser/${+removeUserId}`,
+        `${window.SERVER_IP}/users/deleteuser/${+removeUserId}`,
         {},
         {
           headers: {

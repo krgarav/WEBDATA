@@ -27,7 +27,7 @@ const ImageSection = ({
     >
       {imageUrl ? (
         <img
-          src={`${import.meta.env.VITE_API_URL}/images/${imageUrl}`}
+          src={`${window.SERVER_IP}/images/${imageUrl}`}
           alt="Selected"
           ref={imageRef}
           style={{

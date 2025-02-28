@@ -40,7 +40,7 @@ const ImageScanner = () => {
         // Make a GET request to the backend to get the CSV headers
         const response = await axios.get(
           // The URL of the backend endpoint
-          `${import.meta.env.VITE_API_URL}/get/headerdata/${fileId}`,
+          `${window.SERVER_IP}/get/headerdata/${fileId}`,
           // The headers to send with the request
           {
             headers: {
@@ -70,7 +70,7 @@ const ImageScanner = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/update/duplicatedata`,
+        `${window.SERVER_IP}/update/duplicatedata`,
         {
           index: currentRowData?.index,
           fileID: fileId,
@@ -195,7 +195,7 @@ const ImageScanner = () => {
     setLoading(true)
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/duplicate/data`,
+        `${window.SERVER_IP}/duplicate/data`,
         {
           colName: columnName,
           fileID: fileId,
@@ -267,7 +267,7 @@ const ImageScanner = () => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/delete/duplicate`,
+        `${window.SERVER_IP}/delete/duplicate`,
         { index: parseInt(rowIndex), fileID: fileId },
         {
           headers: {

@@ -30,7 +30,7 @@ const UploadDataFile = () => {
     setUploadingModalOpen(true);
     setFileUploadingStatus("Pending");
     await axios
-      .post(`${import.meta.env.VITE_API_URL}/upload/data`, formData, {
+      .post(`${window.SERVER_IP}/upload/data`, formData, {
         headers: {
           token: token,
         },
@@ -71,7 +71,7 @@ const UploadDataFile = () => {
     setFileUploadingStatus("Pending");
     setUploadingModalOpen(true);
     await axios
-      .post(`${import.meta.env.VITE_API_URL}/upload/key`, formData, {
+      .post(`${window.SERVER_IP}/upload/key`, formData, {
         headers: {
           token: token,
         },

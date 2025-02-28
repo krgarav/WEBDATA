@@ -439,7 +439,7 @@ const ImageScanner = () => {
     // Append the array of image files under the key "images"
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/add/templete`,
+        `${window.SERVER_IP}/add/templete`,
         formData,
         {
           headers: {

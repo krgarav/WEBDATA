@@ -15,7 +15,7 @@ function UserDetail() {
     const fetchUserDetails = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/user/details/${id}`,
+          `${window.SERVER_IP}/user/details/${id}`,
           {
             headers: {
               token: token,

@@ -24,25 +24,31 @@ registerLicense(
   "Ngo9BigBOggjHTQxAR8/V1NCaF5cXmZCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXhdcHRVQmVeV0F3Wks="
 );
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <DataProvider>
-      <App />
-      <ToastContainer
-        position="top-center"
-        autoClose={500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-    </DataProvider>
-  </React.StrictMode>
-);
+fetch("/config.json")
+  .then((response) => response.json())
+  .then((config) => {
+    window.REACT_APP_IP = window.location.hostname;
+    window.SERVER_IP = config.SERVER_IP; // Store SERVER_IP globally
 
-
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(
+      <React.StrictMode>
+        <DataProvider>
+          <App />
+          <ToastContainer
+            position="top-center"
+            autoClose={500}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+        </DataProvider>
+      </React.StrictMode>
+    );
+  })
+  .catch((error) => console.error("Error loading config:", error));

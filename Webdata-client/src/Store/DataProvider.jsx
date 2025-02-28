@@ -21,6 +21,7 @@ const initialData = {
   uploadZipImage: [],
   formFeilds: [],
   templateData: {},
+  backendIP: "localhost",
 };
 
 const DataProvider = (props) => {
@@ -195,6 +196,14 @@ const DataProvider = (props) => {
       };
     });
   };
+  const setbackendIPHandler = (ip) => {
+    setDataState((item) => {
+      return {
+        ...item,
+        backendIP: ip,
+      };
+    });
+  };
 
   const dataContext = {
     isLogin: dataState.isLogin,
@@ -218,6 +227,7 @@ const DataProvider = (props) => {
     uploadZipImage: dataState.uploadZipImage,
     formFeilds: dataState.formFeilds,
     templateData: dataState.templateData,
+    backendIP: dataState.backendIP,
     modifyTemplateData: modifyTemplateDataHandler,
     modifyAuth: modifyAuthHandler,
     modifyLoginData: modifyLoginDataHandler,
@@ -239,6 +249,7 @@ const DataProvider = (props) => {
     setCsvDataWithImage: setCsvDataWithImageHandler,
     setUploadZipImage: setUploadZipImageHandler,
     setFormFeilds: setFormFeildsHandler,
+    setbackendIP: setbackendIPHandler,
   };
 
   return (

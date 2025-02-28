@@ -27,7 +27,7 @@ const AdminAssined = () => {
       try {
         const token = JSON.parse(localStorage.getItem("userData"));
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/assignedTasks`,
+          `${window.SERVER_IP}/assignedTasks`,
           {
             headers: {
               token: token,
@@ -143,7 +143,7 @@ const AdminAssined = () => {
       try {
         const token = JSON.parse(localStorage.getItem("userData"));
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/download_error_file/${taskData.id}`,
+          `${window.SERVER_IP}/download_error_file/${taskData.id}`,
           {
             headers: {
               token: token,
@@ -201,7 +201,7 @@ const AdminAssined = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/download/csv/${currentTaskData.fileId}`,
+        `${window.SERVER_IP}/download/csv/${currentTaskData.fileId}`,
         {
           method: "GET",
           headers: {
@@ -247,7 +247,7 @@ const AdminAssined = () => {
     console.log("fdsfdsf");
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/taskupdation/${parseInt(
+        `${window.SERVER_IP}/taskupdation/${parseInt(
           currentTask.id
         )}`,
         { taskStatus: false },
@@ -280,7 +280,7 @@ const AdminAssined = () => {
     try {
       const token = JSON.parse(localStorage.getItem("userData"));
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/edit/assigned/task`,
+        `${window.SERVER_IP}/edit/assigned/task`,
         { assignedTaskId: taskEditId, userId: user.id },
         {
           headers: {
