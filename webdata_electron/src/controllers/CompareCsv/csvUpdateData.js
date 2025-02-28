@@ -9,6 +9,9 @@ const { promisify } = require("util");
 const Files = require("../../models/TempleteModel/files");
 const { Worker } = require("worker_threads");
 const { app } = require("electron");
+const documentsPath = app.getPath("documents");
+const basePath = path.join(documentsPath, "Webdata");
+
 function readCSVAndConvertToJSON(filePath) {
   return new Promise((resolve, reject) => {
     const jsonArray = [];
@@ -268,7 +271,7 @@ const csvUpdateData = async (req, res) => {
     const fileData = await Files.findOne({ where: { id: fileId } });
     if (!fileData) return res.status(404).json({ error: "File not found" });
 
-    const originalFilePath = "csvFile/" + fileData.csvFile;
+    const originalFilePath = path.join(basePath, "csvFile", fileData.csvFile);
     const resolvedErrorFilePath = path.resolve(errorFilePath);
 
     try {
@@ -291,12 +294,15 @@ const csvUpdateData = async (req, res) => {
         .json({ message: "File is locked. Try again later." });
     }
     // Determine the correct base path
-    const basePath = app.isPackaged
-      ? path.join(process.resourcesPath, "workers") // In production (after build)
-      : __dirname; // In development
+    const baseCodePath = app.isPackaged
+    ? path.join(process.resourcesPath, "workers") // After build
+    : path.join(__dirname, "../../workers"); // Development mode
+  
+  // Ensure correct file path
+  const workerPath = app.isPackaged
+    ? path.join(baseCodePath, "csvWorker.js")
+    : path.join(baseCodePath, "csvWorker.js");
 
-    // Resolve the worker file path
-    const workerPath = path.resolve(basePath, "csvWorker.js");
     // Spawn a worker thread
     const worker = new Worker(workerPath, {
       workerData: {
@@ -329,7 +335,7 @@ const csvUpdateData = async (req, res) => {
 
     worker.on("error", async (error) => {
       await safeReleaseLock();
-      res.status(500).json({ error: "Worker thread error", details: error });
+      res.status(500).json({ error: "Worker thread error", details: error ,workerPath});
     });
 
     worker.on("exit", async (code) => {
@@ -337,14 +343,14 @@ const csvUpdateData = async (req, res) => {
       if (code !== 0) {
         res
           .status(500)
-          .json({ error: `Worker thread exited with code ${code}` });
+          .json({ error: `Worker thread exited with code ${code}`,workerPath });
       }
     });
   } catch (error) {
     console.error("Error in csvUpdateData:", error);
     res
       .status(500)
-      .json({ message: "An error occurred while updating the task" });
+      .json({ message: "An error occurred while updating the task" ,workerPath});
   }
 };
 

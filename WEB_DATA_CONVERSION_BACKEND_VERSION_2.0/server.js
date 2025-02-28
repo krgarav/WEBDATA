@@ -28,7 +28,7 @@ const RowIndexData = require("./models/TempleteModel/rowIndexData");
 const ImageDataPath = require("./models/TempleteModel/templeteImages");
 const MappedData = require("./models/TempleteModel/mappedData");
 const builtPath = path.join(__dirname, "../../WEBDATA/WEB_DATA_CONVERSION__FRONTEND_VERSON_2.0/build");
-console.log(builtPath)
+c
 
 // Check if build exists, if not, run `npm run build`
 if (!fs.existsSync(path.join(builtPath, "index.html"))) {

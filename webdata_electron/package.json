@@ -6,6 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
+    "build": "node ./src/server.js",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -59,7 +60,7 @@
     "xlsx": "^0.18.5"
   },
   "build": {
-    "productName": "Question sets generator",
+    "productName": "Web Data conversion",
     "icon": "assets/icon.ico",
     "win": {
       "target": [
@@ -75,6 +76,25 @@
     "defaultArch": "ia32",
     "directories": {
       "output": "dist"
-    }
+    },
+    "asarUnpack": [
+      "node_modules/csv-parser",
+      "node_modules/csv-writer"
+    ],
+    
+
+    "extraResources": [
+      {
+        "from": "src/workers",
+        "to": "workers",
+        "filter": [
+          "**/*.js"
+        ]
+      },
+      {
+        "from": "node_modules",
+        "to": "node_modules"
+      }
+    ]
   }
 }

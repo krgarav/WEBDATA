@@ -275,12 +275,12 @@ const compareCsv = async (req, res) => {
     const csvData = parse(diff);
     const correctedCsv = parse(f1);
 
-    const directoryPath = "COMPARECSV_FILES/" + "ErrorCsv/";
+    const directoryPath = path.join(basePath,"COMPARECSV_FILES" , "ErrorCsv");
     if (!fs.existsSync(directoryPath)) {
       fs.mkdirSync(directoryPath, { recursive: true });
     }
 
-    const CorrectionDirectoryPath = "COMPARECSV_FILES/" + "CorrectedCsv/";
+    const CorrectionDirectoryPath = path.join(basePath,"COMPARECSV_FILES" , "CorrectedCsv");
     if (!fs.existsSync(CorrectionDirectoryPath)) {
       fs.mkdirSync(CorrectionDirectoryPath, { recursive: true });
     }

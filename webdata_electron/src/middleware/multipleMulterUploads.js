@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     let destinationFolder = path.join(
       basePath,
-      "COMPARECSV_FILES" + "multipleCsvCompare"
+      "COMPARECSV_FILES" , "multipleCsvCompare"
     );
     if (!fs.existsSync(destinationFolder)) {
       fs.mkdirSync(destinationFolder, { recursive: true });
