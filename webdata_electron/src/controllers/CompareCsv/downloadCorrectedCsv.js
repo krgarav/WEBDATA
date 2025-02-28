@@ -4,7 +4,9 @@ const Assigndata = require("../../models/TempleteModel/assigndata");
 const Files = require("../../models/TempleteModel/files");
 const csvToJson = require("../../services/csv_to_json");
 const jsonToCsv = require("../../services/json_to_csv");
-
+const { app } = require("electron");
+const documentsPath = app.getPath("documents");
+const basePath = path.join(documentsPath, "Webdata");
 const DownloadCorrectedCsv = async (req, res) => {
   try {
     const { taskId } = req.params;
@@ -29,8 +31,8 @@ const DownloadCorrectedCsv = async (req, res) => {
 
     const originalFilename = fileData.csvFile;
     const originalFilePath = path.join(
-      __dirname,
-      "../../csvFile",
+      basePath,
+      "csvFile",
       originalFilename
     );
 

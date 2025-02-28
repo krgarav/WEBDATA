@@ -7,7 +7,9 @@ const fs = require("fs");
 const path = require("path");
 const jsonToCsv = require("../../services/json_to_csv");
 const { LRUCache } = require("lru-cache");
-
+const { app } = require("electron");
+const documentsPath = app.getPath("documents");
+const basePath = path.join(documentsPath, "Webdata");
 // Configure the LRU cache
 const cache = new LRUCache({
   max: 1000, // Maximum number of items in the cache
@@ -46,7 +48,7 @@ const updateCsvData = async (req, res, next) => {
       }
 
       const fileName = fileData.csvFile;
-      const filePath = path.join(__dirname, "../../csvFile", fileName);
+      const filePath = path.join(basePath, "csvFile", fileName);
 
       const workbook = XLSX.readFile(filePath);
       const sheetName = workbook.SheetNames[0];

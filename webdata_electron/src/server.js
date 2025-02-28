@@ -25,7 +25,9 @@ const RowIndexData = require("./models/TempleteModel/rowIndexData");
 const ImageDataPath = require("./models/TempleteModel/templeteImages");
 const MappedData = require("./models/TempleteModel/mappedData");
 const builtPath = path.join(__dirname, "./dist");
-
+const { app:electronApp  } = require("electron");
+const documentsPath = electronApp .getPath("documents");
+const basePath = path.join(documentsPath, "Webdata");
 //middlewares
 app.use(cors());
 app.use(express.json());
@@ -41,7 +43,7 @@ const imageDirectoryPath = path.join(
 );
 // Serve static files from the 'extractedFiles' directory
 app.use("/images", express.static(imageDirectoryPath));
-app.use("/images", express.static(path.join(__dirname, "extractedFiles")));
+app.use("/images", express.static(path.join(basePath, "extractedFiles")));
 app.use(express.static(builtPath));
 
 

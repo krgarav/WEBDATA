@@ -1,14 +1,16 @@
 const path = require("path");
 const fs = require("fs").promises; // Use the promises API for async/await
 const Assigndata = require("../../models/TempleteModel/assigndata");
-
+const { app } = require("electron");
+const documentsPath = app.getPath("documents");
+const basePath = path.join(documentsPath, "Webdata");
 const downloadErrorCorrectedFile = async (req, res) => {
-  const userRole = req.role;
-  if (userRole !== "Admin") {
-    return res
-      .status(403)
-      .json({ message: "You don't have access to perform this action" });
-  }
+  // const userRole = req.role;
+  // if (userRole !== "Admin") {
+  //   return res
+  //     .status(403)
+  //     .json({ message: "You don't have access to perform this action" });
+  // }
 
   try {
     const { taskId } = req.params;
