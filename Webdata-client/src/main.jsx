@@ -27,9 +27,9 @@ registerLicense(
 fetch("/config.json")
   .then((response) => response.json())
   .then((config) => {
-    window.REACT_APP_IP = window.location.hostname;
+    console.log(config);
+    window.APP_IP = config.APP_IP;
     window.SERVER_IP = config.SERVER_IP; // Store SERVER_IP globally
-
     const root = ReactDOM.createRoot(document.getElementById("root"));
     root.render(
       <React.StrictMode>

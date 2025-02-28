@@ -1,8 +1,20 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { fetchIP } from "../../services/common";
 
 const Settings = () => {
+  const [ips, setIPS] = useState(["localhost"]);
+  const [selectedIP, setSelectedIP] = useState(ips[0]);
+  useEffect(() => {
+    const fetchIPs = async () => {
+      const res = await fetchIP();
+      if (res?.success) {
+        setIPS(res.ipAddresses);
+      }
+    };
+    fetchIPs();
+  }, []);
   const token = JSON.parse(localStorage.getItem("userData"));
   const onCsvBackupHandler = async () => {
     try {
@@ -39,8 +51,23 @@ const Settings = () => {
       toast.error(error.response.data.message);
     }
   };
-  const setIpHandler = () => {
-    
+  const setIpHandler = async () => {
+    const obj = { ip: selectedIP };
+
+    if (selectedIP) {
+      const result = window.confirm("Are you sure you want to change the IP?");
+      if (result) {
+        const response = await axios.post(
+          "http://localhost:4000/settings/setIp",
+          obj
+        );
+
+        if (response.data?.success) {
+          toast.success("IP changed successfully!");
+          window.location.replace(window.location.href); 
+        }
+      }
+    }
   };
   return (
     <div className=" flex justify-center items-center bg-gradient-to-r from-blue-400 to-blue-600 h-[100vh] pt-20">
@@ -77,11 +104,17 @@ const Settings = () => {
         </div>
         <div className="flex items-center space-x-3 px-4 py-3 mb-3 shadow-sm bg-white rounded-md">
           <dt className="font-medium text-gray-900">Set Public IP</dt>
-          <input
-            type="text"
+          <select
+            value={selectedIP}
+            onChange={(e) => setSelectedIP(e.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64"
-            placeholder="Enter IP Address"
-          />
+          >
+            {ips.map((ip, index) => (
+              <option key={index} value={ip}>
+                {ip}
+              </option>
+            ))}
+          </select>
           <button
             onClick={setIpHandler}
             className="inline-block rounded-md bg-blue-500 px-4 py-2 text-sm text-white shadow-sm hover:bg-blue-600 focus:ring-2 focus:ring-blue-300"
