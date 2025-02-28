@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "set-ip": "node set-ip.cjs",
-    "build": "vite build",
+    "build": "node set-ip.cjs && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
