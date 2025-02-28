@@ -7,16 +7,13 @@ const bodyParser = require("body-parser");
 const templeteRoutes = require("./routes/templete");
 const userRoutes = require("./routes/userManagement");
 const compareCsv = require("./routes/compareCsv");
+const mergeCsv = require("./routes/merge");
 const Templete = require("./models/TempleteModel/templete");
 const User = require("./models/User");
 const MetaData = require("./models/TempleteModel/metadata");
 const Files = require("./models/TempleteModel/files");
 const UpdatedData = require("./models/TempleteModel/updatedData");
 const Settings = require("./routes/settings")
-
-
-
-
 const upload = require("./routes/upload");
 const path = require("path");
 const bcrypt = require("bcryptjs");
@@ -28,6 +25,11 @@ const builtPath = path.join(__dirname, "./dist");
 const { app:electronApp  } = require("electron");
 const documentsPath = electronApp .getPath("documents");
 const basePath = path.join(documentsPath, "Webdata");
+const dotenv = require("dotenv");
+dotenv.config();
+const { Sequelize } = require("sequelize");
+const mysql = require("mysql2/promise"); 
+const createDatabaseIfNotExists = require("./utils/createDb");
 //middlewares
 app.use(cors());
 app.use(express.json());
@@ -51,6 +53,7 @@ app.use("/users", userRoutes);
 app.use(upload);
 app.use(compareCsv);
 app.use(templeteRoutes);
+app.use(mergeCsv);
 app.use("/settings", Settings);
 
 // Handle all other routes and serve 'index.html'
@@ -152,11 +155,13 @@ MappedData.belongsTo(Templete, {
   onUpdate: "CASCADE",
 });
 
+// Function to ensure the database exists
 
 
 // Database Sync and Admin User Creation (Handled in Electron Main)
 const startServer = async () => {
   try {
+    // await createDatabaseIfNotExists()
     await sequelize.sync({ force: false });
 
     // Check if admin user exists, if not, create it

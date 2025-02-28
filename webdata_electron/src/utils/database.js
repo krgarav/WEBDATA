@@ -1,5 +1,6 @@
 // const Sequelize = require("sequelize");
-
+const dotenv = require("dotenv");
+dotenv.config();
 // const sequelize = new Sequelize("omrusermanagement", "root", "12345678", {
 //   dialect: "mysql",
 //   host: "localhost",
@@ -13,10 +14,27 @@
 //   dialect: "mysql",
 //   host: "localhost",
 // });
-
 const Sequelize = require("sequelize");
+// Function to ensure the database exists
+// exports.createDatabaseIfNotExists = async () => {
+//   try {
+//     const connection = await mysql.createConnection({
+//       host: "localhost",
+//       user: "root",
+//       password: "root",
+//     });
 
-const sequelize = new Sequelize("webdata", "root", "root", {
+//     await connection.query(`CREATE DATABASE IF NOT EXISTS webdata}`);
+//     console.log(`✅ Database "webdata" is ready.`);
+//     await connection.end();
+//   } catch (error) {
+//     console.error("❌ Error creating database:", error);
+//     process.exit(1); // Exit if DB creation fails
+//   }
+// };
+
+console.log(process.env.SQL_DATABASE_NAME)
+const sequelize = new Sequelize(process.env.SQL_DATABASE_NAME, process.env.SQL_USER, process.env.SQL_PASS, {
   dialect: "mysql",
   host: "localhost",
   logging: false,

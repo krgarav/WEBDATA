@@ -101,3 +101,7 @@ src/ErrorCsv
 src/COMPARECSV_FILES
 src/TempleteImages
 dist
+mysql.zip
+mysql
+COMPARECSV_FILES
+csvFile
