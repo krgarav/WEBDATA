@@ -26,27 +26,27 @@ const Assigndata = require("./models/TempleteModel/assigndata");
 const RowIndexData = require("./models/TempleteModel/rowIndexData");
 const ImageDataPath = require("./models/TempleteModel/templeteImages");
 const MappedData = require("./models/TempleteModel/mappedData");
-const builtPath = path.join(
-  __dirname,
-  "../../WEBDATA/Webdata-client/dist"
-);
-
+const builtPath = path.join(__dirname, "../../webdata/Webdata-client/dist");
+const buildBat = path.join(__dirname, "../../webdata/Webdata-client/start.bat");
+// const projectPath = path.resolve(__dirname, "../../Webdata-client");
 // Check if build exists, if not, run `npm run build`
-if (!fs.existsSync(path.join(builtPath, "index.html"))) {
-  console.log("⚠️  Build not found! Running `npm run build`...");
-  try {
-    execSync("npm run build", {
-      stdio: "inherit",
-      cwd: "../../Webdata-client",
-    });
-    console.log("✅ Build completed!");
-  } catch (error) {
-    console.error("❌ Error running `npm run build`:", error);
-    process.exit(1); // Exit process if build fails
-  }
-} else {
-  console.log("✅ Build found, skipping `npm run build`.");
-}
+// Check if index.html exists
+// if (!fs.existsSync(path.join(builtPath, "index.html"))) {
+//   console.log("⚠️  Build not found! Running npm run build...");
+
+//   try {
+//     execSync(`C:\\Windows\\System32\\cmd.exe /c npm run build`, {
+//       stdio: "inherit",
+//       cwd: projectPath,
+//     });
+//     console.log("✅ Build process completed!");
+//   } catch (error) {
+//     console.error("❌ Error running npm run build:", error);
+//     process.exit(1); // Exit if build fails
+//   }
+// } else {
+//   console.log("✅ Build found, skipping build process.");
+// }
 
 //middlewares
 app.use(cors());

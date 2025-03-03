@@ -4,9 +4,11 @@ const multer = require("multer");
 const fs = require("fs").promises;
 const path = require("path");
 const ImageData = require("../../models/TempleteModel/templeteImages");
-
+const { app } = require("electron");
+const documentsPath = app.getPath("documents");
+const basePath = path.join(documentsPath, "Webdata");
 // const baseFolder = path.join(__dirname, "../../TempleteImages");
-const baseFolder = "TempleteImages/";
+const baseFolder = path.join(basePath, "TempleteImages");
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
     if (!(await fs.access(baseFolder).catch(() => false))) {

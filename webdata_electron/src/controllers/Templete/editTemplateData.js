@@ -3,7 +3,9 @@ const Templete = require("../../models/TempleteModel/templete");
 const ImageData = require("../../models/TempleteModel/templeteImages");
 const fs = require("fs").promises;
 const path = require("path");
-
+const { app } = require("electron");
+const documentsPath = app.getPath("documents");
+const basePath = path.join(documentsPath, "Webdata");
 const editTemplateData = async (req, res) => {
   const templateId = req.params.id;
 
@@ -24,7 +26,7 @@ const editTemplateData = async (req, res) => {
       return res.status(404).json({ message: "Template not found" });
     }
 
-    const imagesDir = path.join(__dirname, "..", "..", "TempleteImages");
+    const imagesDir = path.join(basePath, "TempleteImages");
 
     const imagePaths = await Promise.all(
       template.imagedatapaths.map(async (imageData) => {

@@ -1,6 +1,7 @@
 // const Sequelize = require("sequelize");
+const { app } = require("electron");
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ path: app.getAppPath() + "/.env" });
 // const sequelize = new Sequelize("omrusermanagement", "root", "12345678", {
 //   dialect: "mysql",
 //   host: "localhost",
@@ -32,13 +33,18 @@ const Sequelize = require("sequelize");
 //     process.exit(1); // Exit if DB creation fails
 //   }
 // };
-
-console.log(process.env.SQL_DATABASE_NAME)
-const sequelize = new Sequelize(process.env.SQL_DATABASE_NAME, process.env.SQL_USER, process.env.SQL_PASS, {
+const sequelize = new Sequelize("webdataconversion_2", "root", "root", {
   dialect: "mysql",
   host: "localhost",
   logging: false,
   timezone: "+05:30",
 });
+
+// const sequelize = new Sequelize(process.env.SQL_DATABASE_NAME, process.env.SQL_USER, process.env.SQL_PASS, {
+//   dialect: "mysql",
+//   host: "localhost",
+//   logging: false,
+//   timezone: "+05:30",
+// });
 
 module.exports = sequelize;

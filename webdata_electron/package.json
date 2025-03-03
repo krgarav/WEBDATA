@@ -92,6 +92,14 @@
       {
         "from": "node_modules",
         "to": "node_modules"
+      },
+      {
+        "from": "./.env",
+        "to": ".env"
+      },
+      {
+        "from": "./src/dist",
+        "to": "dist"
       }
     ]
   }

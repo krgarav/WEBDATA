@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-require("dotenv").config()
 const sequelize = require("./utils/database");
 const bodyParser = require("body-parser");
 const templeteRoutes = require("./routes/templete");
@@ -21,12 +20,12 @@ const Assigndata = require("./models/TempleteModel/assigndata");
 const RowIndexData = require("./models/TempleteModel/rowIndexData");
 const ImageDataPath = require("./models/TempleteModel/templeteImages");
 const MappedData = require("./models/TempleteModel/mappedData");
-const builtPath = path.join(__dirname, "./dist");
+
 const { app:electronApp  } = require("electron");
-const documentsPath = electronApp .getPath("documents");
+const builtPath =  electronApp.isPackaged? path.join(process.resourcesPath, "dist")  : path.join(__dirname, "dist");
+const documentsPath = electronApp.getPath("documents");
 const basePath = path.join(documentsPath, "Webdata");
 const dotenv = require("dotenv");
-dotenv.config();
 const { Sequelize } = require("sequelize");
 const mysql = require("mysql2/promise"); 
 const createDatabaseIfNotExists = require("./utils/createDb");
