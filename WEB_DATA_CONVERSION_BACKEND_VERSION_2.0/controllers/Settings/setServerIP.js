@@ -9,6 +9,7 @@ exports.changeServerIP = (req, res) => {
       __dirname,
       "../../../Webdata-client/dist/config.json"
     );
+    console.log(configPath)
     // Read the existing config.json
     const configData = JSON.parse(fs.readFileSync(configPath, "utf8"));
 

@@ -104,7 +104,7 @@ const Settings = () => {
         </div>
         <div className="flex items-center space-x-3 px-4 py-3 mb-3 shadow-sm bg-white rounded-md">
           <dt className="font-medium text-gray-900">Set Public IP</dt>
-          <select
+          {/* <select
             value={selectedIP}
             onChange={(e) => setSelectedIP(e.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64"
@@ -114,7 +114,12 @@ const Settings = () => {
                 {ip}
               </option>
             ))}
-          </select>
+          </select> */}
+          <input
+           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64"
+          type="text"
+          onChange={(e) => setSelectedIP(e.target.value)}
+          value={selectedIP} />
           <button
             onClick={setIpHandler}
             className="inline-block rounded-md bg-blue-500 px-4 py-2 text-sm text-white shadow-sm hover:bg-blue-600 focus:ring-2 focus:ring-blue-300"
