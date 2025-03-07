@@ -73,7 +73,7 @@ const MergeDuplicateDetect = () => {
       <div className="flex justify-center items-center w-[100%] pt-20 h-[100vh] bg-blue-500">
       {download && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50">
-          <MergeDownload setDownload={setDownload} />
+          <MergeDownload setDownload={setDownload} templateId={templateId}  />
         </div>
       )}
         <div className=" w-[800px]">

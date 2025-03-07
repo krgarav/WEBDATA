@@ -141,3 +141,57 @@ export const fetchIP = async () => {
   return response.data;
 };
 
+export const downloadUpdatedCsv = async (templateId) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("userData"));
+
+    const response = await axios.get(
+      `http://${window.APP_IP}:4000/downloadUpdatedCsv?templateId=${templateId}`,
+      {
+        headers: { token },
+        responseType: "blob", // Receive binary data
+      }
+    );
+
+    // Extract filename from the headers
+    const contentDisposition = response.headers["content-disposition"];
+    let fileName = "download.csv"; // Default filename
+
+    if (contentDisposition) {
+      const match = contentDisposition.match(/filename="?([^"]+)"?/);
+      console.log(match);
+      if (match && match[1]) {
+        fileName = match[1];
+      }
+    }
+
+    // Create a Blob from the response data
+    const blob = new Blob([response.data], { type: "text/csv" });
+
+    // Create a link and trigger download with correct filename
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.setAttribute("download", fileName); // Use filename from backend
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error downloading CSV:", error);
+  }
+};
+
+export const deleteMergedTable = async (templateId) => {
+  try {
+    const token = JSON.parse(localStorage.getItem("userData"));
+
+    const response = await axios.put(
+      `http://${window.APP_IP}:4000/updateTemplate?templateId=${templateId}`, 
+      { headers: { token } }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting merged table:", error);
+    throw error; // Re-throw error for better debugging
+  }
+};

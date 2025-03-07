@@ -6,18 +6,30 @@ const {
   getTableHeaders,
 } = require("../controllers/MergeCsv/checkTemplate");
 const { checkDuplicates } = require("../controllers/MergeCsv/checkDuplicate");
-const { viewDuplicates, getImageCol } = require("../controllers/MergeCsv/viewDuplicates");
-const { deleteDuplicate, updateDuplicate } = require("../controllers/MergeCsv/updateDuplicate");
+const {
+  viewDuplicates,
+  getImageCol,
+} = require("../controllers/MergeCsv/viewDuplicates");
+const {
+  deleteDuplicate,
+  updateDuplicate,
+} = require("../controllers/MergeCsv/updateDuplicate");
+const {
+  downloadCsvController,
+} = require("../controllers/MergeCsv/downloadCsv");
+const { updateTemplate } = require("../controllers/MergeCsv/updateTemplate");
 const router = express.Router();
 
 router.post("/mergecsv", mergeCSV);
 router.post("/checkmergecsv", checkTempalte);
 router.get("/gettabledata/:templateId", getTableHeaders);
 
-router.post("/checkduplicates",checkDuplicates);
-router.post("/viewDuplicates",viewDuplicates);
-router.get("/getImageCol",getImageCol);
-router.put("/updateRow",updateDuplicate);
-router.delete("/deleteRow",deleteDuplicate);
+router.post("/checkduplicates", checkDuplicates);
+router.post("/viewDuplicates", viewDuplicates);
+router.get("/getImageCol", getImageCol);
+router.put("/updateRow", updateDuplicate);
+router.delete("/deleteRow", deleteDuplicate);
+router.get("/downloadUpdatedCsv", downloadCsvController);
+router.put("/updateTemplate", updateTemplate);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
+  deleteMergedTable,
   fetchFilesAssociatedWithTemplate,
   REACT_APP_IP,
 } from "../services/common";
@@ -13,6 +14,7 @@ const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
   const [selectedValues, setSelectedValues] = useState([]);
   const [options, setOptions] = useState([]);
   const [tableName, setTableName] = useState(table);
+  const [mergeLoading, setMergeLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -41,6 +43,7 @@ const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
       files: selectedValues.map((item) => item.value),
     };
     try {
+      setMergeLoading(true);
       const res = await axios.post(`http://${REACT_APP_IP}:4000/mergecsv`, obj);
       if (res.data) {
         toast.success(res.data.message);
@@ -50,6 +53,8 @@ const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.error);
+    } finally {
+      setMergeLoading(false);
     }
   };
   const handleSelectAll = () => {
@@ -79,7 +84,18 @@ const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
       setLoading(false);
     }
   };
-
+  const resetHandler = async () => {
+    const result = window.confirm("All the data will be lost. Are you sure?");
+    if (!result) {
+      return;
+    }
+    try {
+      const response = await deleteMergedTable(+templateId);
+      onClose();
+    } catch (error) {
+      toast.error("Error occured during deleting table");
+    }
+  };
   return (
     <div
       className="relative z-10"
@@ -168,11 +184,39 @@ const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
                 <button
                   type="button"
                   onClick={mergeHandler}
+                  disabled={mergeLoading}
                   className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                 >
-                  Merge
+                  {mergeLoading ? (
+                    <span className="flex">
+                      <svg
+                        className="ml-1 mr-2 h-5 w-5 animate-spin text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                        />
+                      </svg>
+                      Merging...
+                    </span>
+                  ) : (
+                    <span className="w-30">Merge</span>
+                  )}
                 </button>
               )}
+
               {!merge && (
                 <button
                   type="button"
@@ -208,6 +252,14 @@ const MergeModal = ({ isOpen, onClose, templateId, message, table }) => {
                   ) : (
                     <span className="w-30">Show Duplicates</span>
                   )}
+                </button>
+              )}
+              {!merge && (
+                <button
+                  className={`mt-3 w-full inline-flex justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-blue-600 sm:mt-0 sm:w-auto ${"bg-blue-500"} text-white mx-2`}
+                  onClick={resetHandler}
+                >
+                  Reset Merged
                 </button>
               )}
             </div>

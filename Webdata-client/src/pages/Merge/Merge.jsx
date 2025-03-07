@@ -146,7 +146,7 @@ const Merge = () => {
           <div className="flex justify-center items-center mt-10">
             <button
               type="button"
-              class={`text-white focus:outline-none focus:ring-2 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 transition-all ${loading ? "bg-blue-500":"bg-blue-700 hover:bg-blue-800"}`}
+              className={`text-white focus:outline-none focus:ring-2 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 transition-all ${loading ? "bg-blue-500":"bg-blue-700 hover:bg-blue-800"}`}
               onClick={checkMergeHandler}
             >
               {loading ? (

@@ -23,8 +23,17 @@ const MergeEditDeleteDuplicate = ({
 
   useEffect(() => {
     if (Array.isArray(duplicateData)) {
-      setData(duplicateData);
+      const updatedData = duplicateData.map((item) => {
+        const newItem = {}; // Create a new object to store updated keys
+        for (const key in item) {
+          const newKey = key.endsWith(".") ? key.slice(0, -1) : key; // Remove trailing dot
+          newItem[newKey] = item[key]; // Assign value to new key
+        }
+        return newItem;
+      });
+      setData(updatedData);
     }
+      
   }, [duplicateData]);
 
   // Filtering logic: Stop looping when a key starts with "q"
@@ -40,7 +49,7 @@ const MergeEditDeleteDuplicate = ({
       }
       columns.push({
         field: key,
-        headerText: key.charAt(0).toUpperCase() + key.slice(1), // Capitalize header
+        headerText:  key.charAt(0).toUpperCase() + key.slice(1), // Capitalize header
         width: 150,
         textAlign: "Center",
       });

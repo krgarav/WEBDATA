@@ -31,16 +31,16 @@ exports.viewDuplicates = async (req, res) => {
   
       // Fetch full duplicate records, including IDs
       let query = `
-        SELECT *
-        FROM ${tableName}
-        WHERE ${colName} = :colValue
-        AND ${colName} IN (
-            SELECT ${colName}
-            FROM ${tableName}
-            GROUP BY ${colName}
-            HAVING COUNT(${colName}) > 1
-        )
-      `;
+      SELECT * 
+      FROM \`${tableName}\`
+      WHERE \`${colName}\` = :colValue
+      AND \`${colName}\` IN (
+          SELECT \`${colName}\`
+          FROM \`${tableName}\`
+          GROUP BY \`${colName}\`
+          HAVING COUNT(\`${colName}\`) > 1
+      )
+    `;
   
       const result = await sequelize.query(query, {
         type: QueryTypes.SELECT,
