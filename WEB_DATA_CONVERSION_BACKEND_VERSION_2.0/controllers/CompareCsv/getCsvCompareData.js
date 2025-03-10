@@ -325,7 +325,13 @@ const getCsvCompareData = async (req, res) => {
     if (!primaryValue || !primaryKey) {
       return res.status(400).json({ message: "Primary key or value missing" });
     }
-
+    const currentTask = await Assigndata.findOne({ where: { id: taskId } });
+    //     if (!currentTask) {
+    //       return res.status(404).json({ message: "Task not found" });
+    //     }
+    
+        await currentTask.update({ currentIndex });
+    
     // **FAST DATA RETRIEVAL FROM CACHE (O(1) Lookup)**
     if (!csvCache) await loadCsvIntoMemory(csvFilePath,primaryKey); // Load CSV if not already cached
     // console.log(csvCache)

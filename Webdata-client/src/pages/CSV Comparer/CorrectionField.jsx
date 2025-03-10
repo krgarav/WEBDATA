@@ -242,17 +242,19 @@ const CorrectionField = ({
           <input
             type="text"
             className="w-full border rounded-xl py-1 px-2 shadow"
-            // value={inputValue[key] ?inputValue[key]:dataItem?.FILE_1_DATA}
-            value={
-              inputValue[key] !== undefined
-                ? inputValue[key]
-                : dataItem?.CORRECTED
-            }
+            value={inputValue[key] ?inputValue[key]:dataItem?.CORRECTED}
+            placeholder={dataItem?.COLUMN_NAME}
+            // value={
+            //   inputValue[key] !== undefined
+            //     ? inputValue[key]
+            //     : dataItem?.CORRECTED
+            // }
+            // value={dataItem?.CORRECTED?dataItem?.CORRECTED:""}
             // value={dataItem?.CORRECTED?dataItem?.CORRECTED:""}
             // defaultValue={dataItem?.CORRECTED}
             onChange={(e) => {
               const input = e.target.value.toUpperCase(); // Convert input to uppercase
-
+console.log(input)
               // Validate based on field type
               if (
                 (dataItem.type === "formField" && numberRegex.test(input)) || // Allow only numbers for form fields

@@ -51,7 +51,8 @@ const DownloadCorrectedCsv = async (req, res) => {
       const correctedValue = errorRow["CORRECTED"];
       const correctedBy = errorRow["CORRECTED BY"] || "Unknown"; // Default to "Unknown" if not present
 
-      let findVar = jsonData.find((item) => item[primaryKey] == primary.trim());
+      // let findVar = jsonData.find((item) => item[primaryKey] == primary.trim());
+      let findVar = jsonData.find((item) => String(item[primaryKey]).trim() === String(primary).trim());
 
       if (findVar) {
         // Apply the correction

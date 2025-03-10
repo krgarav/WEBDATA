@@ -227,7 +227,12 @@ const compareCsv = async (req, res) => {
         }
 
         // ✅ Check for value mismatch (excluding skipping keys)
-        else if (val1 !== val2 && !skippingKey.includes(colKey)) {
+        else if (
+          (val1 !== undefined && val2 !== undefined
+            ? val1.trim() !== val2.trim()
+            : val1 !== val2) &&
+          !skippingKey.includes(colKey)
+        ) {
           diff.push({
             PRIMARY: ` ${key}`,
             COLUMN_NAME: colKey,

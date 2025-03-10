@@ -33,7 +33,7 @@ const writeCsvFile = (filePath, data) => {
 (async () => {
   try {
     // Read both CSV files
-    const jsonData = await readCsvFile(originalFilePath);
+    // const jsonData = await readCsvFile(originalFilePath);
     const errorJsonFile = await readCsvFile(errorFilePath);
 
     const updatedErrorJsonFile = errorJsonFile.map((item) => {
@@ -47,30 +47,30 @@ const writeCsvFile = (filePath, data) => {
     });
 
     // Use a Map for O(1) lookup instead of .find()
-    const jsonDataMap = new Map(jsonData.map((item) => [item["PRIMARY KEY"], item]));
+    // const jsonDataMap = new Map(jsonData.map((item) => [item["PRIMARY KEY"], item]));
 
-    updatedErrorJsonFile.forEach((errorRow) => {
-      const primaryKey = errorRow["PRIMARY KEY"];
-      const primary = errorRow["PRIMARY"];
-      const columnName = errorRow["COLUMN_NAME"];
-      const correctedValue = errorRow["CORRECTED"];
-      const correctedBy = errorRow["CORRECTED BY"] || "Unknown";
+    // updatedErrorJsonFile.forEach((errorRow) => {
+    //   const primaryKey = errorRow["PRIMARY KEY"];
+    //   const primary = errorRow["PRIMARY"];
+    //   const columnName = errorRow["COLUMN_NAME"];
+    //   const correctedValue = errorRow["CORRECTED"];
+    //   const correctedBy = errorRow["CORRECTED BY"] || "Unknown";
 
-      let findVar = jsonDataMap.get(primary.trim());
+      // let findVar = jsonDataMap.get(primary.trim());
 
-      if (findVar) {
-        findVar[columnName] = correctedValue;
-        if (correctedValue) {
-          findVar["Corrected Data"] = findVar["Corrected Data"]
-            ? findVar["Corrected Data"] + `, ${columnName}: ${correctedValue}`
-            : `${columnName}: ${correctedValue}`;
-          findVar["Corrected By"] = correctedBy;
-        }
-      }
-    });
+      // if (findVar) {  
+      //   findVar[columnName] = correctedValue;
+      //   if (correctedValue) {
+      //     findVar["Corrected Data"] = findVar["Corrected Data"]
+      //       ? findVar["Corrected Data"] + `, ${columnName}: ${correctedValue}`
+      //       : `${columnName}: ${correctedValue}`;
+      //     findVar["Corrected By"] = correctedBy;
+      //   }
+      // }
+    // });
 
     // Write to CSV
-    await writeCsvFile(correctedCsvFilePath, Array.from(jsonDataMap.values()));
+    // await writeCsvFile(correctedCsvFilePath, Array.from(jsonDataMap.values()));
     await writeCsvFile(errorFilePath, updatedErrorJsonFile);
 
     // Send success message back to main thread
