@@ -23,15 +23,15 @@ const MergeEditDeleteDuplicate = ({
 
   useEffect(() => {
     if (Array.isArray(duplicateData)) {
-      const updatedData = duplicateData.map((item) => {
-        const newItem = {}; // Create a new object to store updated keys
-        for (const key in item) {
-          const newKey = key.endsWith(".") ? key.slice(0, -1) : key; // Remove trailing dot
-          newItem[newKey] = item[key]; // Assign value to new key
-        }
-        return newItem;
-      });
-      setData(updatedData);
+      // const updatedData = duplicateData.map((item) => {
+      //   const newItem = {}; // Create a new object to store updated keys
+      //   for (const key in item) {
+      //     const newKey = key.endsWith(".") ? key.slice(0, -1) : key; // Remove trailing dot
+      //     newItem[newKey] = item[key]; // Assign value to new key
+      //   }
+      //   return newItem;
+      // });
+      setData(duplicateData);
     }
       
   }, [duplicateData]);

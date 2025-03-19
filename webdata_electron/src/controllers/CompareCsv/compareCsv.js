@@ -124,10 +124,10 @@ const compareCsv = async (req, res) => {
         path: secondCsvFilePath,
       });
     }
-    const f1 = await csvToJson(secondCsvFilePath);
-    const f2 = await csvToJson(secondFilePath);
+    const f2 = await csvToJson(secondCsvFilePath);
+    const f1 = await csvToJson(secondFilePath);
 
-    f2.splice(0, 1);
+    f1.splice(0, 1);
 
     if (checkHeadersMatch(f1, f2, skippingKey).match === false) {
       return res.status(501).send({
@@ -157,66 +157,7 @@ const compareCsv = async (req, res) => {
         });
       }
     }
-    // for (let i = 0; i < f1.length; i++) {
-    //   for (let j = 0; j < f2.length; j++) {
-    //     // const pkLength = f1[i][primaryKey];
-    //     // const str = " ".repeat(pkLength);
-
-    //     if (
-    //       f1[i][primaryKey] === f2[j][primaryKey]
-    //       // f1[i][primaryKey] !== str &&
-    //       // f2[j][primaryKey] !== str
-    //     ) {
-
-    //       for (let [key, value] of Object.entries(f1[i])) {
-    //         const val1 = value;
-    //         const val2 = f2[j][key];
-    //         // console.log(f1[i])
-    //         const imgPathArr = f1[i][imageColName]?.split("\\");
-    //         // console.log(imgPathArr)
-    //         const imgName = imgPathArr[imgPathArr.length - 1];
-
-    //         // if (
-    //         //   val1.includes("*") ||
-    //         //   val2.includes("*") ||
-    //         //   /^\s*$/.test(val1) ||
-    //         //   /^\s*$/.test(val2)
-    //         // ) {
-    //         //   if (!skippingKey.includes(key) && formFeilds.includes(key)) {
-    //         //     const obj = {
-    //         //       PRIMARY: ` ${f1[i][primaryKey]}`,
-    //         //       COLUMN_NAME: key,
-    //         //       FILE_1_DATA: val1,
-    //         //       FILE_2_DATA: val2,
-    //         //       IMAGE_NAME: imgName,
-    //         //       CORRECTED: "",
-    //         //       "CORRECTED BY": "",
-    //         //       "PRIMARY KEY": primaryKey,
-    //         //     };
-    //         //     diff.push(obj);
-    //         //   }
-    //         // }
-
-    //         // else if (value !== f2[j][key]) {
-    //          if (value !== f2[j][key]) {
-    //           if (!skippingKey.includes(key)) {
-    //             const obj = {
-    //               PRIMARY: ` ${f1[i][primaryKey]}`,
-    //               COLUMN_NAME: key,
-    //               FILE_1_DATA: val1,
-    //               FILE_2_DATA: val2,
-    //               IMAGE_NAME: imgName,
-    //               CORRECTED: "",
-    //               "CORRECTED BY": "",
-    //               "PRIMARY KEY": primaryKey,
-    //             };
-    //             diff.push(obj);
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+   
     // Convert f2 into a Map for O(1) lookups
     const f2Map = new Map(f2.map((item) => [item[primaryKey], item]));
 
